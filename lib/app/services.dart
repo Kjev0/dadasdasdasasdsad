@@ -45,6 +45,7 @@ class AppServices {
     required this.startup,
     required this.hotkeys,
     required this.androidSystem,
+    required this.notifier,
   });
 
   final PlatformInfo platform;
@@ -82,4 +83,5 @@ class AppServices {
   final StartupManager startup;
   final GlobalHotkeyService hotkeys;
   final AndroidSystemHelper androidSystem;
+  final SystemNotifier notifier;
 }

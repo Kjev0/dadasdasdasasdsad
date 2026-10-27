@@ -55,3 +55,12 @@ abstract class AndroidSystemHelper {
   Future<bool> requestAudioLibraryPermission();
   Future<void> openAppSettings();
 }
+
+/// Small system notifications (download finished, track changed). Linux uses
+/// org.freedesktop.Notifications, Android a regular notification channel;
+/// platforms without support return false from [isSupported] and the UI falls
+/// back to in-app messages.
+abstract class SystemNotifier {
+  bool get isSupported;
+  Future<void> show({required String id, required String title, String? body, String? iconPath});
+}

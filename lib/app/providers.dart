@@ -62,6 +62,7 @@ final appLifecycleProvider = Provider<AppLifecycleController>((ref) => ref.watch
 final startupManagerProvider = Provider<StartupManager>((ref) => ref.watch(appServicesProvider).startup);
 final globalHotkeysProvider = Provider<GlobalHotkeyService>((ref) => ref.watch(appServicesProvider).hotkeys);
 final androidSystemProvider = Provider<AndroidSystemHelper>((ref) => ref.watch(appServicesProvider).androidSystem);
+final systemNotifierProvider = Provider<SystemNotifier>((ref) => ref.watch(appServicesProvider).notifier);
 
 List<Override> serviceOverrides(AppServices services) => [appServicesProvider.overrideWithValue(services)];
 
