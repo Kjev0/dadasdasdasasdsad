@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:math';
+import 'dart:collection';
 
 import '../../core/errors.dart';
 import '../../core/util/cancel_token.dart';
@@ -8,47 +8,46 @@ import '../../core/util/cancel_token.dart';
 typedef Clock = DateTime Function();
 typedef Sleeper = Future<void> Function(Duration duration);
 
-/// Client-side token bucket that keeps a source below a provider's public
+/// Client-side rate limiter that keeps a source below a provider's public
 /// rate limit (e.g. Deezer: ≤ 50 requests per 5 seconds).
 ///
-/// [capacity] tokens refill continuously over [period]. [acquire] waits until
-/// a token is available. [penalize] empties the bucket and blocks for a
-/// while (used when the provider signals "quota exceeded").
+/// Sliding window: at most [capacity] requests are admitted in *any* window
+/// of length [period] (a grant is only given when the grant [capacity]
+/// positions earlier is at least [period] old). A plain token bucket that
+/// refills [capacity] tokens per [period] would admit a full burst plus the
+/// refill, i.e. almost 2 × [capacity] inside one window, which is over the
+/// provider's limit. [acquire] waits until a slot is free. [penalize] fills
+/// the window and blocks for a while (used when the provider signals "quota
+/// exceeded").
 class TokenBucketRateLimiter {
   TokenBucketRateLimiter({required this.capacity, required this.period, Clock? clock, Sleeper? sleep})
     : assert(capacity > 0),
       _clock = clock ?? DateTime.now,
-      _sleep = sleep ?? ((d) => Future<void>.delayed(d)),
-      _tokens = capacity.toDouble() {
-    _last = _clock();
-  }
+      _sleep = sleep ?? ((d) => Future<void>.delayed(d));
 
   final int capacity;
   final Duration period;
   final Clock _clock;
   final Sleeper _sleep;
 
-  double _tokens;
-  late DateTime _last;
+  /// Grant times inside the current window, oldest first (≤ [capacity]).
+  final Queue<DateTime> _grants = Queue<DateTime>();
   DateTime? _blockedUntil;
 
-  /// Serialises waiters so tokens are handed out in FIFO order.
+  /// Serialises waiters so slots are handed out in FIFO order.
   Future<void> _queue = Future.value();
 
-  double get _refillPerMicro => capacity / period.inMicroseconds;
-
-  /// Tokens currently available (after refill), for diagnostics/tests.
+  /// Requests that could be sent right now without waiting, for
+  /// diagnostics/tests.
   double get available {
-    _refill();
-    return _tokens;
+    _prune(_clock());
+    return (capacity - _grants.length).toDouble();
   }
 
-  void _refill() {
-    final now = _clock();
-    final elapsed = now.difference(_last).inMicroseconds;
-    if (elapsed > 0) {
-      _tokens = min(capacity.toDouble(), _tokens + elapsed * _refillPerMicro);
-      _last = now;
+  /// Drops grants that left the window ending at [now].
+  void _prune(DateTime now) {
+    while (_grants.isNotEmpty && !_grants.first.add(period).isAfter(now)) {
+      _grants.removeFirst();
     }
   }
 
@@ -76,14 +75,14 @@ class TokenBucketRateLimiter {
         await _wait(blocked.difference(now), cancel);
         continue;
       }
-      _refill();
-      if (_tokens >= 1) {
-        _tokens -= 1;
+      _prune(now);
+      if (_grants.length < capacity) {
+        _grants.add(now);
         return;
       }
-      final missing = 1 - _tokens;
-      final waitMicros = (missing / _refillPerMicro).ceil();
-      await _wait(Duration(microseconds: max(waitMicros, 1)), cancel);
+      // The window is full: the oldest grant leaves it after [period].
+      final wait = _grants.first.add(period).difference(now);
+      await _wait(wait > Duration.zero ? wait : const Duration(microseconds: 1), cancel);
     }
   }
 
@@ -93,12 +92,14 @@ class TokenBucketRateLimiter {
     cancel.throwIfCanceled();
   }
 
-  /// The provider reported that the quota is exhausted: drop all tokens and
+  /// The provider reported that the quota is exhausted: fill the window and
   /// block new requests for [backoff].
   void penalize(Duration backoff) {
-    _refill();
-    _tokens = 0;
-    final until = _clock().add(backoff);
+    final now = _clock();
+    _grants
+      ..clear()
+      ..addAll(List<DateTime>.filled(capacity, now));
+    final until = now.add(backoff);
     if (_blockedUntil == null || until.isAfter(_blockedUntil!)) _blockedUntil = until;
   }
 }

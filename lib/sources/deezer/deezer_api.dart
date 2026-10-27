@@ -10,8 +10,8 @@ final _log = Logger('sources.deezer.api');
 
 /// Client for the public Deezer API (`https://api.deezer.com`, no auth).
 ///
-/// * Requests pass a client-side token bucket ([limiter], default 50 per
-///   5 s — the commonly cited public limit; the official docs are
+/// * Requests pass a client-side sliding-window limiter ([limiter], max 50 per
+///   any 5 s — the commonly cited public limit; the official docs are
 ///   login-gated, see docs/research/API_NOTES.md §4.2).
 /// * Deezer reports errors inside HTTP 200 bodies:
 ///   `{"error":{"type":"…","message":"…","code":N}}`. Code 4 ("quota

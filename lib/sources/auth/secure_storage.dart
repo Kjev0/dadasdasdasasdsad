@@ -68,17 +68,25 @@ class InMemoryKeyValueStore implements SecureKeyValueStore {
 /// fails, every operation goes to an in-memory store instead, [isPersistent]
 /// is false and a warning is logged — secrets are never written to plain
 /// files. If the backend starts failing later, the store degrades the same
-/// way at that moment.
+/// way at that moment. A failed [delete] is never reported as success: the
+/// stored secret is blanked (best effort) and the error is rethrown.
 class ProbedSecureStorage implements SecureKeyValueStore {
   ProbedSecureStorage._(this._backend, this._persistent);
 
   /// Probe key; never holds real data.
   static const probeKey = 'fermata.probe';
 
+  /// How long the probe waits for the backend. Generous on purpose: with a
+  /// locked Linux keyring the first call blocks while the desktop shows an
+  /// interactive "unlock your keyring" prompt, which a user needs far more
+  /// than a few seconds to answer. A timeout here is not a failure of the
+  /// backend and would keep the whole session memory-only.
+  static const defaultProbeTimeout = Duration(seconds: 30);
+
   /// Opens [backend] (default: [FlutterSecureKeyValueStore]) and probes it.
   static Future<ProbedSecureStorage> open({
     SecureKeyValueStore? backend,
-    Duration probeTimeout = const Duration(seconds: 4),
+    Duration probeTimeout = defaultProbeTimeout,
     Random? random,
   }) async {
     final store = backend ?? FlutterSecureKeyValueStore();
@@ -99,7 +107,7 @@ class ProbedSecureStorage implements SecureKeyValueStore {
   /// timeout (the Secret Service can hang when no keyring daemon answers).
   static Future<bool> probe(
     SecureKeyValueStore store, {
-    Duration timeout = const Duration(seconds: 4),
+    Duration timeout = defaultProbeTimeout,
     Random? random,
   }) async {
     final value = 'probe-${(random ?? Random()).nextInt(1 << 30)}';
@@ -150,7 +158,22 @@ class ProbedSecureStorage implements SecureKeyValueStore {
   @override
   Future<void> delete(String key) async {
     await _memory.delete(key);
-    await _guard((s) => s.delete(key));
+    if (!_persistent) return;
+    try {
+      await _backend.delete(key).timeout(const Duration(seconds: 10));
+    } catch (e, st) {
+      _log.warning('Secure storage delete failed; continuing in memory for this session: $e');
+      _persistent = false;
+      // The entry may still be in the backend and would come back on the
+      // next start. Overwrite the secret with an empty value (readers treat
+      // an empty value as "absent") before reporting the failure.
+      try {
+        await _backend.write(key, '').timeout(const Duration(seconds: 10));
+      } catch (_) {
+        // Nothing more we can do; the caller still learns about the failure.
+      }
+      Error.throwWithStackTrace(e, st);
+    }
   }
 
   @override

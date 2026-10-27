@@ -117,6 +117,11 @@ class OAuthSession {
   SourceAuthState _state = const SourceAuthState(status: SourceConnectionStatus.notConnected);
   OAuthToken? _token;
   bool _tokenLoaded = false;
+
+  /// Bumped whenever the session's token is replaced or deleted from outside
+  /// the refresh path ([connect], [disconnect]); an in-flight refresh that
+  /// finds it changed must drop its result.
+  int _tokenEpoch = 0;
   Future<OAuthToken>? _refreshing;
   Future<void>? _connecting;
   StreamSubscription<String>? _credSub;
@@ -257,18 +262,14 @@ class OAuthSession {
           e.failure == OAuthFailure.cancelled ||
           e.failure == OAuthFailure.timeout ||
           e.failure == OAuthFailure.accessDenied;
-      _emit(
-        SourceAuthState(
-          status: soft ? _restingStatus(previous) : SourceConnectionStatus.error,
-          error: e.message,
-          accountName: soft ? previous.accountName : null,
-        ),
-      );
+      _emit(_failedConnectState(previous, e.message, soft: soft));
       rethrow;
     } catch (e) {
-      _emit(SourceAuthState(status: SourceConnectionStatus.error, error: e is FermataException ? e.message : '$e'));
+      _emit(_failedConnectState(previous, e is FermataException ? e.message : '$e', soft: false));
       rethrow;
     }
+    _tokenEpoch++;
+    _refreshing = null;
     _token = token;
     _tokenLoaded = true;
     try {
@@ -303,6 +304,25 @@ class OAuthSession {
     _log.info('Connected $sourceId');
   }
 
+  /// State after a failed [connect]. A failure that leaves a still-usable
+  /// session behind (an existing token) never turns it into `error`: the
+  /// failed attempt did not touch the old token, so the session stays as it
+  /// was and only reports the message.
+  SourceAuthState _failedConnectState(SourceAuthState previous, String message, {required bool soft}) {
+    final keepsSession = _token != null && previous.status != SourceConnectionStatus.expired;
+    if (!soft && !keepsSession) return SourceAuthState(status: SourceConnectionStatus.error, error: message);
+    final status = _restingStatus(previous);
+    final connected = status == SourceConnectionStatus.connected;
+    return SourceAuthState(
+      status: status,
+      error: message,
+      accountName: previous.accountName,
+      accountAvatar: connected ? previous.accountAvatar : null,
+      grantedScopes: connected ? _token?.scopes ?? const [] : const [],
+      expiresAt: connected ? _token?.expiresAt : null,
+    );
+  }
+
   SourceConnectionStatus _restingStatus(SourceAuthState previous) =>
       _token != null && previous.status != SourceConnectionStatus.expired
       ? SourceConnectionStatus.connected
@@ -325,13 +345,30 @@ class OAuthSession {
         _log.warning('Remote revoke for $sourceId failed (tokens are deleted locally anyway): ${e.runtimeType}');
       }
     }
+    // Invalidate any refresh still in flight so it cannot re-persist the
+    // token we are deleting.
+    _tokenEpoch++;
+    _refreshing = null;
     _token = null;
-    await _tokens.delete(sourceId);
+    Object? deleteError;
+    StackTrace? deleteStack;
+    try {
+      await _tokens.delete(sourceId);
+    } catch (e, st) {
+      deleteError = e;
+      deleteStack = st;
+    }
     _emit(
       SourceAuthState(
         status: hasCredentials ? SourceConnectionStatus.notConnected : SourceConnectionStatus.credentialsMissing,
       ),
     );
+    if (deleteError != null) {
+      // The session is disconnected locally, but the stored token may
+      // survive a restart: do not report success.
+      _log.warning('Could not delete the stored $sourceId token: ${deleteError.runtimeType}');
+      Error.throwWithStackTrace(deleteError, deleteStack!);
+    }
     _log.info('Disconnected $sourceId');
   }
 
@@ -376,7 +413,13 @@ class OAuthSession {
   /// Refreshes now (shared between concurrent callers). On a rejected
   /// refresh token the state becomes `expired`.
   Future<OAuthToken> forceRefresh({CancelToken? cancel}) {
-    return _refreshing ??= _refresh().whenComplete(() => _refreshing = null);
+    final running = _refreshing;
+    if (running != null) return running;
+    late final Future<OAuthToken> refresh;
+    refresh = _refresh().whenComplete(() {
+      if (identical(_refreshing, refresh)) _refreshing = null;
+    });
+    return _refreshing = refresh;
   }
 
   Future<OAuthToken> _refresh() async {
@@ -386,14 +429,24 @@ class OAuthSession {
       _markExpired('No refresh token.');
       throw AuthRequiredException(sourceId, 'The $displayName session expired. Please reconnect.');
     }
+    final epoch = _tokenEpoch;
     try {
       final fresh = await _client.refresh(requireConfig(), token);
+      // disconnect()/connect() ran while the request was in flight: the
+      // result belongs to a session that no longer exists.
+      if (epoch != _tokenEpoch) throw AuthRequiredException(sourceId, '$displayName was disconnected.');
       _token = fresh;
       await _tokens.write(sourceId, fresh);
+      if (epoch != _tokenEpoch) {
+        // disconnect() ran during the write: make sure nothing stays stored.
+        if (_token == null) await _tokens.delete(sourceId);
+        throw AuthRequiredException(sourceId, '$displayName was disconnected.');
+      }
       if (_state.isConnected) _emit(_connected(keepFrom: _state));
       _log.fine('Refreshed $sourceId token');
       return fresh;
     } on OAuthFlowException catch (e) {
+      if (epoch != _tokenEpoch) throw AuthRequiredException(sourceId, '$displayName was disconnected.');
       _markExpired(e.message);
       throw AuthRequiredException(sourceId, 'The $displayName session expired. Please reconnect.');
     }

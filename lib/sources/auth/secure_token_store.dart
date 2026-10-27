@@ -44,7 +44,11 @@ class SecureTokenStore implements TokenStore {
       // Do not include the raw value: it is a secret.
       _log.warning('Discarding unreadable stored token for $sourceId (${e.runtimeType})');
     }
-    await _storage.delete(keyFor(sourceId));
+    try {
+      await _storage.delete(keyFor(sourceId));
+    } catch (e) {
+      _log.warning('Could not remove the unreadable stored token for $sourceId (${e.runtimeType})');
+    }
     return null;
   }
 
@@ -57,9 +61,19 @@ class SecureTokenStore implements TokenStore {
   @override
   Future<void> deleteAll() async {
     final all = await _storage.readAll();
+    Object? firstError;
+    StackTrace? firstStack;
     for (final key in all.keys) {
-      if (key.startsWith(keyPrefix)) await _storage.delete(key);
+      if (!key.startsWith(keyPrefix)) continue;
+      try {
+        await _storage.delete(key);
+      } catch (e, st) {
+        // Keep deleting the other tokens, then report the failure.
+        firstError ??= e;
+        firstStack ??= st;
+      }
     }
+    if (firstError != null) Error.throwWithStackTrace(firstError, firstStack!);
   }
 }
 

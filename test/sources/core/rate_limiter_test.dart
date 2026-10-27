@@ -17,7 +17,7 @@ class _FakeTime {
 }
 
 void main() {
-  test('allows a burst of capacity, then paces at capacity/period', () async {
+  test('allows a burst of capacity, then waits until the window frees up', () async {
     final t = _FakeTime();
     final limiter = TokenBucketRateLimiter(
       capacity: 50,
@@ -31,13 +31,12 @@ void main() {
     }
     expect(t.now, start, reason: 'the first 50 requests need no waiting');
     await limiter.acquire();
-    // One token refills every 100 ms.
-    expect(t.now.difference(start).inMilliseconds, closeTo(100, 1));
+    // The 51st request must be a full period after the 1st (<= capacity in any window).
+    expect(t.now.difference(start), const Duration(seconds: 5));
     for (var i = 0; i < 49; i++) {
       await limiter.acquire();
     }
-    // 100 requests never take less than (100 - 50) * 100 ms.
-    expect(t.now.difference(start).inMilliseconds, greaterThanOrEqualTo(4999));
+    expect(t.now.difference(start), const Duration(seconds: 5), reason: 'the second burst fits the freed window');
   });
 
   test('never exceeds capacity within any period window', () async {
@@ -56,12 +55,11 @@ void main() {
     for (var i = 0; i < stamps.length; i++) {
       final windowEnd = stamps[i].add(const Duration(seconds: 1));
       final inWindow = stamps.where((s) => !s.isBefore(stamps[i]) && s.isBefore(windowEnd)).length;
-      // Burst capacity plus at most one refilled token per 200 ms.
-      expect(inWindow, lessThanOrEqualTo(10));
+      expect(inWindow, lessThanOrEqualTo(5));
     }
     final last = stamps.sublist(20);
     final span = last.last.difference(last.first);
-    expect(span.inMilliseconds, greaterThanOrEqualTo(19 * 200 - 1), reason: 'steady state is 5 per second');
+    expect(span.inMilliseconds, greaterThanOrEqualTo(3000), reason: 'steady state is 5 per second');
   });
 
   test('penalize blocks for the backoff', () async {
