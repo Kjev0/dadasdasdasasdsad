@@ -57,6 +57,7 @@
   "offlineDownloadable": "Downloadable",
   "offlineStreamOnly": "Stream only",
   "offlineUnavailable": "Not available offline",
+  "reasonSiloed": "SoundCloud tracks play in their own queue (SoundCloud's terms).",
   "desktopTrayNotPlaying": "Not playing",
   "@desktopTrayNotPlaying": {
     "description": "Disabled first item of the tray menu when nothing is loaded."

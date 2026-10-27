@@ -117,6 +117,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get offlineUnavailable => 'Not available offline';
 
   @override
+  String get reasonSiloed =>
+      'SoundCloud tracks play in their own queue (SoundCloud\'s terms).';
+
+  @override
   String get desktopTrayNotPlaying => 'Not playing';
 
   @override

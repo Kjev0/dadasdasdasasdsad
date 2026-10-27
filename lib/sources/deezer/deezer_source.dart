@@ -181,7 +181,9 @@ class DeezerSource extends MusicSourceBase {
     final id = _id(sourceAlbumId);
     final offset = PageCursor.decodeOffset(cursor);
     final results = await Future.wait([
-      _albumCache.get(id, () => api.get('album/$id', cancel: cancel)),
+      // The cached request is shared between callers, so it must not carry
+      // one caller's cancel token; each caller cancels its own wait.
+      _albumCache.get(id, () => api.get('album/$id')),
       api.get('album/$id/tracks', query: {'index': offset, 'limit': _pageSize}, cancel: cancel),
     ]);
     final album = results[0];
@@ -261,7 +263,15 @@ class DeezerSource extends MusicSourceBase {
     final track = await getTrack(sourceTrackId, cancel: cancel);
     final artistId = track?.extra[DeezerMapper.extraArtistId];
     if (artistId == null) return const [];
-    final json = await api.get('artist/$artistId/radio', query: {'limit': limit + 1}, cancel: cancel);
+    final Map<String, Object?> json;
+    try {
+      json = await api.get('artist/$artistId/radio', query: {'limit': limit + 1}, cancel: cancel);
+    } on ApiException catch (e) {
+      // Artists without a Deezer radio answer "no data" (mapped to 404).
+      if (e.statusCode == 404) return const [];
+      rethrow;
+    }
+    cancel?.throwIfCanceled();
     return DeezerMapper.tracks(
       json['data'],
       checkedAt: _clock(),

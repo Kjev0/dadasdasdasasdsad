@@ -33,6 +33,7 @@
   "offlineDownloadable": "Kan downloades",
   "offlineStreamOnly": "Kun streaming",
   "offlineUnavailable": "Ikke tilgængelig offline",
+  "reasonSiloed": "SoundCloud-numre afspilles i deres egen kø (SoundClouds vilkår).",
   "desktopTrayNotPlaying": "Der afspilles intet",
   "desktopTrayNowPlaying": "{title} — {artist}",
   "desktopTrayPlay": "Afspil",

@@ -117,6 +117,10 @@ class AppLocalizationsDa extends AppLocalizations {
   String get offlineUnavailable => 'Ikke tilgængelig offline';
 
   @override
+  String get reasonSiloed =>
+      'SoundCloud-numre afspilles i deres egen kø (SoundClouds vilkår).';
+
+  @override
   String get desktopTrayNotPlaying => 'Der afspilles intet';
 
   @override

@@ -296,6 +296,12 @@ abstract class AppLocalizations {
   /// **'Not available offline'**
   String get offlineUnavailable;
 
+  /// No description provided for @reasonSiloed.
+  ///
+  /// In en, this message translates to:
+  /// **'SoundCloud tracks play in their own queue (SoundCloud\'s terms).'**
+  String get reasonSiloed;
+
   /// Disabled first item of the tray menu when nothing is loaded.
   ///
   /// In en, this message translates to:

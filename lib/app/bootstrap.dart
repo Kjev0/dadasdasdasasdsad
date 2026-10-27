@@ -17,12 +17,17 @@ import '../platform/android/android_platform.dart';
 import '../platform/desktop/desktop_integration.dart';
 import '../platform/desktop/single_instance.dart';
 import '../playback/playback.dart';
+import '../playback/queue_silo.dart';
 import '../settings/settings_store.dart';
 import '../sources/audius/audius_source.dart';
 import '../sources/auth/auth.dart';
 import '../sources/deezer/deezer_source.dart';
+import '../sources/jamendo/jamendo_source.dart';
 import '../sources/local/local_source.dart';
 import '../sources/registry/source_registry_impl.dart';
+import '../sources/soundcloud/soundcloud_source.dart';
+import '../sources/spotify/spotify_source.dart';
+import '../sources/youtube/youtube_source.dart';
 import 'services.dart';
 
 final _log = Logger('app.bootstrap');
@@ -64,7 +69,11 @@ Future<Bootstrapped> bootstrap(List<String> args) async {
   final sources = SourceRegistryImpl(settings: settings)
     ..register(LocalSource(tracks: library.tracks))
     ..register(AudiusSource(http: http, credentials: credentials))
-    ..register(DeezerSource(http: http));
+    ..register(DeezerSource(http: http))
+    ..register(SoundCloudSource(http: http, oauth: oauth, tokens: tokens, credentials: credentials, platform: platform))
+    ..register(SpotifySource(http: http, oauth: oauth, tokens: tokens, credentials: credentials, platform: platform))
+    ..register(YouTubeSource(http: http, oauth: oauth, tokens: tokens, credentials: credentials, platform: platform))
+    ..register(JamendoSource(http: http, credentials: credentials));
   await sources.initAll();
 
   // Notifications: the desktop notifier only exists once the desktop
@@ -104,12 +113,14 @@ Future<Bootstrapped> bootstrap(List<String> args) async {
 
   // Playback.
   if (platform.isDesktop) MediaKitBackend.ensureInitialized();
+  final silo = QueueSilo(); // provider-terms queue separation (docs/COMPLIANCE.md)
   final resolver = StreamResolverImpl(
     sources: sources,
     downloads: downloads,
     links: library.links,
     settings: settings,
     isMetered: network.isMeteredNow,
+    silo: silo,
   );
   final playback = PlaybackControllerImpl(
     backend: createPlatformAudioBackend(platform),
@@ -118,6 +129,7 @@ Future<Bootstrapped> bootstrap(List<String> args) async {
     stateFile: paths.queueStateFile,
     smartQueueProvider: (recent) => recommendations.smartQueueContinuation(recent),
     platform: platform,
+    silo: silo,
   );
   await playback.init();
   final historyRecorder = library.createHistoryRecorder(playback, settings)..start();

@@ -133,6 +133,10 @@ abstract final class AvailabilityReason {
   static const notAuthorized = 'not_authorized';
   static const credentialsMissing = 'credentials_missing';
   static const offline = 'offline';
+
+  /// Provider terms forbid mixing this source into the current queue
+  /// (e.g. SoundCloud streams play in their own queue).
+  static const siloed = 'siloed';
   static const unknown = 'unknown';
 }
 

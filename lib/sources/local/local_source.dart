@@ -75,7 +75,7 @@ class LocalSource extends MusicSourceBase {
   Future<Page<Artist>> searchArtists(String query, {String? cursor, int limit = 20, CancelToken? cancel}) async {
     final q = query.trim();
     if (q.isEmpty) return const Page.empty();
-    final all = await _tracks.artists(text: q);
+    final all = _localArtists(await _localTracks(q), q);
     cancel?.throwIfCanceled();
     return _slice([for (final a in all) _artistOf(a)], cursor, limit);
   }
@@ -84,7 +84,7 @@ class LocalSource extends MusicSourceBase {
   Future<Page<Album>> searchAlbums(String query, {String? cursor, int limit = 20, CancelToken? cancel}) async {
     final q = query.trim();
     if (q.isEmpty) return const Page.empty();
-    final all = await _tracks.albums(text: q);
+    final all = _localAlbums(await _localTracks(q), q);
     cancel?.throwIfCanceled();
     return _slice([for (final a in all) _albumOf(a)], cursor, limit);
   }
@@ -162,7 +162,60 @@ class LocalSource extends MusicSourceBase {
   }
 
   @override
-  Future<List<String>> genres({CancelToken? cancel}) => _tracks.genres();
+  Future<List<String>> genres({CancelToken? cancel}) async {
+    final genres = <String>{
+      for (final t in await _localTracks(null))
+        if (t.genre != null && t.genre!.trim().isNotEmpty) t.genre!.trim(),
+    };
+    return genres.toList()..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+  }
+
+  // The library also stores remote tracks (favorites, history, imports);
+  // this source only exposes the user's own files.
+  Future<List<Track>> _localTracks(String? text) =>
+      _tracks.query(TrackQuery(text: text, localFilesOnly: true, sort: TrackSortField.artist, descending: false));
+
+  static bool _matches(String value, String q) => value.toLowerCase().contains(q.toLowerCase());
+
+  List<ArtistSummary> _localArtists(List<Track> tracks, String q) {
+    final byName = <String, List<Track>>{};
+    for (final t in tracks) {
+      final name = t.primaryArtist.trim();
+      if (name.isEmpty || !_matches(name, q)) continue;
+      byName.putIfAbsent(name.toLowerCase(), () => []).add(t);
+    }
+    return [
+      for (final group in byName.values)
+        ArtistSummary(
+          name: group.first.primaryArtist.trim(),
+          trackCount: group.length,
+          albumCount: {for (final t in group) t.album}.whereType<String>().length,
+          artworkUrl: group.map((t) => t.artworkUrl).whereType<Uri>().firstOrNull,
+        ),
+    ];
+  }
+
+  List<AlbumSummary> _localAlbums(List<Track> tracks, String q) {
+    final byKey = <String, List<Track>>{};
+    for (final t in tracks) {
+      final title = t.album?.trim();
+      if (title == null || title.isEmpty) continue;
+      final artist = (t.albumArtist ?? t.primaryArtist).trim();
+      if (!_matches(title, q) && !_matches(artist, q)) continue;
+      byKey.putIfAbsent('${artist.toLowerCase()}\u0000${title.toLowerCase()}', () => []).add(t);
+    }
+    return [
+      for (final group in byKey.values)
+        AlbumSummary(
+          title: group.first.album!.trim(),
+          artist: (group.first.albumArtist ?? group.first.primaryArtist).trim(),
+          trackCount: group.length,
+          year: group.map((t) => t.year).whereType<int>().firstOrNull,
+          artworkUrl: group.map((t) => t.artworkUrl).whereType<Uri>().firstOrNull,
+          totalDuration: group.fold<Duration>(Duration.zero, (sum, t) => sum + (t.duration ?? Duration.zero)),
+        ),
+    ];
+  }
 
   // ---- Playback ---------------------------------------------------------------
 

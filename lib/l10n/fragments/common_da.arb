@@ -31,5 +31,6 @@
   "offlineUserOwned": "Din fil",
   "offlineDownloadable": "Kan downloades",
   "offlineStreamOnly": "Kun streaming",
-  "offlineUnavailable": "Ikke tilgængelig offline"
+  "offlineUnavailable": "Ikke tilgængelig offline",
+  "reasonSiloed": "SoundCloud-numre afspilles i deres egen kø (SoundClouds vilkår)."
 }

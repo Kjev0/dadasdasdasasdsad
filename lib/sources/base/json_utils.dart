@@ -80,7 +80,8 @@ DateTime? jsonDate(Object? value) {
 /// The year of a date string (`2001-03-12` → 2001), or null.
 int? jsonYear(Object? value) {
   final date = jsonDate(value);
-  if (date != null) return date.year;
+  // Placeholder dates like "0000-00-00" parse to year 0 / -1: treat as unknown.
+  if (date != null) return date.year > 1000 ? date.year : null;
   final s = jsonString(value);
   if (s != null && s.length >= 4) {
     final y = int.tryParse(s.substring(0, 4));

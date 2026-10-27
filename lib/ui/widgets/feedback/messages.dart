@@ -15,6 +15,7 @@ String availabilityReasonText(AppLocalizations l10n, String? reason) => switch (
       AvailabilityReason.notAuthorized => l10n.reasonNotAuthorized,
       AvailabilityReason.credentialsMissing => l10n.reasonCredentialsMissing,
       AvailabilityReason.offline => l10n.reasonOffline,
+      AvailabilityReason.siloed => l10n.reasonSiloed,
       _ => l10n.reasonUnknown,
     };
 
@@ -31,6 +32,7 @@ bool isAvailabilityReason(String? reason) => const {
       AvailabilityReason.notAuthorized,
       AvailabilityReason.credentialsMissing,
       AvailabilityReason.offline,
+      AvailabilityReason.siloed,
       AvailabilityReason.unknown,
     }.contains(reason);
 

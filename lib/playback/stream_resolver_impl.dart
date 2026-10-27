@@ -12,6 +12,7 @@ import '../core/models/playback.dart';
 import '../core/models/track.dart';
 import '../core/util/cancel_token.dart';
 import '../settings/settings_store.dart';
+import 'queue_silo.dart';
 
 final _log = Logger('playback.resolver');
 
@@ -33,6 +34,7 @@ class StreamResolverImpl implements StreamResolver {
     required this._links,
     required this._settings,
     this._isMetered,
+    this._silo,
   });
 
   final SourceRegistry _sources;
@@ -40,6 +42,7 @@ class StreamResolverImpl implements StreamResolver {
   final TrackLinkRepository _links;
   final SettingsStore _settings;
   final Future<bool> Function()? _isMetered;
+  final QueueSilo? _silo;
 
   /// Most informative first.
   static const _reasonRank = [
@@ -132,6 +135,10 @@ class StreamResolverImpl implements StreamResolver {
       reasons.add(AvailabilityReason.unknown);
       return null;
     }
+    if (!(_silo?.allows(t.sourceId) ?? true)) {
+      reasons.add(AvailabilityReason.siloed);
+      return null;
+    }
     final availability = t.availability;
     switch (availability.playback) {
       case PlaybackRights.unavailable:
@@ -155,6 +162,7 @@ class StreamResolverImpl implements StreamResolver {
       final quality = await _quality();
       final stream = await source.resolveStream(t, quality: quality, cancel: cancel);
       final isPreview = stream.isPreview || previewOnly || availability.playback == PlaybackRights.preview;
+      _silo?.commit(t.sourceId);
       return ResolvedStream(source: isPreview ? _asPreview(stream) : stream, playedTrack: t);
     } on OperationCanceledException {
       rethrow;

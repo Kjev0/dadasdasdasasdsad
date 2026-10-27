@@ -20,6 +20,7 @@ import 'engine/listen_clock.dart';
 import 'engine/playback_tuning.dart';
 import 'queue/play_queue.dart';
 import 'queue/queue_state_store.dart';
+import 'queue_silo.dart';
 
 part 'controller/fades.dart';
 part 'controller/housekeeping.dart';
@@ -47,6 +48,7 @@ class PlaybackControllerImpl implements PlaybackController {
     QueueStateStore? stateStore,
     DateTime Function()? now,
     math.Random? random,
+    this._silo,
   })  : _settings = settings,
         _store = stateStore ?? QueueStateStore(stateFile),
         _platform = platform ?? PlatformInfo.current(),
@@ -59,6 +61,10 @@ class PlaybackControllerImpl implements PlaybackController {
   final AudioBackend _backend;
   final StreamResolver _resolver;
   final SettingsStore _settings;
+
+  /// Provider-terms queue silo shared with the stream resolver (may be null
+  /// in tests).
+  final QueueSilo? _silo;
   final QueueStateStore _store;
   final Future<List<Track>> Function(List<Track> recent)? _smartQueueProvider;
   final PlatformInfo _platform;
@@ -225,6 +231,7 @@ class PlaybackControllerImpl implements PlaybackController {
     }
     final crossfade = _manualCrossfadeAllowed();
     _endCurrent(completed: false);
+    _silo?.reset();
     _queue.replace(tracks, startIndex: startIndex, origin: origin, originLabel: originLabel, shuffle: shuffle);
     _failureStreak = 0;
     _emitQueue();
@@ -408,6 +415,7 @@ class PlaybackControllerImpl implements PlaybackController {
     if (!keepCurrent || _queue.current == null) {
       _endCurrent(completed: false);
       _queue.clear(keepCurrent: false);
+      _silo?.reset();
       _park(Duration.zero);
     } else {
       _queue.clear(keepCurrent: true);
