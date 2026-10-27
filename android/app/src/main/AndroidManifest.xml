@@ -1,0 +1,161 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+        Permissions. User-facing explanations for each one live in
+        docs/platform/ANDROID.md (used by the onboarding / permission UI).
+        Do not add permissions that are not strictly needed: e.g.
+        BLUETOOTH_CONNECT is NOT required for headset / car media buttons,
+        those arrive through the MediaSession.
+    -->
+
+    <!-- Streaming from online providers, OAuth, artwork and lyrics. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Offline detection and "stream on Wi-Fi only" (connectivity_plus). -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Background playback (audio_service). -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- Required on Android 14+ (targetSdk 34+) for a foregroundServiceType="mediaPlayback" service. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+
+    <!-- Android 13+ runtime permission. The media-session notification itself is
+         exempt; this is needed for any other notification (errors, sleep timer, ...). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Local library scanning. Android 13+ uses the granular audio permission,
+         Android 12L and older use the legacy storage permission. -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <!--
+        Lets the app show the system "Allow app to always run in background?" dialog
+        (ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS). It is ONLY requested when the
+        user explicitly opts in from Fermata's settings; it is never requested at
+        startup.
+
+        Google Play policy: this permission is restricted to apps whose core
+        function is adversely affected by Doze / App Standby, and Play may ask for a
+        justification or reject the app. If Fermata is ever published on Play,
+        either justify it in the Play Console declaration or remove this line and
+        deep-link to Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS instead
+        (that intent needs no permission).
+    -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+    <!--
+        allowBackup / dataExtractionRules: flutter_secure_storage's encrypted
+        values (OAuth tokens) are bound to Android Keystore keys that never leave
+        the device, so restoring them on another device fails with
+        "InvalidKeyException: Failed to unwrap key". Cloud backup is disabled and
+        SharedPreferences are excluded from device-to-device transfer.
+
+        usesCleartextTraffic / networkSecurityConfig: every provider is HTTPS-only.
+        The only cleartext traffic allowed is to 127.0.0.1 / localhost, which
+        just_audio's local proxy needs (request headers, caching, stream sources).
+    -->
+    <application
+        android:name="${applicationName}"
+        android:label="Fermata"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:usesCleartextTraffic="false"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:enableOnBackInvokedCallback="true"
+        tools:targetApi="33">
+
+        <!-- Extends com.ryanheise.audioservice.AudioServiceActivity (see MainActivity.kt). -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:taskAffinity=""
+            android:theme="@style/LaunchTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize">
+            <!-- Specifies an Android theme to apply to this Activity as soon as
+                 the Android process has started. This theme is visible to the user
+                 while the Flutter UI initializes. After that, this theme continues
+                 to determine the Window background behind the Flutter UI. -->
+            <meta-data
+              android:name="io.flutter.embedding.android.NormalTheme"
+              android:resource="@style/NormalTheme"
+              />
+
+            <!-- Deep links are handled by app_links, not by Flutter's built-in
+                 router deep linking (required since Flutter 3.24). -->
+            <meta-data
+                android:name="flutter_deeplinking_enabled"
+                android:value="false" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+            <!-- OAuth redirect: fermata://oauth/<provider>?code=...&state=...
+                 (e.g. fermata://oauth/soundcloud). Delivered to Dart via app_links. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="fermata" android:host="oauth" />
+            </intent-filter>
+        </activity>
+
+        <!-- audio_service: background playback service + MediaBrowserService
+             (Android Auto / Wear / system media controls). -->
+        <service android:name="com.ryanheise.audioservice.AudioService"
+            android:foregroundServiceType="mediaPlayback"
+            android:exported="true" tools:ignore="Instantiatable">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
+
+        <!-- audio_service: headset / Bluetooth / car media buttons. -->
+        <receiver android:name="com.ryanheise.audioservice.MediaButtonReceiver"
+            android:exported="true" tools:ignore="Instantiatable">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Don't delete the meta-data below.
+             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+    </application>
+
+    <!-- Package visibility (Android 11+). -->
+    <queries>
+        <!-- Required to query activities that can process text, see:
+             https://developer.android.com/training/package-visibility and
+             https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
+
+             In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT"/>
+            <data android:mimeType="text/plain"/>
+        </intent>
+        <!-- url_launcher: canLaunchUrl / launchUrl for https links (OAuth
+             authorize pages, provider websites). -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+        </intent>
+        <!-- url_launcher: LaunchMode.inAppBrowserView / supportsLaunchMode()
+             need to see the Custom Tabs provider (Chrome, Firefox, ...). -->
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService" />
+        </intent>
+    </queries>
+</manifest>

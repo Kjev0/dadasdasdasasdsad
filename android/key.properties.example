@@ -1,0 +1,19 @@
+# Release signing for Fermata (Android).
+#
+# Copy this file to android/key.properties (gitignored) and fill in the values,
+# or set the FERMATA_KEYSTORE_PATH / FERMATA_KEYSTORE_PASSWORD /
+# FERMATA_KEY_ALIAS / FERMATA_KEY_PASSWORD environment variables instead (CI).
+# If neither is present, release builds are signed with the debug key and a
+# warning is printed. See docs/platform/ANDROID.md, "Signing".
+#
+# Create a keystore once (keep it and its passwords backed up: losing them means
+# existing installs can never be updated in place):
+#   keytool -genkeypair -v -keystore ~/fermata-release.jks -storetype PKCS12 \
+#     -keyalg RSA -keysize 4096 -validity 10000 -alias fermata
+#
+# storeFile: absolute path, or relative to this android/ directory.
+# NEVER commit key.properties or the keystore.
+storeFile=/home/you/fermata-release.jks
+storePassword=change-me
+keyAlias=fermata
+keyPassword=change-me

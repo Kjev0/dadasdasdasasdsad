@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  AppStream metadata for Fermata.
+  Install to: /usr/share/metainfo/app.fermata.player.metainfo.xml
+  Validate:   appstreamcli validate (with no-net) on this file
+
+  TODO(lead): add <project_license> (SPDX expression) once the license is
+  decided, plus <url type="homepage"/>, <url type="bugtracker"/> and
+  <screenshots/> (required for Flathub / software centers).
+-->
+<component type="desktop-application">
+  <id>app.fermata.player</id>
+  <metadata_license>CC0-1.0</metadata_license>
+
+  <name>Fermata</name>
+  <summary>Play your local library and streaming services in one place</summary>
+  <developer id="app.fermata">
+    <name>Fermata contributors</name>
+  </developer>
+
+  <description>
+    <p>
+      Fermata is a local-first music player. It plays the music files on
+      your computer and brings tracks and playlists from supported online
+      services into the same library and queue.
+    </p>
+    <ul>
+      <li>Plays MP3, FLAC, AAC/M4A, Ogg Vorbis, Opus, WAV, AIFF and more, with gapless playback</li>
+      <li>ReplayGain and loudness normalization</li>
+      <li>Keeps playing in the background: closing the window minimizes Fermata to the system tray</li>
+      <li>Media keys and desktop media controls through MPRIS</li>
+      <li>Optional global keyboard shortcuts and start on login</li>
+      <li>Account tokens are kept in the system keyring, never in plain files</li>
+    </ul>
+  </description>
+
+  <launchable type="desktop-id">app.fermata.player.desktop</launchable>
+  <icon type="stock">app.fermata.player</icon>
+
+  <categories>
+    <category>AudioVideo</category>
+    <category>Audio</category>
+    <category>Player</category>
+    <category>Music</category>
+  </categories>
+
+  <keywords>
+    <keyword>music</keyword>
+    <keyword>audio</keyword>
+    <keyword>player</keyword>
+    <keyword>playlist</keyword>
+    <keyword>library</keyword>
+    <keyword>streaming</keyword>
+  </keywords>
+
+  <provides>
+    <binary>fermata</binary>
+    <mediatype>audio/mpeg</mediatype>
+    <mediatype>audio/mp4</mediatype>
+    <mediatype>audio/flac</mediatype>
+    <mediatype>audio/ogg</mediatype>
+    <mediatype>audio/opus</mediatype>
+    <mediatype>audio/wav</mediatype>
+    <mediatype>audio/x-aiff</mediatype>
+    <mediatype>audio/webm</mediatype>
+    <dbus type="user">org.mpris.MediaPlayer2.fermata</dbus>
+  </provides>
+
+  <requires>
+    <display_length compare="ge">360</display_length>
+  </requires>
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
+  </supports>
+
+  <content_rating type="oars-1.1" />
+
+  <releases>
+    <release version="1.0.0" type="development" date="2026-10-27">
+      <description>
+        <p>First development build.</p>
+      </description>
+    </release>
+  </releases>
+</component>

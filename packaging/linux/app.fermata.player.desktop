@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=Fermata
+GenericName=Music Player
+Comment=Play your local music library and streaming services in one place
+Keywords=music;audio;player;songs;albums;artists;playlist;library;streaming;mp3;flac;
+Exec=fermata %U
+TryExec=fermata
+Icon=app.fermata.player
+Terminal=false
+StartupNotify=true
+StartupWMClass=app.fermata.player
+SingleMainWindow=true
+Categories=AudioVideo;Audio;Player;Music;
+MimeType=audio/mpeg;audio/mp4;audio/x-m4a;audio/aac;audio/x-aac;audio/flac;audio/x-flac;audio/ogg;audio/x-vorbis+ogg;audio/opus;audio/x-opus+ogg;audio/wav;audio/x-wav;audio/vnd.wave;audio/x-aiff;audio/aiff;audio/webm;audio/x-matroska;audio/x-ms-wma;audio/x-ape;audio/x-wavpack;x-scheme-handler/fermata;

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Android 12+ backup / device-to-device transfer rules
+    (android:dataExtractionRules). Cloud backup is also disabled through
+    android:allowBackup="false" in the manifest.
+
+    flutter_secure_storage keeps OAuth tokens in SharedPreferences, encrypted
+    with Android Keystore keys that never leave the device. Restoring those
+    files on a new device would fail with "InvalidKeyException: Failed to
+    unwrap key", so all SharedPreferences are excluded: after a transfer the
+    user simply reconnects their streaming accounts. The library database and
+    DataStore-backed settings are still transferred.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="sharedpref" path="." />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="sharedpref" path="." />
+    </device-transfer>
+</data-extraction-rules>

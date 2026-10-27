@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Release builds run resource shrinking (isShrinkResources). Notification
+    icons such as @drawable/ic_stat_fermata are only referenced by name from
+    Dart (AudioServiceConfig.androidNotificationIcon, MediaControl.androidIcon),
+    so the shrinker cannot see them. Keep all drawables, as recommended by the
+    audio_service README ("Android setup", step 2). Uniquely named so it
+    cannot shadow a plugin's own res/raw/keep.xml during resource merging.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/*" />
