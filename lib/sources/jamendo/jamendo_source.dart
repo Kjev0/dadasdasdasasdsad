@@ -282,7 +282,7 @@ class JamendoSource extends MusicSourceBase {
 
   /// The artist's tracks by all-time popularity.
   @override
-  Future<Page<Track>> artistTopTracks(String sourceArtistId, {String? cursor, int limit = 30, CancelToken? cancel}) {
+  Future<Page<Track>> artistTopTracks(String sourceArtistId, {String? cursor, int limit = 30, CancelToken? cancel}) async {
     _ensure();
     final artistId = JamendoLinks.idOf(sourceArtistId, JamendoLinkKind.artist) ?? sourceArtistId;
     return _trackPage(
