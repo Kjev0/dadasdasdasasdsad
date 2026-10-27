@@ -73,24 +73,6 @@ class PlaylistActions {
     }
   }
 
-  /// Rename only.
-  Future<void> rename(Playlist playlist) async {
-    final l10n = context.l10n;
-    final name = await TextInputDialog.show(
-      context,
-      title: l10n.pagesRename,
-      initialValue: playlist.name,
-      hint: l10n.shellPlaylistNameHint,
-      confirmLabel: l10n.actionSave,
-    );
-    if (name == null || name == playlist.name) return;
-    try {
-      await ref.read(playlistRepositoryProvider).updatePlaylist(playlist.copyWith(name: name, updatedAt: DateTime.now()));
-    } catch (e, st) {
-      _fail(e, st);
-    }
-  }
-
   /// Delete after confirmation. Returns true when deleted.
   Future<bool> delete(Playlist playlist) async {
     final l10n = context.l10n;

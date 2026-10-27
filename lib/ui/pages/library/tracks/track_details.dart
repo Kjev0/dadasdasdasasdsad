@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../core/models/track.dart';
 import '../../../design/context_ext.dart';
@@ -37,7 +38,11 @@ class TrackDetailsSheet extends ConsumerWidget {
       if (track.duration != null) (l10n.libraryDetailDuration, formatDuration(track.duration!)),
       if (f?.codec != null) (l10n.libraryDetailFormat, f!.codec!.toUpperCase()),
       if (f?.bitrateKbps != null) (l10n.libraryDetailBitrate, l10n.libraryKbps(f!.bitrateKbps!)),
-      if (f?.sampleRateHz != null) (l10n.libraryDetailSampleRate, l10n.libraryKhz((f!.sampleRateHz! / 1000).toStringAsFixed(1))),
+      if (f?.sampleRateHz != null)
+        (
+          l10n.libraryDetailSampleRate,
+          l10n.libraryKhz(NumberFormat.decimalPatternDigits(locale: localeNameOf(context), decimalDigits: 1).format(f!.sampleRateHz! / 1000)),
+        ),
       if (f?.bitsPerSample != null) (l10n.libraryDetailBitDepth, l10n.libraryBits(f!.bitsPerSample!)),
       if (f?.channels != null) (l10n.libraryDetailChannels, '${f!.channels}'),
       if (f?.fileSizeBytes != null) (l10n.libraryDetailSize, formatBytes(context, f!.fileSizeBytes!)),

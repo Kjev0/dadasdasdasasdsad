@@ -76,6 +76,27 @@ void main() {
     expect(kit.downloads.calls, contains('resumeAll'));
   });
 
+  testWidgets('retry all failed; cancel all (confirmed)', (tester) async {
+    final kit = FakeKit();
+    kit.downloads
+      ..addTask(_task('1', DownloadStatus.failed, error: 'network_error'))
+      ..addTask(_task('2', DownloadStatus.canceled))
+      ..addTask(_task('3', DownloadStatus.downloading, total: 100))
+      ..addTask(_task('4', DownloadStatus.paused, total: 100));
+    await pumpPage(tester, kit: kit, route: '/downloads');
+    await tester.tap(find.byKey(const ValueKey('downloads-retry-failed')));
+    await settle(tester);
+    expect(kit.downloads.calls.where((c) => c == 'retry').length, 2);
+    await tester.tap(find.byKey(const ValueKey('downloads-cancel-all')));
+    await settle(tester);
+    expect(find.text('Cancel all downloads?'), findsOneWidget);
+    await tester.tap(find.widgetWithText(FilledButton, 'Cancel downloads'));
+    await settle(tester);
+    // The two retried tasks are queued again, plus the running and paused one.
+    expect(kit.downloads.calls.where((c) => c == 'cancel').length, 4);
+    expect(kit.downloads.tasks.every((t) => t.status == DownloadStatus.canceled), isTrue);
+  });
+
   testWidgets('completed downloads play from the list', (tester) async {
     final kit = FakeKit();
     kit.downloads

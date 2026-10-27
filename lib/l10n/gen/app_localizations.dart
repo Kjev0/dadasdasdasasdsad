@@ -1586,12 +1586,6 @@ abstract class AppLocalizations {
   /// **'Remove'**
   String get pagesRemove;
 
-  /// No description provided for @pagesRename.
-  ///
-  /// In en, this message translates to:
-  /// **'Rename'**
-  String get pagesRename;
-
   /// No description provided for @pagesOpenOnProvider.
   ///
   /// In en, this message translates to:
@@ -3553,6 +3547,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Resume all'**
   String get downloadsResumeAll;
+
+  /// No description provided for @downloadsRetryFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry failed'**
+  String get downloadsRetryFailed;
+
+  /// No description provided for @downloadsCancelAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel all'**
+  String get downloadsCancelAll;
+
+  /// No description provided for @downloadsCancelAllTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel all downloads?'**
+  String get downloadsCancelAllTitle;
+
+  /// No description provided for @downloadsCancelAllMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloads in progress stop, and partly downloaded files are removed.'**
+  String get downloadsCancelAllMessage;
+
+  /// No description provided for @downloadsCancelAllConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel downloads'**
+  String get downloadsCancelAllConfirm;
+
+  /// No description provided for @downloadsKeepDownloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep downloading'**
+  String get downloadsKeepDownloading;
 
   /// No description provided for @downloadsPause.
   ///

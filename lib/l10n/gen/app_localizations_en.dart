@@ -912,9 +912,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pagesRemove => 'Remove';
 
   @override
-  String get pagesRename => 'Rename';
-
-  @override
   String pagesOpenOnProvider(String provider) {
     return 'Open on $provider';
   }
@@ -2077,6 +2074,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get downloadsResumeAll => 'Resume all';
+
+  @override
+  String get downloadsRetryFailed => 'Retry failed';
+
+  @override
+  String get downloadsCancelAll => 'Cancel all';
+
+  @override
+  String get downloadsCancelAllTitle => 'Cancel all downloads?';
+
+  @override
+  String get downloadsCancelAllMessage =>
+      'Downloads in progress stop, and partly downloaded files are removed.';
+
+  @override
+  String get downloadsCancelAllConfirm => 'Cancel downloads';
+
+  @override
+  String get downloadsKeepDownloading => 'Keep downloading';
 
   @override
   String get downloadsPause => 'Pause';

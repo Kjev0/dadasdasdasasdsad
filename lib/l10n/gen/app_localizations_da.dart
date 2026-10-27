@@ -910,9 +910,6 @@ class AppLocalizationsDa extends AppLocalizations {
   String get pagesRemove => 'Fjern';
 
   @override
-  String get pagesRename => 'Omdøb';
-
-  @override
   String pagesOpenOnProvider(String provider) {
     return 'Åbn på $provider';
   }
@@ -2074,6 +2071,25 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get downloadsResumeAll => 'Genoptag alle';
+
+  @override
+  String get downloadsRetryFailed => 'Prøv mislykkede igen';
+
+  @override
+  String get downloadsCancelAll => 'Annullér alle';
+
+  @override
+  String get downloadsCancelAllTitle => 'Annullér alle downloads?';
+
+  @override
+  String get downloadsCancelAllMessage =>
+      'Igangværende downloads stopper, og delvist downloadede filer fjernes.';
+
+  @override
+  String get downloadsCancelAllConfirm => 'Annullér downloads';
+
+  @override
+  String get downloadsKeepDownloading => 'Fortsæt';
 
   @override
   String get downloadsPause => 'Pause';

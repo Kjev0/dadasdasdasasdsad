@@ -43,7 +43,6 @@
   "pagesNoMatches": "Nothing matches these filters.",
   "pagesLoadMore": "Load more",
   "pagesRemove": "Remove",
-  "pagesRename": "Rename",
   "pagesOpenOnProvider": "Open on {provider}",
   "@pagesOpenOnProvider": {
     "placeholders": {
@@ -739,6 +738,12 @@
   "albumEmpty": "No tracks on this album.",
   "downloadsPauseAll": "Pause all",
   "downloadsResumeAll": "Resume all",
+  "downloadsRetryFailed": "Retry failed",
+  "downloadsCancelAll": "Cancel all",
+  "downloadsCancelAllTitle": "Cancel all downloads?",
+  "downloadsCancelAllMessage": "Downloads in progress stop, and partly downloaded files are removed.",
+  "downloadsCancelAllConfirm": "Cancel downloads",
+  "downloadsKeepDownloading": "Keep downloading",
   "downloadsPause": "Pause",
   "downloadsResume": "Resume",
   "downloadsProgress": "Download progress",

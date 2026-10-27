@@ -24,11 +24,10 @@ String shelfTitle(AppLocalizations l10n, Shelf shelf) {
   };
 }
 
-/// Subtitle to show under a shelf title (the parameter is already part of
-/// the title for some shelves).
+/// Subtitle to show under a shelf title: null where the subtitle is already
+/// part of the localized title (artist / genre name).
 String? shelfSubtitle(AppLocalizations l10n, Shelf shelf) => switch (shelf.title) {
       'shelfBecauseYouLiked' || 'shelfGenre' => null,
-      'shelfDailyMix' => shelf.subtitle,
       _ => shelf.subtitle,
     };
 

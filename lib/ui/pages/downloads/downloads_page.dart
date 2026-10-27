@@ -62,6 +62,25 @@ class _DownloadsPageState extends ConsumerState<DownloadsPage> {
         DownloadFilter.failed => t.status == DownloadStatus.failed || t.status == DownloadStatus.canceled,
       };
 
+  Future<void> _cancelAll(List<DownloadTask> tasks) async {
+    final l10n = context.l10n;
+    final ok = await ConfirmDialog.show(
+      context,
+      title: l10n.downloadsCancelAllTitle,
+      message: l10n.downloadsCancelAllMessage,
+      confirmLabel: l10n.downloadsCancelAllConfirm,
+      cancelLabel: l10n.downloadsKeepDownloading,
+      destructive: true,
+    );
+    if (!ok) return;
+    final dm = ref.read(downloadManagerProvider);
+    await _bulk(() async {
+      for (final t in tasks) {
+        await dm.cancel(t.id);
+      }
+    });
+  }
+
   Future<void> _bulk(Future<void> Function() action) async {
     try {
       await action();
@@ -88,6 +107,7 @@ class _DownloadsPageState extends ConsumerState<DownloadsPage> {
     }
     final active = [for (final t in tasks) if (t.isActive || t.status == DownloadStatus.paused) t];
     final hasPaused = tasks.any((t) => t.status == DownloadStatus.paused);
+    final failed = [for (final t in tasks) if (t.status == DownloadStatus.failed || t.status == DownloadStatus.canceled) t];
     final shown = [for (final t in tasks) if (_matches(t)) t]..sort((a, b) {
         // Active first (queue order), then newest finished.
         final ra = a.isActive || a.status == DownloadStatus.paused ? 0 : 1;
@@ -142,6 +162,26 @@ class _DownloadsPageState extends ConsumerState<DownloadsPage> {
             ),
           if (hasPaused)
             FermataButton(label: l10n.downloadsResumeAll, icon: Icons.play_arrow_rounded, onPressed: () => _bulk(dm.resumeAll)),
+          if (failed.isNotEmpty)
+            FermataButton(
+              key: const ValueKey('downloads-retry-failed'),
+              label: l10n.downloadsRetryFailed,
+              icon: Icons.refresh_rounded,
+              variant: FermataButtonVariant.secondary,
+              onPressed: () => _bulk(() async {
+                for (final t in failed) {
+                  await dm.retry(t.id);
+                }
+              }),
+            ),
+          if (active.isNotEmpty)
+            FermataButton(
+              key: const ValueKey('downloads-cancel-all'),
+              label: l10n.downloadsCancelAll,
+              icon: Icons.close_rounded,
+              variant: FermataButtonVariant.ghost,
+              onPressed: () => _cancelAll(active),
+            ),
         ],
       ),
       const StorageSummaryCard(),

@@ -3,7 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/contracts/discovery.dart';
 import '../../../core/models/track.dart';
+import '../../actions/track_actions.dart';
 import '../../design/context_ext.dart';
+import '../../widgets/feedback/messages.dart';
+import '../../widgets/feedback/toast.dart';
 import '../../widgets/media/media_card.dart';
 import '../../widgets/media/shelf_row.dart';
 import '../../widgets/tracks/track_list_view.dart';
@@ -50,13 +53,23 @@ class TrackShelfRow extends ConsumerWidget {
       itemBuilder: (context, i) {
         final t = shown[i];
         void play() => playCollection(context, ref, tracks, startIndex: i, origin: origin, originLabel: title);
+        void open() {
+          if (isExternalTrack(t)) {
+            TrackActions(context, ref).openExternally(t);
+          } else if (t.availability.playback == PlaybackRights.unavailable) {
+            showFermataToast(context, availabilityReasonText(context.l10n, t.availability.reason), icon: Icons.block_rounded);
+          } else {
+            play();
+          }
+        }
+
         return MediaCard(
           key: ValueKey('card-${t.id}'),
           width: width,
           title: t.title,
           subtitle: t.artistLine,
           artworkUrl: t.artworkUrl,
-          onTap: play,
+          onTap: open,
           onPlay: isPlayableInApp(t) ? play : null,
           onSecondaryTap: (pos) => showTrackMenu(context, ref, t, position: pos),
         );
