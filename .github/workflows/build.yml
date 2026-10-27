@@ -275,6 +275,13 @@ jobs:
 
       # Without the keystore secrets the APK is debug-signed (installable; the
       # release notes warn that a later properly signed build needs a reinstall).
+      # tray_manager's cnativeapi build hook runs pkg-config for the host
+      # (GTK3/X11/Xi) even when the target is Android.
+      - name: Host build-hook dependencies
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q libgtk-3-dev libx11-dev libxi-dev pkg-config
+
       - name: Release keystore (optional)
         env:
           FERMATA_KEYSTORE_BASE64: ${{ secrets.FERMATA_KEYSTORE_BASE64 }}
