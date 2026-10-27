@@ -17,9 +17,7 @@ enum NetworkWaitReason {
 /// Download network policy: combines [NetworkStatus] with the download
 /// settings. Pure decision logic — the manager reacts to the result.
 class DownloadNetworkPolicy {
-  DownloadNetworkPolicy({required NetworkStatus network, required SettingsStore settings})
-      : _network = network,
-        _settings = settings;
+  DownloadNetworkPolicy({required this._network, required this._settings});
 
   final NetworkStatus _network;
   final SettingsStore _settings;

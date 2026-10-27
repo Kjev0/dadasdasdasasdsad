@@ -54,15 +54,12 @@ abstract class OfflineArtworkStore {
 /// scanner (other files in `artworkCacheDir`) is never touched.
 class FermataArtworkCache extends CacheManager with ImageCacheManager implements OfflineArtworkStore {
   FermataArtworkCache._(
-    Config config, {
+    super.config, {
     required this.root,
-    required _BoundedJsonRepository repository,
-    required _PinSet pins,
-    required FermataHttp http,
-  })  : _repository = repository,
-        _pins = pins,
-        _http = http,
-        super(config);
+    required this._repository,
+    required this._pins,
+    required this._http,
+  });
 
   /// Creates the cache. Directories are created synchronously so the
   /// instance can be handed to widgets immediately.
@@ -224,8 +221,8 @@ class _DirectoryFileSystem implements FileSystem {
 /// JSON index that additionally enforces a byte budget (LRU by `touched`)
 /// and never evicts pinned keys.
 class _BoundedJsonRepository extends JsonCacheInfoRepository {
-  _BoundedJsonRepository(File file, {required this.filesDir, required this.maxBytes, required this.isPinned})
-      : super.withFile(file);
+  _BoundedJsonRepository(super.file, {required this.filesDir, required this.maxBytes, required this.isPinned})
+      : super.withFile();
 
   final Directory filesDir;
   final int Function() maxBytes;

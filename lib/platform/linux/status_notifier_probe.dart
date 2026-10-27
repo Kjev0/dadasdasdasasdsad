@@ -12,9 +12,7 @@ final _log = Logger('linux.tray');
 /// KDE Plasma, XFCE, Cinnamon, MATE, Budgie and waybar do; GNOME Shell only
 /// with the AppIndicator extension.
 class StatusNotifierProbe implements TrayAvailabilityProbe {
-  StatusNotifierProbe({required DBusClient client, Map<String, String> environment = const {}})
-      : _client = client,
-        _env = environment;
+  StatusNotifierProbe({required this._client, Map<String, String> environment = const {}}) : _env = environment;
 
   static const watcherName = 'org.kde.StatusNotifierWatcher';
 

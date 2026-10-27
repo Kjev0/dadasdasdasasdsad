@@ -18,9 +18,8 @@ final _log = Logger('downloads.network');
 ///   available (e.g. no NetworkManager) we assume "connected, unmetered" so
 ///   downloads are never blocked by a missing daemon.
 class ConnectivityNetworkStatus extends NetworkStatus {
-  ConnectivityNetworkStatus({Connectivity? connectivity, PlatformInfo? platform})
-      : _connectivity = connectivity,
-        _platform = platform ?? PlatformInfo.current();
+  ConnectivityNetworkStatus({this._connectivity, PlatformInfo? platform})
+      : _platform = platform ?? PlatformInfo.current();
 
   Connectivity? _connectivity;
   final PlatformInfo _platform;

@@ -52,10 +52,11 @@ class DownloadIndex {
     }
   }
 
-  /// Schedules a debounced save; [snapshot] is evaluated at write time.
+  /// Schedules a save within [debounce] (throttled: further calls while a
+  /// save is pending are coalesced); [snapshot] is evaluated at write time.
   void scheduleSave(List<DownloadRecord> Function() snapshot) {
     _snapshot = snapshot;
-    _timer?.cancel();
+    if (_timer != null) return;
     _timer = Timer(debounce, () {
       _timer = null;
       unawaited(_enqueueWrite());

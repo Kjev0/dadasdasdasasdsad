@@ -74,10 +74,16 @@ class AndroidSystemHelperImpl implements AndroidSystemHelper {
   /// Android API level, read once. Falls back to 33 when unknown (modern
   /// permission model; requesting the legacy storage permission on 13+
   /// would always be denied).
-  Future<int> sdkInt() => _sdkInt ??= _readSdkInt().catchError((Object e, StackTrace st) {
-        _log.warning('Could not read the Android API level', e, st);
-        return androidTiramisu;
-      });
+  Future<int> sdkInt() => _sdkInt ??= _loadSdkInt();
+
+  Future<int> _loadSdkInt() async {
+    try {
+      return await _readSdkInt();
+    } catch (e, st) {
+      _log.warning('Could not read the Android API level', e, st);
+      return androidTiramisu;
+    }
+  }
 
   Future<Permission> _audioPermission() async =>
       await sdkInt() >= androidTiramisu ? Permission.audio : Permission.storage;

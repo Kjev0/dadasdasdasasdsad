@@ -36,6 +36,17 @@ abstract final class DownloadErrorCode {
   static const unknown = 'unknown';
 }
 
+/// Carries a pre-classified [DownloadFailure] through the transfer pipeline.
+class DownloadFailureException implements Exception {
+  const DownloadFailureException(this.failure, [this.message]);
+
+  final DownloadFailure failure;
+  final String? message;
+
+  @override
+  String toString() => 'DownloadFailureException(${failure.code}${message == null ? '' : ': $message'})';
+}
+
 /// How a failed attempt is handled.
 @immutable
 class DownloadFailure {
@@ -56,6 +67,8 @@ class DownloadFailure {
   /// Maps an exception thrown by authorization, transfer or verification.
   static DownloadFailure classify(Object error) {
     switch (error) {
+      case DownloadFailureException(:final failure):
+        return failure;
       case DownloadNotPermittedException():
         return DownloadFailure(DownloadErrorCode.notPermitted, retryable: false, cause: error);
       case UnsupportedSourceOperation():

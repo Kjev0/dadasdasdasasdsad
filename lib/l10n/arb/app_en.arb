@@ -149,5 +149,349 @@
   },
   "desktopHotkeysUnsupportedWayland": "Global shortcuts don't work in Wayland sessions. Use your desktop's keyboard settings instead: media keys and commands like “playerctl play-pause” control Fermata through MPRIS.",
   "desktopHotkeysUnsupportedPlatform": "Global shortcuts aren't available on this platform.",
-  "desktopUnknownArtist": "Unknown artist"
+  "desktopUnknownArtist": "Unknown artist",
+  "playerPlay": "Play",
+  "playerPause": "Pause",
+  "playerNext": "Next",
+  "playerPrevious": "Previous",
+  "playerShuffleOn": "Shuffle is on",
+  "playerShuffleOff": "Shuffle is off",
+  "playerRepeatOff": "Repeat is off",
+  "playerRepeatAll": "Repeating all",
+  "playerRepeatOne": "Repeating one track",
+  "playerLike": "Like",
+  "playerUnlike": "Remove from Liked songs",
+  "playerLyrics": "Lyrics",
+  "playerQueue": "Queue",
+  "playerArtwork": "Artwork",
+  "playerOutputDevice": "Output device",
+  "playerSystemDefault": "System default",
+  "playerNoDevices": "No other output devices found",
+  "playerVolume": "Volume",
+  "playerMute": "Mute",
+  "playerUnmute": "Unmute",
+  "playerSpeed": "Playback speed",
+  "playerSpeedValue": "{speed}×",
+  "@playerSpeedValue": {
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
+  "playerSleepTimer": "Sleep timer",
+  "playerSleepOff": "Off",
+  "playerSleepMinutes": "{minutes, plural, =1{1 minute} other{{minutes} minutes}}",
+  "@playerSleepMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "playerSleepEndOfTrack": "End of track",
+  "playerSleepRemaining": "Pauses in {time}",
+  "@playerSleepRemaining": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "playerSleepAtEndOfTrack": "Pauses after this track",
+  "playerMiniPlayer": "Mini player",
+  "playerExitMiniPlayer": "Back to full window",
+  "playerAlwaysOnTop": "Keep on top",
+  "playerNothingPlaying": "Nothing playing",
+  "playerNothingPlayingHint": "Pick an album, playlist or track to start listening.",
+  "playerSeek": "Playback position",
+  "playerElapsed": "{time} elapsed",
+  "@playerElapsed": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "playerRemaining": "{time} remaining",
+  "@playerRemaining": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "playerOpenNowPlaying": "Open now playing",
+  "playerCloseNowPlaying": "Close now playing",
+  "playerPlayingFrom": "Playing from {origin}",
+  "@playerPlayingFrom": {
+    "placeholders": {
+      "origin": {
+        "type": "String"
+      }
+    }
+  },
+  "playerAddToPlaylist": "Add to playlist",
+  "playerDownload": "Download",
+  "playerDownloaded": "Downloaded",
+  "playerOpenOn": "Open on {provider}",
+  "@playerOpenOn": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "playerUploaderOn": "Uploader on {provider}",
+  "@playerUploaderOn": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "playerCopyLink": "Copy link",
+  "playerMore": "More",
+  "playerChipPreview": "Preview",
+  "playerChipYourFile": "Your file",
+  "playerChipDownloaded": "Downloaded",
+  "playerPreviewFrom": "{seconds}-second preview · {provider}",
+  "@playerPreviewFrom": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      },
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "playerUnplayable": "Can't play this track",
+  "playerSkippedUnplayable": "Skipped a track that can't be played",
+  "playerShowArtwork": "Show artwork",
+  "playerShowLyrics": "Show lyrics",
+  "playerShowQueue": "Show queue",
+  "playerLyricsAttribution": "Lyrics: {provider}",
+  "@playerLyricsAttribution": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "playerLyricsNotFound": "No lyrics found for this track.",
+  "playerLyricsInstrumental": "Instrumental",
+  "playerLyricsDisabled": "Lyrics are turned off in Settings.",
+  "playerLyricsError": "Couldn't load lyrics.",
+  "playerLyricsSeekTo": "Jump to this line",
+  "playerQueueNowPlaying": "Now playing",
+  "playerQueueUpNext": "Up next",
+  "playerQueueHistory": "Played earlier",
+  "playerQueueEmpty": "Your queue is empty",
+  "playerQueueEmptyHint": "Play an album, playlist or track and it shows up here.",
+  "playerQueueClear": "Clear queue",
+  "playerQueueClearTitle": "Clear the queue?",
+  "playerQueueClearMessage": "All upcoming tracks are removed. The current track keeps playing.",
+  "playerQueueRemove": "Remove from queue",
+  "playerQueuePlayNext": "Play next",
+  "playerQueueSuggested": "Suggested",
+  "playerQueueRemoved": "Removed from queue",
+  "playerQueueReorder": "Drag to reorder",
+  "playerQueueCount": "{count, plural, =0{No tracks} =1{1 track} other{{count} tracks}}",
+  "@playerQueueCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "playerOriginSearch": "Search",
+  "playerOriginSmartQueue": "Suggestions",
+  "playerOriginLibrary": "Your library",
+  "playerOriginFavorites": "Liked songs",
+  "playerSiloTitle": "Start a new queue?",
+  "playerSiloMessage": "SoundCloud tracks play in their own queue (SoundCloud's terms). Start a new queue?",
+  "playerSiloConfirm": "Start new queue",
+  "navHome": "Home",
+  "navSearch": "Search",
+  "navExplore": "Explore",
+  "navLibrary": "Library",
+  "navPlaylists": "Playlists",
+  "navDownloads": "Downloads",
+  "navFavorites": "Liked songs",
+  "navHistory": "History",
+  "navQueue": "Queue",
+  "navSettings": "Settings",
+  "navNowPlaying": "Now playing",
+  "navImport": "Import a playlist",
+  "shellYourPlaylists": "Your playlists",
+  "shellNoPlaylists": "No playlists yet",
+  "shellPageNotFound": "This page doesn't exist.",
+  "shellGoHome": "Go to Home",
+  "shellCommandPalette": "Command palette",
+  "shellLoading": "Loading",
+  "paletteHint": "Search commands, playlists and tracks",
+  "paletteNoResults": "No matches",
+  "paletteGroupNavigation": "Go to",
+  "paletteGroupPlayer": "Player",
+  "paletteGroupSettings": "Settings",
+  "paletteGroupPlaylists": "Playlists",
+  "paletteGroupTracks": "In your library",
+  "paletteFooter": "Up and down to move · Enter to run · Esc to close",
+  "cmdPlayPause": "Play or pause",
+  "cmdNext": "Next track",
+  "cmdPrevious": "Previous track",
+  "cmdSeekForward": "Skip forward 10 seconds",
+  "cmdSeekBackward": "Skip back 10 seconds",
+  "cmdVolumeUp": "Volume up",
+  "cmdVolumeDown": "Volume down",
+  "cmdToggleShuffle": "Shuffle on or off",
+  "cmdCycleRepeat": "Change repeat mode",
+  "cmdLike": "Like the current track",
+  "cmdSearch": "Search",
+  "cmdCommandPalette": "Open the command palette",
+  "cmdNowPlaying": "Show now playing",
+  "cmdQueue": "Show the queue",
+  "cmdSettings": "Open settings",
+  "cmdGlobalPlayPause": "Play or pause (system-wide)",
+  "cmdGlobalNext": "Next track (system-wide)",
+  "cmdGlobalPrevious": "Previous track (system-wide)",
+  "cmdGlobalShowWindow": "Show Fermata (system-wide)",
+  "cmdMiniPlayer": "Mini player on or off",
+  "cmdClearQueue": "Clear the queue",
+  "cmdStop": "Stop playback",
+  "shellSectionAppearance": "Appearance & theme",
+  "shellSectionGlass": "Liquid Glass",
+  "shellSectionPlayback": "Playback",
+  "shellSectionAudioQuality": "Audio quality",
+  "shellSectionDownloads": "Downloads",
+  "shellSectionStorage": "Storage & cache",
+  "shellSectionPerformance": "Performance",
+  "shellSectionSavers": "Battery & data saver",
+  "shellSectionServices": "Connected services",
+  "shellSectionImport": "Playlist import & matching",
+  "shellSectionNotifications": "Notifications",
+  "shellSectionBackground": "Background playback",
+  "shellSectionDesktop": "System tray & window",
+  "shellSectionStartup": "Startup",
+  "shellSectionShortcuts": "Keyboard shortcuts",
+  "shellSectionPrivacy": "Privacy",
+  "shellSectionLanguage": "Language",
+  "shellSectionAccessibility": "Accessibility",
+  "shellSectionUpdates": "Updates",
+  "shellSectionAbout": "About & diagnostics",
+  "shellErrorStorage": "There isn't enough space, or the folder can't be written to.",
+  "shellErrorDownloadNotPermitted": "This track can't be downloaded.",
+  "shellAddedToQueue": "Added to queue",
+  "shellPlayingNext": "Plays next",
+  "shellAddedToPlaylist": "Added to {playlist}",
+  "@shellAddedToPlaylist": {
+    "placeholders": {
+      "playlist": {
+        "type": "String"
+      }
+    }
+  },
+  "shellTracksAddedToPlaylist": "{count, plural, =1{1 track added to {playlist}} other{{count} tracks added to {playlist}}}",
+  "@shellTracksAddedToPlaylist": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "playlist": {
+        "type": "String"
+      }
+    }
+  },
+  "shellLiked": "Added to Liked songs",
+  "shellUnliked": "Removed from Liked songs",
+  "shellDownloadQueued": "Download added",
+  "shellDownloadsQueued": "{count, plural, =1{1 download added} other{{count} downloads added}}",
+  "@shellDownloadsQueued": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shellDownloadsRejected": "{count, plural, =1{1 track can't be downloaded} other{{count} tracks can't be downloaded}}",
+  "@shellDownloadsRejected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shellDownloadRemoved": "Download removed",
+  "shellLinkCopied": "Link copied",
+  "shellCouldNotOpenLink": "Couldn't open the link.",
+  "shellNewPlaylist": "New playlist",
+  "shellPlaylistNameHint": "Playlist name",
+  "shellCreate": "Create",
+  "shellAdd": "Add",
+  "shellAddToPlaylistTitle": "Add to playlist",
+  "shellAddToPlaylistEmpty": "Create your first playlist to add tracks to it.",
+  "shellTypeToConfirm": "Type {word} to confirm",
+  "@shellTypeToConfirm": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "shellSelectedCount": "{count, plural, =1{1 selected} other{{count} selected}}",
+  "@shellSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shellSelectAll": "Select all",
+  "shellClearSelection": "Clear selection",
+  "shellSelect": "Select",
+  "shellScrollLeft": "Scroll left",
+  "shellScrollRight": "Scroll right",
+  "shellSeeAll": "See all",
+  "shellSearchHint": "Search",
+  "shellClearSearch": "Clear search",
+  "shellBadgePreview": "Preview",
+  "shellBadgeExternal": "Plays on {provider}",
+  "@shellBadgeExternal": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "shellBadgeDownloaded": "Downloaded",
+  "shellBadgeUnavailable": "Unavailable",
+  "shellBadgeExplicit": "Explicit",
+  "shellMenuPlay": "Play",
+  "shellMenuPlayNext": "Play next",
+  "shellMenuAddToQueue": "Add to queue",
+  "shellMenuAddToPlaylist": "Add to playlist",
+  "shellMenuLike": "Like",
+  "shellMenuUnlike": "Remove from Liked songs",
+  "shellMenuDownload": "Download",
+  "shellMenuRemoveDownload": "Remove download",
+  "shellMenuGoToArtist": "Go to artist",
+  "shellMenuGoToAlbum": "Go to album",
+  "shellMenuOpenOn": "Open on {provider}",
+  "@shellMenuOpenOn": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "shellMenuCopyLink": "Copy link",
+  "shellMoreOptions": "More options",
+  "shellNowPlayingIndicator": "Now playing",
+  "shellGlassPreviewTitle": "Track title",
+  "shellGlassPreviewArtist": "Artist",
+  "shellGlassModeSolid": "Solid surfaces",
+  "shellGlassModeTranslucent": "Translucent, no blur",
+  "shellGlassModeBlurred": "Translucent with blur",
+  "shellFileYourFile": "Local file"
 }

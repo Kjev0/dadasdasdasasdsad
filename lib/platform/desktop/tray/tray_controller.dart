@@ -51,18 +51,14 @@ enum TrayStatus {
 /// routes menu clicks.
 class TrayController {
   TrayController({
-    required TrayBackend backend,
-    required TrayAvailabilityProbe probe,
+    required this._backend,
+    required this._probe,
     required SettingsStore settings,
-    required PlaybackController playback,
-    required Future<String?> Function() resolveIconPath,
+    required this._playback,
+    required this._resolveIconPath,
     AppLocalizations Function()? strings,
     this.menuDebounce = const Duration(milliseconds: 120),
-  })  : _backend = backend,
-        _probe = probe,
-        _settings = settings,
-        _playback = playback,
-        _resolveIconPath = resolveIconPath,
+  })  : _settings = settings,
         _strings = strings ?? desktopStringsFor(settings);
 
   final TrayBackend _backend;

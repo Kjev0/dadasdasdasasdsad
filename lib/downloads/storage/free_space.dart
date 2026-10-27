@@ -100,7 +100,7 @@ abstract final class FreeSpace {
       chars.setAll(0, units);
       chars[units.length] = 0;
       final values = out.cast<Uint64>();
-      final ok = getDiskFreeSpaceEx(wPath.cast<Uint16>(), values, values.elementAt(1), values.elementAt(2));
+      final ok = getDiskFreeSpaceEx(wPath.cast<Uint16>(), values, values + 1, values + 2);
       if (ok == 0) return null;
       return values[0]; // bytes available to the calling user (quota aware)
     } finally {

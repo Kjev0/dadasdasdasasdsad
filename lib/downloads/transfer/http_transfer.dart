@@ -19,7 +19,14 @@ final _log = Logger('downloads.transfer');
 /// resume can send `If-Range`).
 @immutable
 class TransferHeaders {
-  const TransferHeaders({this.etag, this.lastModified, this.contentType, this.totalBytes, required this.resumed});
+  const TransferHeaders({
+    this.etag,
+    this.lastModified,
+    this.contentType,
+    this.totalBytes,
+    required this.resumed,
+    this.offset = 0,
+  });
 
   final String? etag;
   final String? lastModified;
@@ -30,6 +37,9 @@ class TransferHeaders {
 
   /// True when the server honoured the Range request (206).
   final bool resumed;
+
+  /// Bytes already in the partial file when the body starts.
+  final int offset;
 }
 
 /// Result of a finished transfer (the partial file holds the whole body).
@@ -52,10 +62,10 @@ class TransferResult {
 /// * Rejects text/HTML bodies as soon as the first bytes arrive.
 class HttpTransfer {
   HttpTransfer({
-    required FermataHttp http,
+    required this._http,
     this.headerTimeout = const Duration(seconds: 30),
     this.idleTimeout = const Duration(seconds: 30),
-  }) : _http = http;
+  });
 
   final FermataHttp _http;
   final Duration headerTimeout;
@@ -75,27 +85,40 @@ class HttpTransfer {
     // At most one restart (stale range / mismatching Content-Range).
     for (var pass = 0;; pass++) {
       cancel.throwIfCanceled();
-      final request = http.AbortableRequest('GET', uri, abortTrigger: cancel.whenCanceled)
+      // Aborts the connection on cancel, timeouts and early rejection.
+      final abort = Completer<void>();
+      unawaited(cancel.whenCanceled.then((_) {
+        if (!abort.isCompleted) abort.complete();
+      }));
+      final request = http.AbortableRequest('GET', uri, abortTrigger: abort.future)
         ..headers['User-Agent'] = _http.userAgent
         ..headers['Accept-Encoding'] = 'identity'
         ..headers.addAll(headers);
       if (offset > 0) {
         request.headers['Range'] = 'bytes=$offset-';
-        final validator = etag ?? lastModified;
+        // If-Range needs a strong validator; weak ETags fall back to the date.
+        final validator = (etag != null && !etag.startsWith('W/')) ? etag : lastModified;
         if (validator != null) request.headers['If-Range'] = validator;
       }
 
-      final response = await _send(request, cancel);
+      final http.StreamedResponse response;
+      try {
+        response = await _send(request, cancel);
+      } catch (_) {
+        if (!abort.isCompleted) abort.complete();
+        rethrow;
+      }
       final status = response.statusCode;
       final contentType = response.headers['content-type'];
       final newEtag = response.headers['etag'];
       final newLastModified = response.headers['last-modified'];
 
       if (status == 416) {
-        await _discard(response);
+        await _discard(response, abort);
         final total = _parseContentRange(response.headers['content-range'])?.total;
         if (offset > 0 && total != null && total == offset) {
-          final h = TransferHeaders(etag: etag, lastModified: lastModified, totalBytes: total, resumed: true);
+          final h = TransferHeaders(
+              etag: etag, lastModified: lastModified, totalBytes: total, resumed: true, offset: offset);
           onHeaders?.call(h);
           return TransferResult(receivedBytes: offset, headers: h);
         }
@@ -106,12 +129,12 @@ class HttpTransfer {
         continue;
       }
       if (status == 429) {
-        await _discard(response);
+        await _discard(response, abort);
         throw RateLimitedException('Rate limited by ${uri.host}',
             retryAfter: parseRetryAfter(response.headers['retry-after']));
       }
       if (status != 200 && status != 206) {
-        await _discard(response);
+        await _discard(response, abort);
         throw ApiException(status, 'HTTP $status from ${uri.host}');
       }
 
@@ -120,7 +143,7 @@ class HttpTransfer {
       if (status == 206) {
         final range = _parseContentRange(response.headers['content-range']);
         if (range == null || range.start != offset) {
-          await _discard(response);
+          await _discard(response, abort);
           if (pass > 0) throw ApiException(status, 'Unexpected Content-Range from ${uri.host}');
           _log.fine('Content-Range mismatch (${response.headers['content-range']}); restarting');
           await _truncate(partial);
@@ -141,11 +164,17 @@ class HttpTransfer {
         contentType: contentType,
         totalBytes: total,
         resumed: append,
+        offset: offset,
       );
       onHeaders?.call(transferHeaders);
-      final received = await _receive(response, partial, append: append, offset: offset, total: total,
-          cancel: cancel, onProgress: onProgress, host: uri.host);
-      return TransferResult(receivedBytes: received, headers: transferHeaders);
+      try {
+        final received = await _receive(response, partial,
+            append: append, offset: offset, total: total, cancel: cancel, onProgress: onProgress, host: uri.host);
+        return TransferResult(receivedBytes: received, headers: transferHeaders);
+      } finally {
+        // No effect after a complete response; closes the socket otherwise.
+        if (!abort.isCompleted) abort.complete();
+      }
     }
   }
 
@@ -184,7 +213,7 @@ class HttpTransfer {
     Object? failure;
     StackTrace? failureStack;
     try {
-      await for (final chunk in response.stream.timeout(idleTimeout)) {
+      await for (final chunk in _cancellable(response.stream, cancel).timeout(idleTimeout)) {
         if (!headChecked) {
           head!.add(chunk);
           if (head.length >= AudioSniffer.earlyCheckLength) {
@@ -221,6 +250,29 @@ class HttpTransfer {
     }
   }
 
+  /// Ends [source] with [OperationCanceledException] as soon as [cancel]
+  /// fires, even for clients that do not support request abortion.
+  static Stream<List<int>> _cancellable(Stream<List<int>> source, CancelToken cancel) {
+    StreamSubscription<List<int>>? sub;
+    late final StreamController<List<int>> controller;
+    controller = StreamController<List<int>>(
+      sync: true,
+      onListen: () {
+        sub = source.listen(controller.add, onError: controller.addError, onDone: controller.close);
+        cancel.whenCanceled.then((_) {
+          if (controller.isClosed) return;
+          controller.addError(const OperationCanceledException());
+          unawaited(controller.close());
+          unawaited(sub?.cancel());
+        });
+      },
+      onPause: () => sub?.pause(),
+      onResume: () => sub?.resume(),
+      onCancel: () => sub?.cancel(),
+    );
+    return controller.stream;
+  }
+
   static void _rejectText(Uint8List head) {
     final sniff = AudioSniffer.sniff(head);
     if (!sniff.isAudio && sniff.looksLikeText) {
@@ -228,9 +280,12 @@ class HttpTransfer {
     }
   }
 
-  static Future<void> _discard(http.StreamedResponse response) async {
+  /// Drops a response we will not use (aborting the connection so large
+  /// bodies are not downloaded).
+  static Future<void> _discard(http.StreamedResponse response, Completer<void> abort) async {
+    if (!abort.isCompleted) abort.complete();
     try {
-      await response.stream.drain<void>().timeout(const Duration(seconds: 5));
+      await response.stream.drain<void>().timeout(const Duration(seconds: 2));
     } catch (_) {
       // connection is dropped anyway
     }

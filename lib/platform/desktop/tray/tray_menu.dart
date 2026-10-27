@@ -54,7 +54,7 @@ class TrayMenuState {
     final track = snapshot.track;
     return TrayMenuState(
       title: track?.title,
-      artist: track == null ? null : track.artistLine,
+      artist: track?.artistLine,
       playing: snapshot.playing,
       localeName: localeName,
     );
