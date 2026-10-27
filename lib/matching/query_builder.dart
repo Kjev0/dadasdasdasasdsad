@@ -1,5 +1,4 @@
 import 'normalizer.dart';
-import 'text/char_folding.dart';
 import 'text/segments.dart';
 
 /// Builds the metadata search queries used to find an original on a target

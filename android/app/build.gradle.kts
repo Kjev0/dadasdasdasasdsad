@@ -83,7 +83,11 @@ if (releaseSigning == null && isReleaseBuildRequested) {
 
 android {
     namespace = "app.fermata.player"
-    compileSdk = 36
+    // compileSdk only decides which APIs are visible at compile time; runtime
+    // behaviour follows targetSdk (36). 37 is required: permission_handler_android
+    // 14.1.0 declares minCompileSdk 37 in its AAR metadata (checkAarMetadata fails
+    // with 36).
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

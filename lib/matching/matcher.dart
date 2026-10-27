@@ -70,12 +70,11 @@ class SourceTrackMatcher implements TrackMatcher {
 
   /// Uses whatever [sources] returns at call time (preference order).
   SourceTrackMatcher.withSources({
-    required List<MusicSource> Function() sources,
+    required this._sources,
     required this.scorer,
     this.normalizer = const TrackNormalizer(),
     this.settings = const MatcherSettings(),
-  })  : _sources = sources,
-        _slots = AsyncSemaphore(math.max(1, settings.maxConcurrentTracks)),
+  })  : _slots = AsyncSemaphore(math.max(1, settings.maxConcurrentTracks)),
         _queries = SearchQueryBuilder(uploaderStyleSources: settings.uploaderStyleSources);
 
   final TrackScorer scorer;

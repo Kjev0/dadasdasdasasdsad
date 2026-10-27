@@ -14,7 +14,8 @@ lifecycle table, Danish rationale texts) is documented in
 | Application ID / namespace | `app.fermata.player` | `android/app/build.gradle.kts` |
 | Launcher label | Fermata | `AndroidManifest.xml` |
 | minSdk | 24 (Android 7.0). The highest minimum among the plugins: app_links, audio_session, flutter_secure_storage, permission_handler_android, shared_preferences_android and url_launcher_android all require 24 | `build.gradle.kts` |
-| targetSdk / compileSdk | 36 (Android 16) | `build.gradle.kts` |
+| targetSdk | 36 (Android 16): runtime behaviour | `build.gradle.kts` |
+| compileSdk | 37: compile-time API visibility only. Required because permission_handler_android 14.1.0 declares `minCompileSdk 37` in its AAR metadata | `build.gradle.kts` |
 | Activity | `app.fermata.player.MainActivity` extends `com.ryanheise.audioservice.AudioServiceActivity`, so the UI and the playback service share one cached Flutter engine and playback survives the activity being destroyed | `android/app/src/main/kotlin/app/fermata/player/MainActivity.kt` |
 | Playback service | `com.ryanheise.audioservice.AudioService`, `foregroundServiceType="mediaPlayback"`, exported, `MediaBrowserService` intent filter | manifest |
 | Media buttons | `com.ryanheise.audioservice.MediaButtonReceiver` (`MEDIA_BUTTON`) | manifest |

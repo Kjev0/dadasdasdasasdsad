@@ -295,6 +295,186 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not available offline'**
   String get offlineUnavailable;
+
+  /// Disabled first item of the tray menu when nothing is loaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Not playing'**
+  String get desktopTrayNotPlaying;
+
+  /// Disabled first item of the tray menu: current track.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} — {artist}'**
+  String desktopTrayNowPlaying(String title, String artist);
+
+  /// No description provided for @desktopTrayPlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get desktopTrayPlay;
+
+  /// No description provided for @desktopTrayPause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get desktopTrayPause;
+
+  /// No description provided for @desktopTrayPrevious.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get desktopTrayPrevious;
+
+  /// No description provided for @desktopTrayNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get desktopTrayNext;
+
+  /// No description provided for @desktopTrayShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Fermata'**
+  String get desktopTrayShow;
+
+  /// No description provided for @desktopTrayQuit.
+  ///
+  /// In en, this message translates to:
+  /// **'Quit Fermata'**
+  String get desktopTrayQuit;
+
+  /// Tray icon tooltip when nothing is playing.
+  ///
+  /// In en, this message translates to:
+  /// **'Fermata'**
+  String get desktopTrayTooltipIdle;
+
+  /// Tray icon tooltip with the current track.
+  ///
+  /// In en, this message translates to:
+  /// **'Fermata — {title} · {artist}'**
+  String desktopTrayTooltipTrack(String title, String artist);
+
+  /// No description provided for @desktopTrayTooltipTitleOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Fermata — {title}'**
+  String desktopTrayTooltipTitleOnly(String title);
+
+  /// No description provided for @desktopTrayUnavailableGnome.
+  ///
+  /// In en, this message translates to:
+  /// **'GNOME only shows tray icons with the AppIndicator extension. Without it, closing the window minimizes Fermata instead, and you can bring it back from the dock or the media controls.'**
+  String get desktopTrayUnavailableGnome;
+
+  /// No description provided for @desktopTrayUnavailableNoHost.
+  ///
+  /// In en, this message translates to:
+  /// **'This desktop has no system tray (no StatusNotifier host is running). Closing the window minimizes Fermata instead.'**
+  String get desktopTrayUnavailableNoHost;
+
+  /// No description provided for @desktopTrayUnavailableNoBus.
+  ///
+  /// In en, this message translates to:
+  /// **'Fermata can\'t reach the desktop session bus, so it can\'t show a tray icon. Closing the window minimizes Fermata instead.'**
+  String get desktopTrayUnavailableNoBus;
+
+  /// No description provided for @desktopTrayUnavailableIconMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'The tray icon file is missing from this installation, so the tray icon is turned off. Reinstalling Fermata should fix this.'**
+  String get desktopTrayUnavailableIconMissing;
+
+  /// No description provided for @desktopTrayUnavailableDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'The tray icon is turned off. Closing the window minimizes Fermata instead.'**
+  String get desktopTrayUnavailableDisabled;
+
+  /// No description provided for @desktopTrayUnavailableFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The system tray refused the icon. Closing the window minimizes Fermata instead.'**
+  String get desktopTrayUnavailableFailed;
+
+  /// No description provided for @desktopTrayUnavailableUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This platform has no system tray.'**
+  String get desktopTrayUnavailableUnsupported;
+
+  /// No description provided for @desktopCloseDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Close Fermata?'**
+  String get desktopCloseDialogTitle;
+
+  /// No description provided for @desktopCloseDialogBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Fermata can keep playing in the background. You can bring it back from the tray icon or your desktop\'s media controls.'**
+  String get desktopCloseDialogBody;
+
+  /// No description provided for @desktopCloseDialogKeepPlaying.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep playing in background'**
+  String get desktopCloseDialogKeepPlaying;
+
+  /// No description provided for @desktopCloseDialogQuit.
+  ///
+  /// In en, this message translates to:
+  /// **'Quit'**
+  String get desktopCloseDialogQuit;
+
+  /// No description provided for @desktopCloseDialogRemember.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t ask again'**
+  String get desktopCloseDialogRemember;
+
+  /// No description provided for @desktopHotkeyErrorInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'“{binding}” isn\'t a valid shortcut.'**
+  String desktopHotkeyErrorInvalid(String binding);
+
+  /// No description provided for @desktopHotkeyErrorNeedsModifier.
+  ///
+  /// In en, this message translates to:
+  /// **'“{binding}” needs Ctrl, Alt, Shift or Super, otherwise it would block normal typing in every app.'**
+  String desktopHotkeyErrorNeedsModifier(String binding);
+
+  /// No description provided for @desktopHotkeyErrorDuplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'“{binding}” is already used by another global shortcut.'**
+  String desktopHotkeyErrorDuplicate(String binding);
+
+  /// No description provided for @desktopHotkeyErrorFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t register “{binding}”. Another app may already be using it.'**
+  String desktopHotkeyErrorFailed(String binding);
+
+  /// No description provided for @desktopHotkeysUnsupportedWayland.
+  ///
+  /// In en, this message translates to:
+  /// **'Global shortcuts don\'t work in Wayland sessions. Use your desktop\'s keyboard settings instead: media keys and commands like “playerctl play-pause” control Fermata through MPRIS.'**
+  String get desktopHotkeysUnsupportedWayland;
+
+  /// No description provided for @desktopHotkeysUnsupportedPlatform.
+  ///
+  /// In en, this message translates to:
+  /// **'Global shortcuts aren\'t available on this platform.'**
+  String get desktopHotkeysUnsupportedPlatform;
+
+  /// No description provided for @desktopUnknownArtist.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown artist'**
+  String get desktopUnknownArtist;
 }
 
 class _AppLocalizationsDelegate

@@ -55,3 +55,6 @@ android/key.properties
 *.keystore
 dart_defines*.json
 .env
+
+# Kotlin incremental build cache
+.kotlin/
