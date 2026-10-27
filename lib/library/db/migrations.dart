@@ -11,6 +11,7 @@ const List<Migration> migrations = [
   migrateV1,
   migrateV2,
   migrateV3,
+  migrateV4,
 ];
 
 /// Latest schema version known to this build.
@@ -156,4 +157,16 @@ Future<void> migrateV3(Transaction txn) async {
     CREATE TABLE downloaded_tracks (
       track_id TEXT PRIMARY KEY NOT NULL
     )''');
+}
+
+/// v4 — ids of local tracks whose file moved (`old_id` was migrated to
+/// `new_id`). Stale `Track` objects (play queue, UI) that still carry the old
+/// id are redirected instead of resurrecting a phantom track.
+Future<void> migrateV4(Transaction txn) async {
+  await txn.execute('''
+    CREATE TABLE track_moves (
+      old_id TEXT PRIMARY KEY NOT NULL,
+      new_id TEXT NOT NULL
+    )''');
+  await txn.execute('CREATE INDEX idx_track_moves_new ON track_moves(new_id)');
 }

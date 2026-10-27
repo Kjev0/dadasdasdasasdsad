@@ -25,11 +25,12 @@ class SqlFavoritesRepository implements FavoritesRepository {
   Future<void> setFavorite(Track track, bool favorite) async {
     await _db.db.transaction((txn) async {
       await TrackStore.upsert(txn, [track], preserveScanned: true);
+      // A stale object of a moved file stands for its current track.
+      final id = (await TrackStore.resolveMoved(txn, [track.id]))[track.id] ?? track.id;
       if (favorite) {
-        if ((await TrackStore.existingIds(txn, [track.id])).isEmpty) return; // stale local track
-        await txn.rawInsert('INSERT OR IGNORE INTO favorites(track_id, added_at) VALUES (?, ?)', [track.id, nowMs()]);
+        await txn.rawInsert('INSERT OR IGNORE INTO favorites(track_id, added_at) VALUES (?, ?)', [id, nowMs()]);
       } else {
-        await txn.delete('favorites', where: 'track_id = ?', whereArgs: [track.id]);
+        await txn.delete('favorites', where: 'track_id = ?', whereArgs: [id]);
       }
     });
     notifyLibrary(_bus, {LibraryTopic.favorites, LibraryTopic.tracks});

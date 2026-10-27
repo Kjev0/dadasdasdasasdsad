@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:sqflite/sqflite.dart';
 
@@ -20,10 +19,9 @@ abstract final class TrackStore {
   /// With [preserveScanned], existing local rows that the scanner owns (they
   /// have a file hash) are left untouched: a `Track` object held by the UI or
   /// the play queue may be older than the last scan and must not overwrite
-  /// tags read from the file. For the same reason such callers cannot create
-  /// *new* local rows: a local track that is unknown to the library and whose
-  /// file no longer exists is a stale object (e.g. the old id of a moved
-  /// file) and would resurrect a phantom track, so it is skipped.
+  /// tags read from the file. For the same reason they skip tracks whose id
+  /// belongs to a moved file (see [resolveMoved]): the file lives on under a
+  /// new id, and a stale object must not resurrect the old one as a phantom.
   static Future<void> upsert(
     DatabaseExecutor ex,
     List<Track> tracks, {
@@ -33,6 +31,10 @@ abstract final class TrackStore {
     if (tracks.isEmpty) return;
     final now = nowMs();
     final unique = <String, Track>{for (final t in tracks) t.id: t};
+    if (preserveScanned) {
+      final moved = await resolveMoved(ex, unique.keys);
+      moved.keys.forEach(unique.remove);
+    }
     final existing = <String, String?>{};
     final scanned = <String>{};
     for (final chunk in chunked(unique.keys.toList())) {
@@ -48,7 +50,6 @@ abstract final class TrackStore {
     final batch = ex.batch();
     for (final t in unique.values) {
       if (preserveScanned && scanned.contains(t.id)) continue;
-      if (preserveScanned && !existing.containsKey(t.id) && _isDeadLocalFile(t)) continue;
       final json = t.toJson();
       final exists = existing.containsKey(t.id);
       final ovRaw = existing[t.id];
@@ -68,9 +69,22 @@ abstract final class TrackStore {
     await batch.commit(noResult: true);
   }
 
-  static bool _isDeadLocalFile(Track t) {
-    final path = t.localPath;
-    return t.sourceId == SourceIds.local && path != null && !File(path).existsSync();
+  /// For ids of local tracks that were moved/renamed (their references were
+  /// migrated by the scanner): old id → current id. Other ids are absent.
+  static Future<Map<String, String>> resolveMoved(DatabaseExecutor ex, Iterable<String> ids) async {
+    final out = <String, String>{};
+    final local = [for (final id in ids) if (id.startsWith('${SourceIds.local}:')) id];
+    for (final chunk in chunked(local)) {
+      final rows = await ex.rawQuery(
+        'SELECT m.old_id, m.new_id FROM track_moves m JOIN tracks t ON t.id = m.new_id '
+        'WHERE m.old_id IN (${placeholders(chunk.length)}) AND NOT EXISTS (SELECT 1 FROM tracks o WHERE o.id = m.old_id)',
+        chunk,
+      );
+      for (final r in rows) {
+        out[r['old_id'] as String] = r['new_id'] as String;
+      }
+    }
+    return out;
   }
 
   static void _writeArtists(Batch batch, Track effective) {

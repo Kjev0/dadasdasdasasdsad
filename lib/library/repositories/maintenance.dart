@@ -221,21 +221,9 @@ class SqlLibraryMaintenance implements LibraryMaintenance {
       } else {
         await txn.delete('playlists', where: 'id = ?', whereArgs: [id]); // cascades entries
       }
-      if (!(exists && merge)) await txn.insert('playlists', {
-        'id': id,
-        'name': p['name'] as String,
-        'description': p['description'],
-        'kind': kind.name,
-        'artwork_url': p['artworkUrl'],
-        'owner_name': p['ownerName'],
-        'source_id': p['sourceId'],
-        'source_playlist_id': p['sourcePlaylistId'],
-        'created_at': (p['createdAt'] as num?)?.toInt() ?? now,
-        'updated_at': (p['updatedAt'] as num?)?.toInt() ?? now,
-        'auto_download': boolInt(p['autoDownload'] == true),
-        'smart_rules': p['smartRules'] == null ? null : jsonEncode(p['smartRules']),
-        'permalink': p['permalink'],
-      });
+      if (!(exists && merge)) {
+        await _insertPlaylist(txn, id, p, kind, now);
+      }
       final batch = txn.batch();
       for (final e in _list(p['entries'])) {
         final trackId = e['trackId'] as String;
@@ -253,6 +241,24 @@ class SqlLibraryMaintenance implements LibraryMaintenance {
       }
       await batch.commit(noResult: true);
     }
+  }
+
+  static Future<void> _insertPlaylist(Transaction txn, String id, Map<String, Object?> p, PlaylistKind kind, int now) {
+    return txn.insert('playlists', {
+      'id': id,
+      'name': p['name'] as String,
+      'description': p['description'],
+      'kind': kind.name,
+      'artwork_url': p['artworkUrl'],
+      'owner_name': p['ownerName'],
+      'source_id': p['sourceId'],
+      'source_playlist_id': p['sourcePlaylistId'],
+      'created_at': (p['createdAt'] as num?)?.toInt() ?? now,
+      'updated_at': (p['updatedAt'] as num?)?.toInt() ?? now,
+      'auto_download': boolInt(p['autoDownload'] == true),
+      'smart_rules': p['smartRules'] == null ? null : jsonEncode(p['smartRules']),
+      'permalink': p['permalink'],
+    });
   }
 
   static Future<void> _importFavorites(Transaction txn, List<Map<String, Object?>> items, Set<String> known) async {

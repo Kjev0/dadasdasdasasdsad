@@ -67,6 +67,10 @@ abstract final class LocalFileStore {
     final ok = [for (final f in files) if (f.track != null) f];
     if (ok.isEmpty) return;
     await TrackStore.upsert(txn, [for (final f in ok) f.track!]);
+    for (final chunk in chunked([for (final f in ok) f.track!.id])) {
+      // A file that reappears under an old id is no longer "moved away".
+      await txn.rawDelete('DELETE FROM track_moves WHERE old_id IN (${placeholders(chunk.length)})', chunk);
+    }
     final now = nowMs();
     final batch = txn.batch();
     for (final f in ok) {
@@ -134,5 +138,9 @@ abstract final class LocalFileStore {
       }
     }
     await txn.delete('tracks', where: 'id = ?', whereArgs: [oldId]);
+    // Remember the move so stale objects carrying [oldId] are redirected.
+    await txn.rawUpdate('UPDATE track_moves SET new_id = ? WHERE new_id = ?', [newId, oldId]);
+    await txn.rawInsert('INSERT OR REPLACE INTO track_moves(old_id, new_id) VALUES (?, ?)', [oldId, newId]);
+    await txn.delete('track_moves', where: 'old_id = ?', whereArgs: [newId]);
   }
 }

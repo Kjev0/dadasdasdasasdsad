@@ -3,6 +3,7 @@ import 'dart:isolate';
 
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
+import 'package:sqflite/sqflite.dart' show Transaction;
 
 import '../../core/contracts/library.dart';
 import '../../core/models/library.dart';

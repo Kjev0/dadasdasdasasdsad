@@ -70,6 +70,7 @@ app version is refused (`StorageException('database_too_new')`).
   `favorites`, `play_history`, `search_history`, `library_folders`
 * v2 `track_links` (one row per pair, canonical order `a < b`)
 * v3 `tracks.missing_since`, `downloaded_tracks`
+* v4 `track_moves` (old id → new id of moved local files; redirects stale `Track` objects)
 
 ## Behavior notes
 
