@@ -1220,6 +1220,18 @@ abstract class AppLocalizations {
   /// **'Preview only'**
   String get importDiffPreview;
 
+  /// No description provided for @importOpenOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Open on {service}'**
+  String importOpenOn(String service);
+
+  /// No description provided for @importOpenUploader.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploader'**
+  String get importOpenUploader;
+
   /// No description provided for @onboardingSkip.
   ///
   /// In en, this message translates to:
@@ -2959,6 +2971,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 rule} other{{count} rules}}, {match}'**
   String playlistRulesSummary(int count, String match);
+
+  /// No description provided for @playlistReorder.
+  ///
+  /// In en, this message translates to:
+  /// **'Reorder'**
+  String get playlistReorder;
 
   /// No description provided for @playlistRemoveFromPlaylist.
   ///

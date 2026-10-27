@@ -5,6 +5,8 @@ import '../../../app/providers.dart';
 import '../../../core/models/matching.dart';
 import '../../../core/models/track.dart';
 import '../../../core/util/cancel_token.dart';
+import '../../actions/link_launcher.dart';
+import '../../actions/routes.dart';
 import '../../design/context_ext.dart';
 import '../../widgets/chips/badges.dart';
 import '../../widgets/controls/fermata_button.dart';
@@ -83,15 +85,22 @@ class _Chip extends StatelessWidget {
   }
 }
 
-class _TrackColumn extends StatelessWidget {
-  const _TrackColumn({required this.track, this.caption});
+class _TrackColumn extends ConsumerWidget {
+  const _TrackColumn({required this.track, this.caption, this.attribution = false});
 
   final Track track;
   final String? caption;
 
+  /// Link to the track (and uploader) on its provider — required by e.g.
+  /// SoundCloud's attribution rules.
+  final bool attribution;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final c = context.colors;
+    final l10n = context.l10n;
+    final service = sourceDisplayName(ref, track.sourceId);
+    final uploader = uploaderUriOf(track);
     return Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
       if (caption != null) Text(caption!, style: context.type.caption.copyWith(color: c.textTertiary)),
       Text(track.title, maxLines: 2, overflow: TextOverflow.ellipsis, style: context.type.body),
@@ -102,11 +111,37 @@ class _TrackColumn extends StatelessWidget {
         style: context.type.bodySmall,
       ),
       const SizedBox(height: 4),
-      Wrap(spacing: 6, runSpacing: 4, children: [
+      Wrap(spacing: 6, runSpacing: 4, crossAxisAlignment: WrapCrossAlignment.center, children: [
         SourceChip(sourceId: track.sourceId, dense: true),
         if (AvailabilityBadge.isNotable(AvailabilityBadge.primaryKind(track))) AvailabilityBadge.forTrack(track, dense: true),
+        if (attribution && track.permalink != null)
+          _LinkText(label: l10n.importOpenOn(service), onTap: () => ref.read(externalLinkLauncherProvider)(track.permalink!)),
+        if (attribution && uploader != null)
+          _LinkText(label: l10n.importOpenUploader, onTap: () => ref.read(externalLinkLauncherProvider)(uploader)),
       ]),
     ]);
+  }
+}
+
+class _LinkText extends StatelessWidget {
+  const _LinkText({required this.label, required this.onTap});
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      link: true,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: context.radii.xsAll,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+          child: Text(label, style: context.type.caption.copyWith(color: context.colors.accentText, decoration: TextDecoration.underline)),
+        ),
+      ),
+    );
   }
 }
 
@@ -142,7 +177,7 @@ class ReviewRow extends ConsumerWidget {
             Text(l10n.importMatch, style: context.type.caption.copyWith(color: c.textTertiary)),
             Text(unsafeOnly ? l10n.importOnlyOtherVersions : l10n.importNoMatch, style: context.type.bodySmall),
           ])
-        : _TrackColumn(track: proposed.candidate, caption: l10n.importMatch);
+        : _TrackColumn(track: proposed.candidate, caption: l10n.importMatch, attribution: true);
 
     return Container(
       key: ValueKey('import.row.$id'),
@@ -254,7 +289,7 @@ class _CandidateList extends StatelessWidget {
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(borderRadius: context.radii.smAll, border: Border.all(color: c.outlineSubtle)),
             child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              _TrackColumn(track: cand.candidate),
+              _TrackColumn(track: cand.candidate, attribution: true),
               const SizedBox(height: 6),
               Wrap(spacing: 6, runSpacing: 6, crossAxisAlignment: WrapCrossAlignment.center, children: [
                 ConfidenceBadge(candidate: cand),

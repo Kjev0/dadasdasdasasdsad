@@ -6,6 +6,8 @@ import 'package:path/path.dart' as p;
 
 import '../../../app/providers.dart';
 import '../../../core/models/catalog.dart';
+import '../../../core/models/library.dart';
+import '../../../core/models/track.dart';
 import '../../actions/routes.dart';
 import '../../design/context_ext.dart';
 import '../../widgets/controls/fermata_button.dart';
@@ -197,14 +199,20 @@ class PlaylistActions {
   /// Quick-play from a card.
   Future<void> play(Playlist playlist, {bool shuffle = false}) async {
     try {
-      final data = await ref.read(localPlaylistProvider(playlist.id).future);
-      if (data == null || !context.mounted) return;
-      final links = await ref.read(playlistLinksProvider(playlist.id).future);
+      // Read the repositories directly: autoDispose providers read without a
+      // listener could be disposed before they resolve.
+      final tracks = await ref.read(playlistRepositoryProvider).playlistTracks(playlist.id);
+      final linkRepo = ref.read(trackLinkRepositoryProvider);
+      final links = <String, List<(Track, TrackLink)>>{};
+      for (final t in {for (final t in tracks) if (!isPlayableInApp(t)) t}) {
+        final linked = await linkRepo.linkedTracks(t.id);
+        if (linked.isNotEmpty) links[t.id] = linked;
+      }
       if (!context.mounted) return;
       await playCollection(
         context,
         ref,
-        data.tracks,
+        tracks,
         shuffle: shuffle,
         origin: 'playlist:${playlist.id}',
         originLabel: playlist.name,

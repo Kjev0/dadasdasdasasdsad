@@ -407,13 +407,14 @@ class InlineNotice extends StatelessWidget {
     final c = context.colors;
     final color = warning ? c.warning : c.accentText;
     return Container(
-      padding: const EdgeInsets.fromLTRB(12, 10, 8, 10),
+      padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
       decoration: BoxDecoration(
         color: c.surfaceHigh.withValues(alpha: 0.6),
         borderRadius: context.radii.mdAll,
         border: Border.all(color: c.outlineSubtle),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, size: 20, color: color),
           const SizedBox(width: 12),
@@ -424,13 +425,15 @@ class InlineNotice extends StatelessWidget {
               children: [
                 if (title != null) Text(title!, style: context.type.label),
                 Text(message, style: context.type.bodySmall),
+                // Below the text so long (translated) labels never overflow.
+                if (actionLabel != null && onAction != null)
+                  Align(
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: TextButton(onPressed: onAction, child: Text(actionLabel!, textAlign: TextAlign.end)),
+                  ),
               ],
             ),
           ),
-          if (actionLabel != null && onAction != null) ...[
-            const SizedBox(width: 8),
-            TextButton(onPressed: onAction, child: Text(actionLabel!)),
-          ],
         ],
       ),
     );
@@ -460,3 +463,8 @@ class ClippedSkeleton extends StatelessWidget {
         child: SingleChildScrollView(physics: const NeverScrollableScrollPhysics(), primary: false, child: child),
       );
 }
+
+/// Whether track rows have room for extras (source chip, trailing
+/// buttons). Below 600 dp a row keeps only what `TrackTile` shows itself:
+/// its subtitle badges are not flexible, so extras would overflow.
+bool roomyRows(BuildContext context) => MediaQuery.sizeOf(context).width >= 600;

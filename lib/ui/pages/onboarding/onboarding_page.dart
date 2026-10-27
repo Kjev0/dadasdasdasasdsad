@@ -98,41 +98,47 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-              child: Row(children: [
-                if (_page > 0)
-                  FermataButton(
-                    key: const ValueKey('onboarding.back'),
-                    label: l10n.onboardingBack,
-                    variant: FermataButtonVariant.ghost,
-                    onPressed: () => _go(_page - 1),
-                  )
-                else
-                  const SizedBox(width: 64),
-                Expanded(
-                  child: Semantics(
-                    label: l10n.onboardingStepOf(_page + 1, _count),
-                    excludeSemantics: true,
-                    child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      for (var i = 0; i < _count; i++)
-                        AnimatedContainer(
-                          duration: ref.watch(effectiveVisualsProvider).duration(const Duration(milliseconds: 220)),
-                          margin: const EdgeInsets.symmetric(horizontal: 3),
-                          width: i == _page ? 20 : 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: i == _page ? c.accent : c.outline,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Semantics(
+                  label: l10n.onboardingStepOf(_page + 1, _count),
+                  excludeSemantics: true,
+                  child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    for (var i = 0; i < _count; i++)
+                      AnimatedContainer(
+                        duration: ref.watch(effectiveVisualsProvider).duration(const Duration(milliseconds: 220)),
+                        margin: const EdgeInsets.symmetric(horizontal: 3),
+                        width: i == _page ? 20 : 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: i == _page ? c.accent : c.outline,
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                    ]),
+                      ),
+                  ]),
+                ),
+                const SizedBox(height: 12),
+                Row(children: [
+                  if (_page > 0)
+                    Flexible(
+                      child: FermataButton(
+                        key: const ValueKey('onboarding.back'),
+                        label: l10n.onboardingBack,
+                        variant: FermataButtonVariant.ghost,
+                        onPressed: () => _go(_page - 1),
+                      ),
+                    ),
+                  const Spacer(),
+                  Flexible(
+                    flex: 3,
+                    child: FermataButton(
+                      key: ValueKey(last ? 'onboarding.finish' : 'onboarding.next'),
+                      label: last ? l10n.onboardingFinish : (_page == 0 ? l10n.onboardingGetStarted : l10n.onboardingNext),
+                      icon: last ? Icons.play_arrow_rounded : null,
+                      busy: _finishing,
+                      onPressed: last ? _finish : () => _go(_page + 1),
+                    ),
                   ),
-                ),
-                FermataButton(
-                  key: ValueKey(last ? 'onboarding.finish' : 'onboarding.next'),
-                  label: last ? l10n.onboardingFinish : (_page == 0 ? l10n.onboardingGetStarted : l10n.onboardingNext),
-                  busy: _finishing,
-                  onPressed: last ? _finish : () => _go(_page + 1),
-                ),
+                ]),
               ]),
             ),
           ],

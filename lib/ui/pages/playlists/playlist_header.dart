@@ -108,12 +108,22 @@ class PlaylistMoreMenu extends ConsumerWidget {
 /// Header of a library playlist: artwork (custom or a mosaic of its
 /// tracks), kind, name, description, stats and actions.
 class LocalPlaylistHeader extends ConsumerWidget {
-  const LocalPlaylistHeader({super.key, required this.data, required this.onPlay, required this.onShuffle, required this.canPlay});
+  const LocalPlaylistHeader({
+    super.key,
+    required this.data,
+    required this.onPlay,
+    required this.onShuffle,
+    required this.canPlay,
+    this.extraActions = const [],
+  });
 
   final LocalPlaylistData data;
   final VoidCallback onPlay;
   final VoidCallback onShuffle;
   final bool canPlay;
+
+  /// Shown before the "more" menu (e.g. the compact "Reorder" toggle).
+  final List<Widget> extraActions;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -147,6 +157,7 @@ class LocalPlaylistHeader extends ConsumerWidget {
                 variant: FermataButtonVariant.secondary,
                 onPressed: () => editSmartRules(context, ref, p),
               ),
+            ...extraActions,
             PlaylistMoreMenu(playlist: p, onDeleted: () => context.go(AppRoutes.playlists)),
           ],
         ),

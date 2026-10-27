@@ -224,10 +224,12 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
           key: ValueKey('history-${r.id ?? '${r.track.id}-${r.playedAt.millisecondsSinceEpoch}'}'),
           track: r.track,
           playContext: siloSafeContext(tracks, i, origin: 'history', originLabel: l10n.navHistory),
-          trailing: Text(
-            timeLabel(context, r.playedAt.toLocal()),
-            style: FermataTypography.tabular(context.type.caption),
-          ),
+          trailing: roomyRows(context)
+              ? Text(
+                  timeLabel(context, r.playedAt.toLocal()),
+                  style: FermataTypography.tabular(context.type.caption),
+                )
+              : null,
         ));
       }
     }

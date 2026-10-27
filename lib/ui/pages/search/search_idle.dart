@@ -122,7 +122,7 @@ class SearchSuggestionsView extends ConsumerWidget {
           if (data.tracks.isNotEmpty) ...[
             SectionHeader(title: l10n.searchInYourLibrary, padding: const EdgeInsets.fromLTRB(8, 16, 0, 4)),
             for (final t in data.tracks)
-              TrackTile(key: ValueKey('suggest-track-${t.id}'), track: t, showSource: true),
+              TrackTile(key: ValueKey('suggest-track-${t.id}'), track: t, showSource: roomyRows(context)),
           ],
         ],
       ],

@@ -689,6 +689,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get importDiffPreview => 'Preview only';
 
   @override
+  String importOpenOn(String service) {
+    return 'Open on $service';
+  }
+
+  @override
+  String get importOpenUploader => 'Uploader';
+
+  @override
   String get onboardingSkip => 'Skip';
 
   @override
@@ -1737,6 +1745,9 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0, $match';
   }
+
+  @override
+  String get playlistReorder => 'Reorder';
 
   @override
   String get playlistRemoveFromPlaylist => 'Remove from playlist';

@@ -5,6 +5,7 @@ import '../../../../core/models/track.dart';
 import '../../../design/context_ext.dart';
 import '../../../widgets/tracks/track_list_view.dart';
 import '../../../widgets/tracks/track_tile.dart';
+import '../shared/page_layout.dart';
 import '../shared/track_helpers.dart';
 import 'track_details.dart';
 
@@ -55,6 +56,18 @@ class _LibraryTrackListState extends ConsumerState<LibraryTrackList> {
     final rowHeight = context.rowExtent;
     final tracks = widget.tracks;
     final silos = (_silos != null && identical(_silos!.tracks, tracks)) ? _silos! : (_silos = SiloPartition(tracks));
+    final roomy = roomyRows(context);
+    // Narrow layouts open details from the selection bar instead of a
+    // per-row button.
+    final bulk = [
+      ...widget.extraBulkActions,
+      if (!roomy)
+        TrackBulkAction(
+          label: l10n.libraryTrackDetails,
+          icon: Icons.info_outline_rounded,
+          onSelected: (s) => showTrackDetails(context, s.first),
+        ),
+    ];
     return ListenableBuilder(
       listenable: _selection,
       builder: (context, _) => CustomScrollView(
@@ -68,7 +81,7 @@ class _LibraryTrackListState extends ConsumerState<LibraryTrackList> {
                   selection: _selection,
                   tracks: tracks,
                   origin: widget.origin,
-                  extraActions: widget.extraBulkActions,
+                  extraActions: bulk,
                 ),
               ),
             ),
@@ -84,17 +97,19 @@ class _LibraryTrackListState extends ConsumerState<LibraryTrackList> {
                     key: ValueKey('lib-${t.id}#$i'),
                     track: t,
                     showAlbum: true,
-                    showSource: widget.showSource,
+                    showSource: widget.showSource && roomy,
                     playContext: silos.contextFor(i, origin: widget.origin, originLabel: widget.originLabel),
                     selectionMode: _selection.active,
                     selected: _selection.isSelected(t.id),
                     onSelectedChanged: (v) => _selection.set(t.id, v),
                     onLongPress: _selection.active ? null : () => _selection.start(t.id),
-                    trailing: IconButton(
-                      tooltip: l10n.libraryTrackDetails,
-                      icon: const Icon(Icons.info_outline_rounded, size: 20),
-                      onPressed: () => showTrackDetails(context, t),
-                    ),
+                    trailing: roomy
+                        ? IconButton(
+                            tooltip: l10n.libraryTrackDetails,
+                            icon: const Icon(Icons.info_outline_rounded, size: 20),
+                            onPressed: () => showTrackDetails(context, t),
+                          )
+                        : null,
                   );
                 },
               ),

@@ -7,6 +7,7 @@ import '../../../core/models/track.dart';
 import '../../actions/track_actions.dart';
 import '../../design/context_ext.dart';
 import '../../widgets/chips/badges.dart';
+import '../../widgets/controls/fermata_button.dart';
 import '../../widgets/feedback/messages.dart';
 import '../../widgets/feedback/states.dart';
 import '../../widgets/feedback/toast.dart';
@@ -39,6 +40,10 @@ class _LocalPlaylistViewState extends ConsumerState<LocalPlaylistView> {
   /// arrives).
   List<PlaylistEntry>? _optimistic;
   LocalPlaylistData? _optimisticFor;
+
+  /// Compact layouts reorder in a dedicated mode (rows are too narrow for
+  /// drag handles next to the track badges).
+  bool _reordering = false;
 
   @override
   void dispose() {
@@ -95,16 +100,61 @@ class _LocalPlaylistViewState extends ConsumerState<LocalPlaylistView> {
     void play({int start = 0, bool shuffle = false}) =>
         playCollection(context, ref, tracks, startIndex: start, shuffle: shuffle, origin: origin, originLabel: playlist.name, canPlay: canPlay);
 
+    final roomy = roomyRows(context);
+    final canReorder = _editable && !_selection.active && entries.length > 1;
     final header = LocalPlaylistHeader(
       data: widget.data,
       canPlay: tracks.any(canPlay),
       onPlay: () => play(),
       onShuffle: () => play(shuffle: true),
+      extraActions: [
+        if (!roomy && canReorder)
+          FermataButton(
+            key: const ValueKey('playlist-reorder'),
+            label: _reordering ? l10n.actionDone : l10n.playlistReorder,
+            icon: _reordering ? Icons.check_rounded : Icons.swap_vert_rounded,
+            variant: FermataButtonVariant.ghost,
+            onPressed: () => setState(() => _reordering = !_reordering),
+          ),
+      ],
     );
     final insets = pageInsets(context);
     final rowHeight = context.rowExtent;
 
+    Widget compactReorderRow(int i) {
+      final t = entries[i].track;
+      return Padding(
+        key: ValueKey('entry-${entries[i].position}-${t.id}'),
+        padding: EdgeInsets.symmetric(horizontal: insets.left),
+        child: SizedBox(
+          height: rowHeight,
+          child: Row(
+            children: [
+              ReorderableDragStartListener(
+                index: i,
+                child: Tooltip(
+                  message: l10n.playerQueueReorder,
+                  child: const Padding(padding: EdgeInsets.all(12), child: Icon(Icons.drag_indicator_rounded)),
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(t.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: context.type.body.copyWith(fontWeight: FontWeight.w600)),
+                    Text(t.artistLine, maxLines: 1, overflow: TextOverflow.ellipsis, style: context.type.bodySmall),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     Widget row(int i, {required bool reorderable}) {
+      if (reorderable && !roomy) return compactReorderRow(i);
       final entry = entries[i];
       final t = entry.track;
       final playable = isPlayableInApp(t);
@@ -117,15 +167,22 @@ class _LocalPlaylistViewState extends ConsumerState<LocalPlaylistView> {
           track: t,
           index: i + 1,
           showAlbum: true,
-          showSource: !t.isLocal,
+          showSource: roomy && !t.isLocal,
           playContext: TrackPlayContext(tracks: tracks, index: i, origin: origin, originLabel: playlist.name),
-          // Imported tracks with a linked match play through the link.
-          onTap: !playable && via != null ? () => play(start: i) : null,
+          // Imported tracks with a linked match play through the link; on
+          // narrow layouts other unplayable tracks open "Find alternatives".
+          onTap: playable
+              ? null
+              : via != null
+                  ? () => play(start: i)
+                  : (!roomy && !_selection.active ? () => showAlternativesSheet(context, t) : null),
           selectionMode: _selection.active,
           selected: _selection.isSelected(t.id),
           onSelectedChanged: (v) => _selection.set(t.id, v),
           onLongPress: _selection.active ? null : () => _selection.start(t.id),
-          trailing: Row(
+          trailing: !roomy
+              ? null
+              : Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               if (!playable)
@@ -149,7 +206,7 @@ class _LocalPlaylistViewState extends ConsumerState<LocalPlaylistView> {
       );
     }
 
-    final reorderable = _editable && !_selection.active && entries.length > 1;
+    final reorderable = canReorder && (roomy || _reordering);
     Widget list;
     if (entries.isEmpty) {
       list = ListView(

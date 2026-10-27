@@ -142,7 +142,7 @@ class _SharedTrack extends ConsumerWidget {
       error: (e, _) => ErrorState(error: e, compact: true, onRetry: () => ref.invalidate(sharedTrackProvider(link))),
       data: (t) => t == null
           ? Text(context.l10n.searchLinkNotFound, style: context.type.bodySmall)
-          : TrackTile(key: ValueKey('shared-${t.id}'), track: t, showSource: true),
+          : TrackTile(key: ValueKey('shared-${t.id}'), track: t, showSource: roomyRows(context)),
     );
   }
 }

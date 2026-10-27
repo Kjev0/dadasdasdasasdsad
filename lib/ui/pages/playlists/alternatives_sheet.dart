@@ -21,6 +21,7 @@ import '../../widgets/util/async_utils.dart';
 import '../library/shared/import_helpers.dart';
 import '../library/shared/revisions.dart';
 import '../library/shared/track_helpers.dart';
+import 'playlist_providers.dart';
 
 /// Linked matches of [Track] (`TrackLinkRepository.linkedTracks`).
 final trackLinksProvider = FutureProvider.autoDispose.family<List<(Track, TrackLink)>, String>(
@@ -110,6 +111,7 @@ class _AlternativesSheetState extends ConsumerState<AlternativesSheet> {
       await ref.read(trackRepositoryProvider).upsertTracks([c.candidate]);
       await ref.read(trackLinkRepositoryProvider).link(original.id, c.candidate.id, confidence: c.score, userConfirmed: true);
       ref.invalidate(trackLinksProvider(original.id));
+      ref.invalidate(playlistLinksProvider);
       if (mounted) showFermataToast(context, l10n.alternativesLinked(sourceDisplayName(ref, c.candidate.sourceId)), icon: Icons.link_rounded);
     } catch (e) {
       if (mounted) showFermataToast(context, errorMessageFor(l10n, e) ?? l10n.errorGeneric, isError: true);
@@ -120,6 +122,7 @@ class _AlternativesSheetState extends ConsumerState<AlternativesSheet> {
     try {
       await ref.read(trackLinkRepositoryProvider).unlink(original.id, linked.id);
       ref.invalidate(trackLinksProvider(original.id));
+      ref.invalidate(playlistLinksProvider);
     } catch (e) {
       if (mounted) showFermataToast(context, context.l10n.errorGeneric, isError: true);
     }

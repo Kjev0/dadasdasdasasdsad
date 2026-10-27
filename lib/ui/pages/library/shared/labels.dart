@@ -63,7 +63,7 @@ String formatBytes(BuildContext context, int bytes) {
     value /= 1024;
     unit++;
   }
-  final digits = unit == 0 || value >= 100 ? 0 : 1;
+  final digits = unit == 0 || value >= 100 || (value * 10).round() % 10 == 0 ? 0 : 1;
   final f = NumberFormat.decimalPatternDigits(locale: localeNameOf(context), decimalDigits: digits);
   return '${f.format(value)} ${units[unit]}';
 }

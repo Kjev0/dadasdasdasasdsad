@@ -317,5 +317,14 @@
   "importDiffArtist": "Different artist",
   "importDiffFeatured": "Different featured artists",
   "importDiffTitle": "Different title",
-  "importDiffPreview": "Preview only"
+  "importDiffPreview": "Preview only",
+  "importOpenOn": "Open on {service}",
+  "@importOpenOn": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "importOpenUploader": "Uploader"
 }

@@ -27,7 +27,6 @@ final favoriteTracksProvider = FutureProvider.autoDispose<List<Track>>(
   (ref) async {
     watchLibrary(ref, LibraryTopic.favorites);
     watchLibrary(ref, LibraryTopic.tracks);
-    ref.watch(favoriteIdsProvider.select((v) => v.value?.length));
     return ref.watch(favoritesRepositoryProvider).favorites();
   },
   retry: noRetry,

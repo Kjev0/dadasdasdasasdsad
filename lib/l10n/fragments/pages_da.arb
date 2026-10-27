@@ -250,6 +250,7 @@
   "playlistSmartEmpty": "Intet passer til reglerne endnu",
   "playlistSmartEmptyHint": "Redigér reglerne, eller afspil og synes om mere musik.",
   "playlistRulesSummary": "{count, plural, =1{1 regel} other{{count} regler}}, {match}",
+  "playlistReorder": "Omarranger",
   "playlistRemoveFromPlaylist": "Fjern fra playlisten",
   "playlistRemovedTracks": "{count, plural, =1{1 nummer fjernet} other{{count} numre fjernet}}",
   "playlistPlaysVia": "Afspilles via {provider} — skift",

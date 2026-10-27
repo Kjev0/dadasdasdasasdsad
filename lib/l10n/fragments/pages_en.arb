@@ -562,6 +562,7 @@
       }
     }
   },
+  "playlistReorder": "Reorder",
   "playlistRemoveFromPlaylist": "Remove from playlist",
   "playlistRemovedTracks": "{count, plural, =1{Removed 1 track} other{Removed {count} tracks}}",
   "@playlistRemovedTracks": {

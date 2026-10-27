@@ -121,5 +121,7 @@
   "importDiffArtist": "Anden kunstner",
   "importDiffFeatured": "Andre gæstekunstnere",
   "importDiffTitle": "Anden titel",
-  "importDiffPreview": "Kun smagsprøve"
+  "importDiffPreview": "Kun smagsprøve",
+  "importOpenOn": "Åbn på {service}",
+  "importOpenUploader": "Uploader"
 }

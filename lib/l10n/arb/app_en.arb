@@ -470,6 +470,15 @@
   "importDiffFeatured": "Different featured artists",
   "importDiffTitle": "Different title",
   "importDiffPreview": "Preview only",
+  "importOpenOn": "Open on {service}",
+  "@importOpenOn": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "importOpenUploader": "Uploader",
   "onboardingSkip": "Skip",
   "onboardingBack": "Back",
   "onboardingNext": "Next",
@@ -1096,6 +1105,7 @@
       }
     }
   },
+  "playlistReorder": "Reorder",
   "playlistRemoveFromPlaylist": "Remove from playlist",
   "playlistRemovedTracks": "{count, plural, =1{Removed 1 track} other{Removed {count} tracks}}",
   "@playlistRemovedTracks": {

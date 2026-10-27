@@ -135,7 +135,7 @@ class _ImportReviewPageState extends ConsumerState<ImportReviewPage> {
 
     return LayoutBuilder(builder: (context, constraints) {
       final pad = constraints.maxWidth < 600 ? 16.0 : 32.0;
-      return CustomScrollView(slivers: [
+      return CustomScrollView(key: const ValueKey('import.reviewList'), slivers: [
         SliverPadding(
           padding: EdgeInsets.fromLTRB(pad, 24, pad, 8),
           sliver: SliverToBoxAdapter(

@@ -181,10 +181,12 @@ class SearchTrackTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = tracks[index];
-    final link = t.sourceId == SourceIds.soundcloud ? t.permalink : null;
+    final roomy = roomyRows(context);
+    // Narrow rows reach the SoundCloud link through the track menu.
+    final link = roomy && t.sourceId == SourceIds.soundcloud ? t.permalink : null;
     return TrackTile(
       track: t,
-      showSource: true,
+      showSource: roomy,
       showAlbum: true,
       playContext: siloSafeContext(tracks, index, origin: 'search'),
       trailing: link == null

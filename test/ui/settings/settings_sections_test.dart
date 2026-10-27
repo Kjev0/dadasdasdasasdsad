@@ -120,4 +120,12 @@ void main() {
     expect(appRouter(tester).routerDelegate.currentConfiguration.uri.path, '/settings');
     expect(kit.playback.called('pause'), isFalse);
   });
+
+  testWidgets('settings are localized (Danish)', (tester) async {
+    final kit = FakeKit(settings: const AppSettings(onboardingCompleted: true, localeCode: 'da'));
+    await pumpFermata(tester, kit: kit, initialRoute: '/settings/glass', overrides: settingsOverrides());
+    expect(find.text('Indstillinger'), findsWidgets); // page title + navigation
+    expect(find.text('Gendan alle standarder'), findsOneWidget);
+    expect(find.textContaining('Slået fra som standard'), findsOneWidget);
+  });
 }

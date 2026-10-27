@@ -294,10 +294,16 @@ class _ImportPageState extends ConsumerState<ImportPage> {
                     Semantics(
                       label: l10n.importStepOf(_step + 1, steps.length, steps[_step]),
                       excludeSemantics: true,
+                      // Narrow windows only label the current step.
                       child: Row(children: [
                         for (var i = 0; i < steps.length; i++) ...[
                           if (i > 0) Expanded(child: Divider(color: i <= _step ? c.accent : c.outlineSubtle)),
-                          _StepDot(index: i, label: steps[i], active: i == _step, done: i < _step),
+                          _StepDot(
+                            index: i,
+                            label: constraints.maxWidth >= 520 || i == _step ? steps[i] : null,
+                            active: i == _step,
+                            done: i < _step,
+                          ),
                         ],
                       ]),
                     ),
@@ -341,7 +347,7 @@ class _StepDot extends StatelessWidget {
   const _StepDot({required this.index, required this.label, required this.active, required this.done});
 
   final int index;
-  final String label;
+  final String? label;
   final bool active;
   final bool done;
 
@@ -359,8 +365,10 @@ class _StepDot extends StatelessWidget {
             ? Icon(Icons.check_rounded, size: 14, color: c.onAccent)
             : Text('${index + 1}', style: context.type.caption.copyWith(color: on ? c.onAccent : c.textSecondary)),
       ),
-      const SizedBox(width: 6),
-      Text(label, style: context.type.caption.copyWith(color: active ? c.textPrimary : c.textSecondary)),
+      if (label != null) ...[
+        const SizedBox(width: 6),
+        Text(label!, style: context.type.caption.copyWith(color: active ? c.textPrimary : c.textSecondary)),
+      ],
       const SizedBox(width: 6),
     ]);
   }

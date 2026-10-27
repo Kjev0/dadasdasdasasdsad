@@ -688,6 +688,14 @@ class AppLocalizationsDa extends AppLocalizations {
   String get importDiffPreview => 'Kun smagsprøve';
 
   @override
+  String importOpenOn(String service) {
+    return 'Åbn på $service';
+  }
+
+  @override
+  String get importOpenUploader => 'Uploader';
+
+  @override
   String get onboardingSkip => 'Spring over';
 
   @override
@@ -1734,6 +1742,9 @@ class AppLocalizationsDa extends AppLocalizations {
     );
     return '$_temp0, $match';
   }
+
+  @override
+  String get playlistReorder => 'Omarranger';
 
   @override
   String get playlistRemoveFromPlaylist => 'Fjern fra playlisten';

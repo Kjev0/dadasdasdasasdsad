@@ -39,8 +39,8 @@ void main() {
     await pumpPage(tester, kit: kit, services: services, route: '/playlists');
     expect(_inPage('Morning'), findsOneWidget);
     expect(find.text('Playlist · 2 tracks'), findsOneWidget);
-    expect(find.text('Smart playlist · 0 tracks'), findsOneWidget);
-    expect(find.text('Imported from Spotify · 0 tracks'), findsOneWidget);
+    expect(find.text('Smart playlist · No tracks'), findsOneWidget);
+    expect(find.text('Imported from Spotify · No tracks'), findsOneWidget);
     await tester.tap(find.text('Smart'));
     await settle(tester);
     expect(_inPage('Morning'), findsNothing);
@@ -145,7 +145,10 @@ void main() {
     final (kit, repo, _, services) = _setup(tracks: testTracks(2));
     repo.add(testPlaylist('p1', name: 'Morning'), trackIds: ['audius:t1', 'audius:t2']);
     await pumpPage(tester, kit: kit, services: services, route: '/playlists');
-    await tester.tap(find.byTooltip('Play').first);
+    // Grid quick-play shows on hover; the list row has a play button.
+    await tester.tap(find.byKey(const ValueKey('playlists-view-toggle')));
+    await settle(tester);
+    await tester.tap(find.descendant(of: find.byKey(const ValueKey('playlist-row-p1')), matching: find.byTooltip('Play')));
     await settle(tester);
     expect(kit.playback.argsOf('playTracks')[2], 'playlist:p1');
     await tester.tap(_inPage('Morning'));
