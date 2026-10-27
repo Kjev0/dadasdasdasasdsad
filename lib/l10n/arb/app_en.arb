@@ -1,0 +1,60 @@
+{
+  "@@locale": "en",
+  "appName": "Fermata",
+  "@appName": {
+    "description": "Product name; do not translate."
+  },
+  "actionCancel": "Cancel",
+  "actionSave": "Save",
+  "actionDelete": "Delete",
+  "actionRetry": "Retry",
+  "actionClose": "Close",
+  "actionDone": "Done",
+  "actionOk": "OK",
+  "actionLearnMore": "Learn more",
+  "actionRestoreDefaults": "Restore defaults",
+  "errorGeneric": "Something went wrong.",
+  "errorOffline": "You're offline. Check your connection and try again.",
+  "errorTimeout": "The request timed out. Try again.",
+  "errorRateLimited": "The service is busy. Try again in a moment.",
+  "errorAuthRequired": "Reconnect your {service} account to continue.",
+  "@errorAuthRequired": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "errorCredentialsMissing": "{service} needs developer credentials before it can be used.",
+  "@errorCredentialsMissing": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "errorUnsupported": "{service} doesn't support this.",
+  "@errorUnsupported": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "reasonDeleted": "This track was deleted.",
+  "reasonPrivate": "This track is private.",
+  "reasonRegionRestricted": "Not available in your region.",
+  "reasonSubscriptionRequired": "Requires a subscription on the provider.",
+  "reasonNotStreamable": "The artist hasn't allowed streaming.",
+  "reasonPreviewOnly": "Only a preview is available.",
+  "reasonExternalOnly": "Plays in the provider's own app.",
+  "reasonFileMissing": "The file is missing.",
+  "reasonNotAuthorized": "Not authorized.",
+  "reasonCredentialsMissing": "Provider not set up.",
+  "reasonOffline": "Unavailable offline.",
+  "reasonUnknown": "Unavailable.",
+  "offlineUserOwned": "Your file",
+  "offlineDownloadable": "Downloadable",
+  "offlineStreamOnly": "Stream only",
+  "offlineUnavailable": "Not available offline"
+}
