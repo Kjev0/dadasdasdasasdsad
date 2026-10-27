@@ -21,7 +21,8 @@ dependencies:
   audio_service: ^0.18.19      # Android foreground media service + MediaSession
   audio_session: ^0.2.4        # Audio focus, interruptions, becoming-noisy
   media_kit: ^1.2.6            # Desktop backend (libmpv)
-  media_kit_libs_audio: ^1.0.7
+  media_kit_libs_linux: ^1.2.1          # libmpv on Linux (Android uses just_audio)
+  media_kit_libs_windows_audio: ^1.0.9
 
   # Desktop integration
   window_manager: ^0.5.2

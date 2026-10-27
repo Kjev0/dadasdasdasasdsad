@@ -5,7 +5,7 @@ import 'package:path_provider/path_provider.dart';
 
 /// Resolved application directories. Created once at bootstrap.
 ///
-/// * Windows: %APPDATA%\app.fermata\Fermata (support), %LOCALAPPDATA% caches
+/// * Windows: %APPDATA%\Fermata\Fermata (support), %LOCALAPPDATA% caches
 /// * Linux:   ~/.local/share/app.fermata.player (support), ~/.cache/...
 /// * Android: app-private internal storage; downloads in the app-specific
 ///            external Music directory (no storage permission needed).
@@ -32,7 +32,7 @@ class AppPaths {
   Directory get tempDownloadDir => Directory(p.join(cacheDir.path, 'downloads-partial'));
 
   static Future<AppPaths> resolve() async {
-    final support = await getApplicationSupportDirectory();
+    final support = await _supportDir();
     final cache = await _cacheDir();
     final downloads = await _defaultDownloads(support);
     final logs = Directory(p.join(support.path, 'logs'));
@@ -50,6 +50,18 @@ class AppPaths {
         defaultDownloadDir: Directory(p.join(root.path, 'downloads'))..createSync(recursive: true),
         logsDir: Directory(p.join(root.path, 'logs'))..createSync(recursive: true),
       );
+
+  static Future<Directory> _supportDir() async {
+    if (Platform.isLinux) {
+      // Computed directly: path_provider_linux may fall back to
+      // $XDG_DATA_HOME/<executable name>, which could be the install root.
+      final xdg = Platform.environment['XDG_DATA_HOME'];
+      final home = Platform.environment['HOME'];
+      final base = (xdg != null && xdg.isNotEmpty) ? xdg : p.join(home ?? '/tmp', '.local', 'share');
+      return Directory(p.join(base, 'app.fermata.player'));
+    }
+    return getApplicationSupportDirectory();
+  }
 
   static Future<Directory> _cacheDir() async {
     if (Platform.isLinux) {

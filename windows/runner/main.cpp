@@ -1,5 +1,6 @@
 #include <flutter/dart_project.h>
 #include <flutter/flutter_view_controller.h>
+#include <shobjidl.h>
 #include <windows.h>
 
 #include "flutter_window.h"
@@ -7,6 +8,10 @@
 
 int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
                       _In_ wchar_t *command_line, _In_ int show_command) {
+  // Must match the AppUserModelID on the installer's shortcuts so the running
+  // window, pinned shortcut and media/notification integration group together.
+  ::SetCurrentProcessExplicitAppUserModelID(L"app.fermata.player");
+
 #if defined(_DEBUG)
   // Debug builds only: attach to the parent console when present (e.g.,
   // 'flutter run') or create a new console when running with a debugger.

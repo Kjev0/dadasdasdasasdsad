@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:fermata/core/contracts/discovery.dart';
 import 'package:fermata/core/errors.dart';
-import 'package:fermata/core/models/catalog.dart';
 import 'package:fermata/core/models/track.dart';
 import 'package:fermata/core/net/http_client.dart';
 import 'package:fermata/core/platform/app_paths.dart';
@@ -183,8 +183,9 @@ void main() {
       expect(pick(song(seconds: 234), tolerance: Duration.zero), isNull);
       expect(pick(song(seconds: 233, title: 'Another Song')), isNull);
       expect(pick(song(seconds: 233, artist: 'Someone Else')), isNull);
-      // Without a known duration the first matching record is used.
-      expect(pick(song(seconds: null))!.id, 34631214);
+      // Without a known duration only the album can tell records apart.
+      expect(pick(song(seconds: null))!.id, 34789925);
+      expect(pick(song(seconds: null, album: null))!.id, 34631214, reason: 'first match in LRCLIB order');
     });
 
     test('a track whose duration LRCLIB does not know is searched directly', () async {
@@ -276,32 +277,35 @@ void main() {
     });
 
     test('positive entries last 30 days, misses 3 days', () async {
-      var now = DateTime(2026, 3, 1);
+      final t0 = DateTime(2026, 3, 1);
+      var now = t0;
       final lrclib = FakeLrclib(get: fixture('lrclib_get_ok.json'));
-      final svc = service(lrclib, clock: () => now);
-      await svc.lyricsFor(song());
-      await svc.lyricsFor(song(id: 'miss', title: 'Nothing', artist: 'Nobody'));
-      expect(lrclib.requests, hasLength(2));
-      // The in-memory copy is per service; use fresh instances to hit the disk.
+      Track miss() => song(id: 'miss', title: 'Nothing', artist: 'Nobody', album: null, seconds: 100);
+      // The in-memory copy is per service; fresh instances hit the disk cache.
+      LyricsServiceImpl fresh() => service(lrclib, clock: () => now);
+
+      await fresh().lyricsFor(song());
+      lrclib.get = null; // LRCLIB knows nothing about the other track
+      expect(await fresh().lyricsFor(miss()), isNull);
+      expect(lrclib.requests, hasLength(3), reason: 'get; get + search');
       lrclib.requests.clear();
 
-      now = now.add(const Duration(days: 2));
-      await service(lrclib, clock: () => now).lyricsFor(song());
-      expect(lrclib.requests, isEmpty, reason: 'positive entry still fresh');
+      now = t0.add(const Duration(days: 2));
+      await fresh().lyricsFor(song());
+      expect(await fresh().lyricsFor(miss()), isNull);
+      expect(lrclib.requests, isEmpty, reason: 'hit (30 d) and miss (3 d) are both still fresh');
 
-      lrclib.get = null;
-      now = now.add(const Duration(days: 2)); // day 4: the miss (3 d) expired, the hit did not
-      final later = service(lrclib, clock: () => now);
-      await later.lyricsFor(song());
-      expect(lrclib.requests, isEmpty);
-      expect(await later.lyricsFor(song(id: 'miss', title: 'Nothing', artist: 'Nobody', seconds: null)), isNull);
-      expect(lrclib.requests, isNotEmpty, reason: 'expired miss is looked up again');
-
+      now = t0.add(const Duration(days: 4));
+      await fresh().lyricsFor(song());
+      expect(lrclib.requests, isEmpty, reason: 'the hit is still fresh');
+      expect(await fresh().lyricsFor(miss()), isNull);
+      expect(lrclib.requests, hasLength(2), reason: 'the expired miss is looked up again');
       lrclib.requests.clear();
+
       lrclib.get = fixture('lrclib_get_ok.json');
-      now = now.add(const Duration(days: 28)); // day 32: the positive entry expired
-      await service(lrclib, clock: () => now).lyricsFor(song());
-      expect(lrclib.gets, hasLength(1));
+      now = t0.add(const Duration(days: 31));
+      await fresh().lyricsFor(song());
+      expect(lrclib.gets, hasLength(1), reason: 'the hit expired after 30 days');
     });
 
     test('a corrupt cache file is ignored and replaced', () async {

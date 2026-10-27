@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:logging/logging.dart';
@@ -39,9 +40,15 @@ class ConnectivityNetworkStatus extends NetworkStatus {
   Future<void> init() async {
     if (_initialized) return;
     _initialized = true;
+    if (_connectivity == null && _platform.isLinux && !_linuxSystemBusAvailable()) {
+      // connectivity_plus talks to NetworkManager over the system bus; without
+      // one (containers, minimal systems) its calls never complete.
+      _log.info('No D-Bus system bus; assuming an unmetered connection');
+      return;
+    }
     final connectivity = _connectivity ??= Connectivity();
     try {
-      _set(mapResults(await connectivity.checkConnectivity(), mobilePlatform: _platform.isMobile));
+      _set(mapResults(await connectivity.checkConnectivity().timeout(_checkTimeout), mobilePlatform: _platform.isMobile));
     } catch (e) {
       _log.info('Connectivity backend unavailable; assuming an unmetered connection', e);
     }
@@ -60,12 +67,20 @@ class ConnectivityNetworkStatus extends NetworkStatus {
     final connectivity = _connectivity;
     if (connectivity != null) {
       try {
-        _set(mapResults(await connectivity.checkConnectivity(), mobilePlatform: _platform.isMobile));
+        _set(mapResults(await connectivity.checkConnectivity().timeout(_checkTimeout), mobilePlatform: _platform.isMobile));
       } catch (_) {
         // keep the last known state
       }
     }
     return isMetered;
+  }
+
+  static const _checkTimeout = Duration(seconds: 3);
+
+  static bool _linuxSystemBusAvailable() {
+    final address = Platform.environment['DBUS_SYSTEM_BUS_ADDRESS'];
+    if (address != null && address.isNotEmpty) return true;
+    return File('/var/run/dbus/system_bus_socket').existsSync() || File('/run/dbus/system_bus_socket').existsSync();
   }
 
   void _set(NetworkState next) {

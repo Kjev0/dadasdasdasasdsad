@@ -48,7 +48,7 @@ Location (`AppPaths.credentialsFile`):
 | Platform | Path |
 |---|---|
 | Linux | `~/.local/share/app.fermata.player/credentials.json` |
-| Windows | `%APPDATA%\app.fermata\Fermata\credentials.json` |
+| Windows | `%APPDATA%\Fermata\Fermata\credentials.json` |
 | Android | app-private storage — use in-app entry instead |
 
 Format (camelCase keys; snake_case such as `client_id` is accepted too):
