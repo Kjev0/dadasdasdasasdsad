@@ -65,6 +65,10 @@ class DownloadBatchNotifier {
 
   int get pendingCompleted => _completed;
 
+  /// Completions or failures not yet reported (failures alone must still
+  /// close their batch so they are not attributed to a later one).
+  bool get hasPending => _completed > 0 || _failed > 0;
+
   void recordCompleted(DownloadTask task) {
     _completed++;
     _lastTitle = task.track.title;

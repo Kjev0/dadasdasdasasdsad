@@ -12,6 +12,7 @@ import '../../core/net/http_client.dart';
 import '../../core/platform/app_paths.dart';
 import '../../core/util/cancel_token.dart';
 import '../../settings/settings_store.dart';
+import '../download_errors.dart';
 import '../files/file_ops.dart';
 
 final _log = Logger('downloads.artwork');
@@ -125,7 +126,7 @@ class FermataArtworkCache extends CacheManager with ImageCacheManager implements
       await _pins.add(key);
       return true;
     } on Exception catch (e) {
-      _log.fine('Could not cache artwork from ${url.host}', e);
+      _log.fine('Could not cache artwork from ${url.host}: ${redactUrls(e)}');
       return false;
     }
   }

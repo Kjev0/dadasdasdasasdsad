@@ -34,6 +34,10 @@ abstract final class DownloadErrorCode {
   static const diskFull = 'disk_full';
   static const storage = 'storage_error';
   static const unknown = 'unknown';
+
+  /// Automatic downloads are not permitted for the track's source (provider
+  /// terms, see docs/COMPLIANCE.md).
+  static const autoNotPermitted = 'automatic_downloads_not_permitted';
 }
 
 /// Carries a pre-classified [DownloadFailure] through the transfer pipeline.
@@ -124,3 +128,13 @@ class DownloadFailure {
   @override
   String toString() => 'DownloadFailure($code, retryable: $retryable)';
 }
+
+final _urlPattern = RegExp(r'''[a-zA-Z][a-zA-Z0-9+.-]*://[^\s"'<>)]+''');
+
+/// Describes [error] for logs with the query/fragment (signatures, tokens) of
+/// any URL stripped.
+String redactUrls(Object? error) => '$error'.replaceAllMapped(_urlPattern, (m) {
+      final url = m[0]!;
+      final cut = url.indexOf(RegExp('[?#]'));
+      return cut < 0 ? url : '${url.substring(0, cut)}?<redacted>';
+    });

@@ -112,11 +112,23 @@ class _AppFrameState extends ConsumerState<AppFrame> {
   Future<(CloseChoice, bool)> _askClose() async {
     final ctx = widget.router.routerDelegate.navigatorKey.currentContext;
     if (ctx == null || !ctx.mounted) return (CloseChoice.minimizeToTray, false);
+    // In mini mode the router's navigator is offstage (and the window is too
+    // small for a dialog): leave mini mode first, restore it on cancel.
+    final mini = ref.read(miniModeProvider.notifier);
+    final wasMini = ref.read(miniModeProvider).active;
+    if (wasMini) {
+      await mini.exit();
+      await WidgetsBinding.instance.endOfFrame;
+    }
+    final dialogCtx = widget.router.routerDelegate.navigatorKey.currentContext;
+    if (dialogCtx == null || !dialogCtx.mounted) return (CloseChoice.minimizeToTray, false);
     final result = await showDialog<(CloseChoice, bool)>(
-      context: ctx,
+      context: dialogCtx,
       builder: (_) => const CloseDialog(),
     );
-    return result ?? (CloseChoice.cancel, false);
+    final choice = result ?? (CloseChoice.cancel, false);
+    if (wasMini && choice.$1 == CloseChoice.cancel) await mini.enter();
+    return choice;
   }
 
   @override

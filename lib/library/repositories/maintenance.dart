@@ -151,9 +151,9 @@ class SqlLibraryMaintenance implements LibraryMaintenance {
     try {
       await _db.db.transaction((txn) async {
         if (!merge) await _clearUserTables(txn, includeFolders: true);
-        await _importTracks(txn, _list(backup['tracks']));
+        await _importTracks(txn, _list(backup['tracks']), merge);
         final known = await _knownIds(txn);
-        await _importPlaylists(txn, _list(backup['playlists']), known);
+        await _importPlaylists(txn, _list(backup['playlists']), known, merge);
         await _importFavorites(txn, _list(backup['favorites']), known);
         await _importHistory(txn, _list(backup['history']), known);
         await _importLinks(txn, _list(backup['links']), known);
@@ -174,7 +174,7 @@ class SqlLibraryMaintenance implements LibraryMaintenance {
   static Future<Set<String>> _knownIds(DatabaseExecutor txn) async =>
       {for (final r in await txn.rawQuery('SELECT id FROM tracks')) r['id'] as String};
 
-  static Future<void> _importTracks(Transaction txn, List<Map<String, Object?>> items) async {
+  static Future<void> _importTracks(Transaction txn, List<Map<String, Object?>> items, bool merge) async {
     final tracks = <Track>[];
     final dateAdded = <String, int>{};
     final overrides = <String, Map<String, Object?>>{};
@@ -196,17 +196,32 @@ class SqlLibraryMaintenance implements LibraryMaintenance {
       }
     }
     for (final e in overrides.entries) {
+      // A merge keeps edits made since the backup; the backup's edit only
+      // fills in tracks that have none.
+      if (merge && existing.contains(e.key) && await TrackStore.override(txn, e.key) != null) continue;
       await TrackStore.setOverride(txn, e.key, e.value);
     }
   }
 
-  static Future<void> _importPlaylists(Transaction txn, List<Map<String, Object?>> items, Set<String> known) async {
+  static Future<void> _importPlaylists(Transaction txn, List<Map<String, Object?>> items, Set<String> known, bool merge) async {
     for (final p in items) {
       final id = p['id'] as String;
       final kind = PlaylistKind.values.asNameMap()[p['kind']] ?? PlaylistKind.local;
-      await txn.delete('playlists', where: 'id = ?', whereArgs: [id]); // cascades entries
       final now = nowMs();
-      await txn.insert('playlists', {
+      var position = 0;
+      final present = <String>{};
+      final exists = (await txn.rawQuery('SELECT 1 FROM playlists WHERE id = ?', [id])).isNotEmpty;
+      if (exists && merge) {
+        // Keep the playlist as it is now; only add the entries it lacks.
+        final rows = await txn.rawQuery('SELECT track_id, position FROM playlist_entries WHERE playlist_id = ?', [id]);
+        for (final r in rows) {
+          present.add(r['track_id'] as String);
+          position = position > (r['position'] as num).toInt() ? position : (r['position'] as num).toInt() + 1;
+        }
+      } else {
+        await txn.delete('playlists', where: 'id = ?', whereArgs: [id]); // cascades entries
+      }
+      if (!(exists && merge)) await txn.insert('playlists', {
         'id': id,
         'name': p['name'] as String,
         'description': p['description'],
@@ -221,10 +236,10 @@ class SqlLibraryMaintenance implements LibraryMaintenance {
         'smart_rules': p['smartRules'] == null ? null : jsonEncode(p['smartRules']),
         'permalink': p['permalink'],
       });
-      var position = 0;
       final batch = txn.batch();
       for (final e in _list(p['entries'])) {
         final trackId = e['trackId'] as String;
+        if (merge && exists && present.contains(trackId)) continue;
         if (!known.contains(trackId)) {
           _log.warning('Backup playlist $id references unknown track; entry skipped');
           continue;
@@ -273,9 +288,16 @@ class SqlLibraryMaintenance implements LibraryMaintenance {
       if (x == y || !known.contains(x) || !known.contains(y)) continue;
       final (a, b) = x.compareTo(y) < 0 ? (x, y) : (y, x);
       batch.rawInsert(
-        'INSERT OR REPLACE INTO track_links(a, b, confidence, confirmed, created_at) VALUES (?, ?, ?, ?, ?)',
+        'INSERT OR IGNORE INTO track_links(a, b, confidence, confirmed, created_at) VALUES (?, ?, ?, ?, ?)',
         [a, b, (l['confidence'] as num).toDouble(), boolInt(l['confirmed'] == true), (l['createdAt'] as num?)?.toInt() ?? nowMs()],
       );
+      if (l['confirmed'] == true) {
+        // Never downgrade; a confirmation in the backup may upgrade an unconfirmed link.
+        batch.rawUpdate(
+          'UPDATE track_links SET confirmed = 1, confidence = MAX(confidence, ?) WHERE a = ? AND b = ? AND confirmed = 0',
+          [(l['confidence'] as num).toDouble(), a, b],
+        );
+      }
     }
     await batch.commit(noResult: true);
   }

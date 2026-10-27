@@ -75,6 +75,11 @@ class TrackActions {
     if (tracks.isEmpty) return;
     final playback = _read(playbackProvider);
     try {
+      // The controller's stream resolver enforces the silo at playback time
+      // only; check it here so mixing is never silently queued.
+      if (!_canJoinOpenQueue(tracks)) {
+        throw UnsupportedSourceOperation(tracks.first.sourceId, mixQueueOperation, 'Tracks cannot join this queue');
+      }
       if (next) {
         await playback.playNext(tracks, origin: origin);
       } else {
@@ -101,6 +106,17 @@ class TrackActions {
       _log.warning('Queue action failed', e, st);
       _error(e);
     }
+  }
+
+  /// Whether [tracks] may join the current queue under the SoundCloud silo
+  /// rule. The silo is inferred from the queue's non-local tracks; a queue
+  /// with no streams yet (empty or local files only) accepts anything.
+  bool _canJoinOpenQueue(List<Track> tracks) {
+    final queue = _read(playbackProvider).queue;
+    final streams = [for (final i in queue.items) if (i.track.sourceId != SourceIds.local) i.track.sourceId];
+    if (streams.isEmpty) return true;
+    final silo = SourcePolicies.siloOf(streams);
+    return tracks.every((t) => SourcePolicies.canJoinSilo(silo, t.sourceId));
   }
 
   // ---- Favorites --------------------------------------------------------

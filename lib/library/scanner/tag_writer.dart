@@ -7,6 +7,7 @@ import 'package:path/path.dart' as p;
 
 import '../../core/models/track.dart';
 import 'audio_formats.dart';
+import 'tag_dates.dart';
 import 'tag_reader.dart';
 
 /// Outcome of [writeTagsSafely].
@@ -70,7 +71,19 @@ TagWriteResult writeTagsSafely(String path, Track edited, Set<String> fields, St
     return TagWriteResult(TagWriteStatus.unsupported, message: 'Unreadable tags: $e');
   }
   final excluded = _modelFieldsFor(before, toWrite);
-  final beforePrint = _fingerprint(before)..removeWhere((k, _) => excluded.contains(k));
+  // Raw date text the package cannot represent (see tag_dates.dart).
+  final List<String> origFlacDates;
+  final String? origRecordingTime;
+  try {
+    origFlacDates = before is VorbisMetadata ? readFlacDates(file) : const [];
+    origRecordingTime = before is Mp3Metadata ? readId3RecordingTime(file) : null;
+  } on FileSystemException catch (e) {
+    return TagWriteResult(TagWriteStatus.failed, message: e.message);
+  }
+  final beforePrint = _fingerprint(before)
+    ..['rawDate'] = origFlacDates
+    ..['rawRecordingTime'] = origRecordingTime
+    ..removeWhere((k, _) => excluded.contains(k));
 
   Directory(backupDir).createSync(recursive: true);
   final backup = File(p.join(backupDir, 'tagwrite_${DateTime.now().microsecondsSinceEpoch}_${_rand.nextInt(1 << 30)}${p.extension(path)}'));
@@ -101,8 +114,20 @@ TagWriteResult writeTagsSafely(String path, Track edited, Set<String> fields, St
     } else {
       replaceMetadata(file, meta);
     }
+    // The writers rewrite the date tag in their own format; put back the
+    // original text (or the edited year) so unrelated edits keep the full date.
+    final yearEdited = toWrite.contains('year');
+    if (meta is VorbisMetadata) {
+      writeFlacDates(file, yearEdited ? [if (edited.year != null) '${edited.year}'] : origFlacDates);
+    } else if (meta is Mp3Metadata) {
+      final time = yearEdited ? edited.year?.toString() : origRecordingTime;
+      if (time != null) writeId3RecordingTime(file, time);
+    }
     final after = readAllMetadata(file, getImage: true);
-    final afterPrint = _fingerprint(after)..removeWhere((k, _) => excluded.contains(k));
+    final afterPrint = _fingerprint(after)
+      ..['rawDate'] = after is VorbisMetadata ? readFlacDates(file) : const <String>[]
+      ..['rawRecordingTime'] = after is Mp3Metadata ? readId3RecordingTime(file) : null
+      ..removeWhere((k, _) => excluded.contains(k));
     final reread = readTags(file);
     final roundTrip = toWrite.every((f) => _sameValue(f, reread, edited));
     if (!roundTrip || !_eq.equals(beforePrint, afterPrint)) {
@@ -235,7 +260,7 @@ Set<String> _modelFieldsFor(Object meta, Set<String> trackFields) {
           'artists' => ['leadPerformer'],
           'albumArtist' => ['bandOrOrchestra'],
           'album' => ['album'],
-          'year' => ['year', 'originalReleaseYear', 'date', 'recordingDates'],
+          'year' => ['year', 'originalReleaseYear', 'date', 'recordingDates', 'rawRecordingTime'],
           'genre' => ['genres', 'contentType'],
           'trackNo' => ['trackNumber'],
           'discNo' => ['partOfSet', 'discNumber'],
@@ -248,7 +273,7 @@ Set<String> _modelFieldsFor(Object meta, Set<String> trackFields) {
           'artists' => ['artist'],
           'albumArtist' => ['albumArtist'],
           'album' => ['album'],
-          'year' => ['date'],
+          'year' => ['date', 'rawDate'],
           'genre' => ['genres'],
           'trackNo' => ['trackNumber'],
           'isrc' => ['isrc'],

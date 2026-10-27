@@ -24,6 +24,8 @@ class SqlHistoryRepository implements HistoryRepository {
   Future<void> recordPlay(PlayRecord record) async {
     await _db.db.transaction((txn) async {
       await TrackStore.upsert(txn, [record.track], preserveScanned: true);
+      // A stale local track (its file moved away) is not stored; no history for it.
+      if ((await TrackStore.existingIds(txn, [record.track.id])).isEmpty) return;
       await txn.insert('play_history', {
         'track_id': record.track.id,
         'played_at': record.playedAt.millisecondsSinceEpoch,

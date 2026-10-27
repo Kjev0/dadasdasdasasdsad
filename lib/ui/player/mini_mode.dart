@@ -32,6 +32,7 @@ const miniWindowSize = Size(380, 132);
 /// Fallback [MiniWindowController] using `window_manager` directly.
 class WindowManagerMiniWindow implements MiniWindowController {
   Rect? _before;
+  bool _wasMaximized = false;
 
   /// Restored minimum size when leaving mini mode.
   static const normalMinimumSize = Size(380, 600);
@@ -40,6 +41,9 @@ class WindowManagerMiniWindow implements MiniWindowController {
   Future<void> setMiniMode(bool enabled, {Size size = miniWindowSize, bool alwaysOnTop = true}) async {
     try {
       if (enabled) {
+        // A maximized window ignores setBounds: leave that state first.
+        _wasMaximized = await windowManager.isMaximized();
+        if (_wasMaximized) await windowManager.unmaximize();
         _before = await windowManager.getBounds();
         await windowManager.setMinimumSize(size);
         final o = _before?.topLeft ?? Offset.zero;
@@ -49,6 +53,8 @@ class WindowManagerMiniWindow implements MiniWindowController {
         await windowManager.setAlwaysOnTop(false);
         await windowManager.setMinimumSize(normalMinimumSize);
         if (_before != null) await windowManager.setBounds(_before);
+        if (_wasMaximized) await windowManager.maximize();
+        _wasMaximized = false;
       }
     } catch (e, st) {
       _log.warning('Mini mode window change failed', e, st);

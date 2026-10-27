@@ -21,6 +21,10 @@ class DownloadIndex {
   final File file;
   final Duration debounce;
 
+  /// Track ids evicted by the storage limit (persisted with the tasks) so
+  /// automatic sync does not re-download them on every run.
+  final evicted = <String>{};
+
   Timer? _timer;
   List<DownloadRecord> Function()? _snapshot;
   Future<void> _chain = Future.value();
@@ -38,6 +42,8 @@ class DownloadIndex {
       final raw = jsonDecode(await f.readAsString());
       if (raw is! Map || raw['tasks'] is! List) return null;
       final records = <DownloadRecord>[];
+      final ev = raw['evicted'];
+      if (ev is List) evicted..clear()..addAll(ev.whereType<String>());
       for (final entry in raw['tasks'] as List) {
         try {
           records.add(DownloadRecord.fromJson((entry as Map).cast<String, Object?>()));
@@ -84,6 +90,7 @@ class DownloadIndex {
     final json = jsonEncode({
       'version': formatVersion,
       'tasks': [for (final r in records) r.toJson()],
+      'evicted': evicted.toList(),
     });
     final tmp = File('${file.path}.tmp');
     await tmp.writeAsString(json, flush: true);

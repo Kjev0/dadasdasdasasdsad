@@ -56,6 +56,15 @@ class ScanJob {
   int _removed = 0;
   final _errors = <String>[];
 
+  /// Library folders (registered when the scan started) that were removed
+  /// while the scan was running; their files must not be saved any more.
+  Set<String> _registeredAtStart = const {};
+
+  /// Roots (with trailing separator) that listed no files or failed while
+  /// listing: a missing mount or a permission problem must not be treated as
+  /// "every file was deleted".
+  final _suspectRoots = <String>[];
+
   void _error(String e) {
     if (_errors.length < _maxErrors) _errors.add(e);
   }
@@ -74,6 +83,9 @@ class ScanJob {
   Future<void> run() async {
     final found = <String, FoundFile>{};
     final enumeratedRoots = <String>[];
+    _registeredAtStart = {
+      for (final r in await db.db.query('library_folders', columns: ['path'])) r['path'] as String,
+    }..retainAll(roots);
     for (final root in roots) {
       cancel.throwIfCanceled();
       _progress(current: root);
@@ -84,6 +96,7 @@ class ScanJob {
         continue;
       }
       enumeratedRoots.add(withSeparator(root));
+      if (result.files.isEmpty || result.errors.isNotEmpty) _suspectRoots.add(withSeparator(root));
       for (final f in result.files) {
         found[f.path] = f;
       }
@@ -98,7 +111,11 @@ class ScanJob {
     final toParse = <FoundFile>[];
     for (final f in found.values) {
       final row = byPath[f.path];
-      final same = row != null && row.size == f.size && row.mtimeMs == f.mtimeMs && !missingArt.contains(row.artworkUrl);
+      final same = row != null &&
+          row.size == f.size &&
+          row.mtimeMs == f.mtimeMs &&
+          !missingArt.contains(row.artworkUrl) &&
+          !_folderArtChanged(row, f);
       if (same && !full) {
         if (row.missing) unchanged.add(row.id);
         _scanned++;
@@ -129,14 +146,28 @@ class ScanJob {
           if (r.hash != null) addedByHash[r.hash!] = r.track!.id;
         }
       }
-      await db.db.transaction((txn) => LocalFileStore.saveScanned(txn, results));
+      var allRemoved = false;
+      await db.db.transaction((txn) async {
+        final current = {for (final r in await txn.query('library_folders', columns: ['path'])) r['path'] as String};
+        final removed = [for (final r in _registeredAtStart) if (!current.contains(r)) withSeparator(r)];
+        allRemoved = removed.isNotEmpty && removed.length == roots.length;
+        final keep = removed.isEmpty
+            ? results
+            : [for (final r in results) if (!removed.any(r.path.startsWith)) r];
+        await LocalFileStore.saveScanned(txn, keep);
+      });
       notifyLibrary(bus, {LibraryTopic.tracks});
+      if (allRemoved) {
+        cancel.cancel();
+        cancel.throwIfCanceled();
+      }
       _progress(current: batch.last.path);
     }
 
     cancel.throwIfCanceled();
     final gone = [for (final r in existing) if (!found.containsKey(r.path)) r];
     if (gone.isNotEmpty) await _handleGone(gone, addedByHash);
+    if (addedByHash.isNotEmpty) await _adoptMissing(addedByHash);
 
     final now = nowMs();
     for (final root in enumeratedRoots) {
@@ -155,14 +186,17 @@ class ScanJob {
       final referenced = await LocalFileStore.referenced(txn, [for (final g in gone) g.id]);
       final now = nowMs();
       for (final g in gone) {
-        final movedTo = g.hash == null ? null : addedByHash.remove(g.hash);
+        var movedTo = g.hash == null ? null : addedByHash.remove(g.hash);
+        // The file may already have been added by an earlier scan of another
+        // library folder (watcher: one scan per changed root).
+        movedTo ??= await _existingCopy(txn, g);
         if (movedTo != null) {
           await LocalFileStore.migrate(txn, g.id, movedTo);
           // Counted as an update of the moved track rather than add + remove.
           _added--;
           _updated++;
           changedRefs = true;
-        } else if (referenced.contains(g.id)) {
+        } else if (referenced.contains(g.id) || _suspectRoots.any(g.path.startsWith)) {
           if (!g.missing) {
             await txn.update('tracks', {'missing_since': now}, where: 'id = ?', whereArgs: [g.id]);
             _removed++;
@@ -177,6 +211,58 @@ class ScanJob {
       LibraryTopic.tracks,
       if (changedRefs) ...{LibraryTopic.playlists, LibraryTopic.favorites, LibraryTopic.history, LibraryTopic.links},
     });
+  }
+
+  /// Another present local track with the content of [g] (a file moved here
+  /// by an earlier scan), if its file exists.
+  Future<String?> _existingCopy(Transaction txn, LocalRow g) async {
+    if (g.hash == null) return null;
+    final rows = await txn.rawQuery(
+      "SELECT id, local_path FROM tracks WHERE source_id = 'local' AND file_hash = ? AND id <> ? AND missing_since IS NULL",
+      [g.hash, g.id],
+    );
+    for (final r in rows) {
+      final path = r['local_path'] as String?;
+      if (path != null && path != g.path && File(path).existsSync()) return r['id'] as String;
+    }
+    return null;
+  }
+
+  /// Files added by this scan whose content matches a track that an earlier
+  /// scan (of another library folder) marked missing: a move across folders.
+  Future<void> _adoptMissing(Map<String, String> addedByHash) async {
+    var changed = false;
+    await db.db.transaction((txn) async {
+      for (final e in addedByHash.entries) {
+        final rows = await txn.rawQuery(
+          "SELECT id FROM tracks WHERE source_id = 'local' AND file_hash = ? AND id <> ? AND missing_since IS NOT NULL LIMIT 1",
+          [e.key, e.value],
+        );
+        if (rows.isEmpty) continue;
+        await LocalFileStore.migrate(txn, rows.first['id'] as String, e.value);
+        _added--;
+        _updated++;
+        changed = true;
+      }
+    });
+    if (changed) {
+      notifyLibrary(bus, {LibraryTopic.tracks, LibraryTopic.playlists, LibraryTopic.favorites, LibraryTopic.history, LibraryTopic.links});
+    }
+  }
+
+  /// Whether the folder art next to [f] differs from what the stored track
+  /// uses (new, replaced or removed cover); embedded artwork wins over it.
+  bool _folderArtChanged(LocalRow row, FoundFile f) {
+    final url = row.artworkUrl;
+    if (url != null && url.startsWith('file:')) {
+      try {
+        if (p.isWithin(artworkDir, Uri.parse(url).toFilePath())) return false; // embedded
+      } catch (_) {
+        return true;
+      }
+    }
+    final expected = f.folderArt == null ? null : Uri.file(f.folderArt!).toString();
+    return url != expected;
   }
 
   static Future<EnumerationResult> _enumerate(String root, Set<String> extensions) =>

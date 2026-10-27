@@ -33,11 +33,14 @@ String imageExtension(Uint8List bytes, String mime) {
 final _rand = Random();
 
 /// Stores embedded artwork once per album in [artworkDir] and returns its
-/// `file://` URI. Existing files are reused (first image of an album wins).
+/// `file://` URI. The cache file is keyed by the album *and* the image
+/// content, so identical images are stored once, while a replaced cover gets
+/// a new file instead of resurrecting the old image.
 /// Writes go to a temp file and are renamed, so concurrent scans are safe.
 Uri? saveEmbeddedArtwork(String artworkDir, Uint8List bytes, String mime, {String? albumKey}) {
   if (bytes.isEmpty) return null;
-  final key = albumKey ?? sha1.convert(bytes).toString();
+  final contentHash = sha1.convert(bytes).toString();
+  final key = albumKey == null ? contentHash : '${albumKey}_${contentHash.substring(0, 12)}';
   final ext = imageExtension(bytes, mime);
   final dir = Directory(artworkDir);
   final target = File(p.join(artworkDir, 'local_$key$ext'));

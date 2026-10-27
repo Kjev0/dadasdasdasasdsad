@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
@@ -15,12 +16,16 @@ final _log = Logger('ui.shortcuts');
 
 /// Intent carrying a `ShortcutActions` id.
 class FermataCommandIntent extends Intent {
-  const FermataCommandIntent(this.actionId, {this.allowInTextField = false});
+  const FermataCommandIntent(this.actionId, {this.allowInTextField = false, this.activationKey = false});
 
   final String actionId;
 
   /// Whether the binding may fire while a text field has focus.
   final bool allowInTextField;
+
+  /// Plain Space / Enter binding: yields to a focused control that activates
+  /// itself with that key (checkbox, switch, button, ...).
+  final bool activationKey;
 }
 
 class _CommandAction extends Action<FermataCommandIntent> {
@@ -29,8 +34,17 @@ class _CommandAction extends Action<FermataCommandIntent> {
   final void Function(String actionId) onInvoke;
 
   @override
-  bool isEnabled(FermataCommandIntent intent) =>
-      intent.allowInTextField || !ShortcutBinding.focusIsInTextField();
+  bool isEnabled(FermataCommandIntent intent) {
+    if (intent.activationKey && _focusedControlActivates()) return false;
+    return intent.allowInTextField || !ShortcutBinding.focusIsInTextField();
+  }
+
+  static bool _focusedControlActivates() {
+    final ctx = FocusManager.instance.primaryFocus?.context;
+    if (ctx == null) return false;
+    final action = Actions.maybeFind<ActivateIntent>(ctx);
+    return action != null && action is! DoNothingAction && action.isEnabled(const ActivateIntent());
+  }
 
   @override
   Object? invoke(FermataCommandIntent intent) {
@@ -46,7 +60,12 @@ Map<ShortcutActivator, Intent> buildShortcutMap(ShortcutSettings settings) {
   for (final action in CommandRegistry.shortcutActions) {
     final parsed = ShortcutBinding.parse(settings.bindingFor(action));
     if (parsed == null) continue;
-    map[parsed.toActivator()] = FermataCommandIntent(action, allowInTextField: ShortcutBinding.allowedInTextField(parsed));
+    map[parsed.toActivator()] = FermataCommandIntent(
+      action,
+      allowInTextField: ShortcutBinding.allowedInTextField(parsed),
+      activationKey: !parsed.hasCommandModifier &&
+          (parsed.key == LogicalKeyboardKey.space || parsed.key == LogicalKeyboardKey.enter),
+    );
   }
   return map;
 }

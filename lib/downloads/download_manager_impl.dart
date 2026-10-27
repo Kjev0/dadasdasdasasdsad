@@ -15,6 +15,7 @@ import '../core/models/download.dart';
 import '../core/models/track.dart';
 import '../core/net/http_client.dart';
 import '../core/platform/app_paths.dart';
+import '../core/sources/source_policies.dart';
 import '../core/util/cancel_token.dart';
 import '../settings/app_settings.dart';
 import '../settings/settings_store.dart';
@@ -56,10 +57,21 @@ class _ActiveRun {
   int lastReceived = 0;
   late final Future<void> done;
 
+  /// A user action (pause/cancel/remove) must not be lost to a system stop
+  /// (network loss, shutdown) that is still unwinding: the stronger intent
+  /// wins, and a later system stop never overrides a user action.
   void stop(_StopIntent why) {
-    intent ??= why;
+    final current = intent;
+    if (current == null || _rank(why) > _rank(current)) intent = why;
     cancel.cancel();
   }
+
+  static int _rank(_StopIntent i) => switch (i) {
+        _StopIntent.network => 0,
+        _StopIntent.shutdown => 1,
+        _StopIntent.pause => 2,
+        _StopIntent.cancel || _StopIntent.remove => 3,
+      };
 }
 
 /// Offline downloads: queue, resumable transfers, integrity, storage limits,
@@ -85,7 +97,9 @@ class DownloadManagerImpl implements DownloadManager {
     DownloadNotificationStrings? notificationStrings,
     DownloadOptions options = const DownloadOptions(),
     FileMover? fileMover,
+    SourcePolicy Function(String sourceId)? sourcePolicies,
   })  : _settings = settings,
+        _policyOf = sourcePolicies ?? SourcePolicies.of,
         _paths = paths,
         _network = network,
         _options = options,
@@ -111,6 +125,7 @@ class DownloadManagerImpl implements DownloadManager {
   final Future<int> Function()? _databaseSize;
   final Future<int> Function()? _streamCacheSize;
   final FileMover _mover;
+  final SourcePolicy Function(String sourceId) _policyOf;
   final bool _ownsArtwork;
   final OfflineArtworkStore _artwork;
   final DownloadNetworkPolicy _policy;
@@ -135,6 +150,7 @@ class DownloadManagerImpl implements DownloadManager {
   Future<void> _fsLock = Future.value();
   Future<void>? _syncing;
   bool _syncSkippedForNetwork = false;
+  int _autoSkippedCount = 0;
   StreamSubscription<AppSettings>? _settingsSub;
   StreamSubscription<NetworkState>? _networkSub;
   bool _initialized = false;
@@ -153,6 +169,14 @@ class DownloadManagerImpl implements DownloadManager {
 
   /// Network status used by the policy (`isMetered` for the stream resolver).
   NetworkStatus get network => _network;
+
+  /// Tracks the last auto-download sync skipped because their source's
+  /// policy forbids automatic downloads (reason:
+  /// [autoDownloadSkipReason]); lets the UI explain instead of pretending.
+  int get autoDownloadSkippedCount => _autoSkippedCount;
+
+  /// Why [autoDownloadSkippedCount] tracks were skipped, or null.
+  String? get autoDownloadSkipReason => _autoSkippedCount > 0 ? DownloadErrorCode.autoNotPermitted : null;
 
   /// Whether the active connection is metered.
   bool get isMetered => _network.isMetered;
@@ -197,7 +221,8 @@ class DownloadManagerImpl implements DownloadManager {
     _settingsSub = _settings.changes.listen((_) => _pump());
     _networkSub = _network.changes.listen((_) => _onNetworkChanged());
     _scheduler.start();
-    _index.scheduleSave(_snapshot);
+    // Persist the restored state right away (e.g. interrupted -> queued).
+    await _index.flush(_snapshot);
     _emitNow();
     _pump();
     if (_options.syncOnInit) _track(syncAutoDownloads());
@@ -256,6 +281,7 @@ class DownloadManagerImpl implements DownloadManager {
 
   @override
   Future<String?> localFileFor(String trackId) async {
+    await _recoverMissing(trackId);
     final record = _completedFor(trackId);
     final path = record?.task.filePath;
     if (record == null || path == null) return null;
@@ -297,6 +323,13 @@ class DownloadManagerImpl implements DownloadManager {
           return const DownloadEligibility(DownloadEligibilityKind.unavailable,
               reason: DownloadErrorCode.sourceUnavailable);
         }
+        // Provider terms (docs/COMPLIANCE.md) beat the track's own flag.
+        if (!_policyOf(track.sourceId).userInitiatedDownloads) {
+          final streamable = track.availability.playback == PlaybackRights.full;
+          return DownloadEligibility(
+              streamable ? DownloadEligibilityKind.streamOnly : DownloadEligibilityKind.unavailable,
+              reason: AvailabilityReason.notAuthorized);
+        }
         if (!source.supports(SourceCapability.download)) {
           return const DownloadEligibility(DownloadEligibilityKind.unavailable,
               reason: AvailabilityReason.notAuthorized);
@@ -316,6 +349,7 @@ class DownloadManagerImpl implements DownloadManager {
 
   @override
   Future<DownloadTask> enqueue(Track track, {String? origin}) async {
+    _index.evicted.remove(track.id); // an explicit request overrides a past eviction
     final (task, eligibility) = await _enqueue(track, origin: origin);
     if (task == null) {
       throw DownloadNotPermittedException(track.id, eligibility.reason ?? eligibility.kind.name);
@@ -327,6 +361,7 @@ class DownloadManagerImpl implements DownloadManager {
   Future<Map<String, DownloadEligibility>> enqueueAll(List<Track> tracks, {String? origin}) async {
     final rejected = <String, DownloadEligibility>{};
     for (final track in tracks) {
+      _index.evicted.remove(track.id);
       final (_, eligibility) = await _enqueue(track, origin: origin);
       if (!eligibility.canDownload) rejected[track.id] = eligibility;
     }
@@ -373,11 +408,8 @@ class DownloadManagerImpl implements DownloadManager {
       return;
     }
     if (r.status != DownloadStatus.failed && r.status != DownloadStatus.canceled) return;
-    final broken = r.task.filePath;
-    if (broken != null) {
-      await _withFsLock(() => _deleteFileIfUnshared(r));
-    }
-    _requeue(r);
+    await _discardBrokenFile(r);
+    _requeue(r, keepFile: r.task.error == DownloadErrorCode.fileMissing);
   }
 
   @override
@@ -398,6 +430,7 @@ class DownloadManagerImpl implements DownloadManager {
       lastModified: null,
       nextAttemptAt: null,
     ));
+    await _unpinArtworkIfUnused(r.task.track);
     _changed();
     _pump();
   }

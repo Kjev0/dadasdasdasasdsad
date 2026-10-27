@@ -16,8 +16,8 @@ extension _Enqueue on DownloadManagerImpl {
     final existing = _recordFor(track.id);
     if (existing != null) {
       if (existing.task.isActive || existing.status == DownloadStatus.completed) return (existing.task, allowed);
-      if (existing.task.filePath != null) await _withFsLock(() => _deleteFileIfUnshared(existing));
-      _requeue(existing, track: track);
+      await _discardBrokenFile(existing);
+      _requeue(existing, track: track, keepFile: existing.task.error == DownloadErrorCode.fileMissing);
       return (_records[existing.id]!.task, allowed);
     }
     final now = DateTime.now();

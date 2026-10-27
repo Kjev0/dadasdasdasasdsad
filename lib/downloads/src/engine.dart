@@ -61,7 +61,7 @@ extension _Engine on DownloadManagerImpl {
   }
 
   void _checkDrained() {
-    if (_batch.pendingCompleted == 0 || _active.isNotEmpty) return;
+    if (!_batch.hasPending || _active.isNotEmpty) return;
     final busy = _records.values.any((r) =>
         r.status == DownloadStatus.queued ||
         r.status == DownloadStatus.downloading ||
@@ -235,6 +235,16 @@ extension _Engine on DownloadManagerImpl {
       path = await DownloadPathBuilder.uniqueTarget(_downloadDir, track, extension);
       await _mover.move(partial, path);
     }
+    // A kept `file_missing` file that reappeared is superseded by this copy.
+    final stale = record.task.filePath;
+    if (stale != null && stale != path && !_records.values.any((o) => o.id != run.id && o.task.filePath == stale)) {
+      try {
+        final f = File(stale);
+        if (await f.exists()) await f.delete();
+      } on FileSystemException catch (e) {
+        _log.fine('Could not delete superseded file', e);
+      }
+    }
     final now = DateTime.now();
     final completedTask = rebuildTask(
       record.task,
@@ -273,6 +283,8 @@ extension _Engine on DownloadManagerImpl {
           lastModified: null,
           nextAttemptAt: null,
         ));
+        // The cover may have been pinned before the cancel landed.
+        await _unpinArtworkIfUnused(r.task.track);
       case _StopIntent.pause:
         _put(r.copyWith(
             task: rebuildTask(r.task, status: DownloadStatus.paused, receivedBytes: partialBytes, bytesPerSecond: 0)));
@@ -324,8 +336,10 @@ extension _Engine on DownloadManagerImpl {
         nextAttemptAt: DateTime.now().add(delay),
       ));
     } else {
-      _log.warning('Download ${run.id} (${record.task.trackId}) failed: ${failure.code}', error,
-          failure.code == DownloadErrorCode.unknown ? stack : null);
+      // Signed download URLs are bearer credentials: never log the error
+      // object (its text may embed the URL), only a redacted description.
+      _log.warning('Download ${run.id} (${record.task.trackId}) failed: ${failure.code} ${redactUrls(error)}',
+          null, failure.code == DownloadErrorCode.unknown ? stack : null);
       final failed = rebuildTask(record.task,
           status: DownloadStatus.failed,
           attempts: attempts,

@@ -6,6 +6,7 @@ import 'package:fermata/core/models/download.dart';
 import 'package:fermata/core/models/track.dart';
 import 'package:fermata/core/net/http_client.dart';
 import 'package:fermata/core/platform/app_paths.dart';
+import 'package:fermata/core/sources/source_policies.dart';
 import 'package:fermata/downloads/artwork/fermata_artwork_cache.dart';
 import 'package:fermata/downloads/download_manager_impl.dart';
 import 'package:fermata/downloads/download_options.dart';
@@ -56,6 +57,13 @@ class DownloadHarness {
   final http = FermataHttp();
   final _managers = <DownloadManagerImpl>[];
 
+  /// The harness source is a stand-in for a provider that permits user-initiated
+  /// and automatic downloads (no real remote provider does, see
+  /// docs/COMPLIANCE.md); every other source id keeps its real policy.
+  static SourcePolicy _policyOf(String id) => id == 'fake'
+      ? const SourcePolicy(userInitiatedDownloads: true, automaticDownloads: true)
+      : SourcePolicies.of(id);
+
   /// Authorization URLs per source track id (served by [server]).
   final auths = <String, DownloadAuthorization>{};
 
@@ -74,6 +82,7 @@ class DownloadHarness {
       options: options,
       fileMover: mover,
       artwork: artwork,
+      sourcePolicies: _policyOf,
     );
     _managers.add(m);
     return m;

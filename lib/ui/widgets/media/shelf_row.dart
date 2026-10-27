@@ -118,12 +118,20 @@ class _ShelfRowState extends ConsumerState<ShelfRow> {
           ),
           SizedBox(
             height: height,
-            child: ListView.separated(
-              controller: _controller,
-              scrollDirection: Axis.horizontal,
-              itemCount: widget.itemCount,
-              separatorBuilder: (_, _) => SizedBox(width: widget.spacing),
-              itemBuilder: widget.itemBuilder,
+            // Viewport / content size changes (window resize, new items) do
+            // not move the scroll position, so listen for metrics changes.
+            child: NotificationListener<ScrollMetricsNotification>(
+              onNotification: (_) {
+                _update();
+                return false;
+              },
+              child: ListView.separated(
+                controller: _controller,
+                scrollDirection: Axis.horizontal,
+                itemCount: widget.itemCount,
+                separatorBuilder: (_, _) => SizedBox(width: widget.spacing),
+                itemBuilder: widget.itemBuilder,
+              ),
             ),
           ),
         ],

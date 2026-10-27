@@ -207,8 +207,9 @@ class SqlTrackRepository implements TrackRepository {
     for (final r in sorted) {
       final d = (r['duration_ms'] as num?)?.toInt();
       final last = out.isEmpty ? null : out.last;
-      final lastD = last == null ? null : (last.last['duration_ms'] as num?)?.toInt();
-      final fits = last != null && ((d == null && lastD == null) || (d != null && lastD != null && (d - lastD).abs() <= 2000));
+      // Compared with the first member (not the previous one): no chaining.
+      final firstD = last == null ? null : (last.first['duration_ms'] as num?)?.toInt();
+      final fits = last != null && ((d == null && firstD == null) || (d != null && firstD != null && (d - firstD).abs() <= 2000));
       if (fits) {
         last.add(r);
       } else {

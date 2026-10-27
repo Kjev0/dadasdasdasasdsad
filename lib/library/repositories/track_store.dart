@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:sqflite/sqflite.dart';
 
@@ -19,7 +20,10 @@ abstract final class TrackStore {
   /// With [preserveScanned], existing local rows that the scanner owns (they
   /// have a file hash) are left untouched: a `Track` object held by the UI or
   /// the play queue may be older than the last scan and must not overwrite
-  /// tags read from the file.
+  /// tags read from the file. For the same reason such callers cannot create
+  /// *new* local rows: a local track that is unknown to the library and whose
+  /// file no longer exists is a stale object (e.g. the old id of a moved
+  /// file) and would resurrect a phantom track, so it is skipped.
   static Future<void> upsert(
     DatabaseExecutor ex,
     List<Track> tracks, {
@@ -44,6 +48,7 @@ abstract final class TrackStore {
     final batch = ex.batch();
     for (final t in unique.values) {
       if (preserveScanned && scanned.contains(t.id)) continue;
+      if (preserveScanned && !existing.containsKey(t.id) && _isDeadLocalFile(t)) continue;
       final json = t.toJson();
       final exists = existing.containsKey(t.id);
       final ovRaw = existing[t.id];
@@ -61,6 +66,11 @@ abstract final class TrackStore {
       _writeArtists(batch, effective);
     }
     await batch.commit(noResult: true);
+  }
+
+  static bool _isDeadLocalFile(Track t) {
+    final path = t.localPath;
+    return t.sourceId == SourceIds.local && path != null && !File(path).existsSync();
   }
 
   static void _writeArtists(Batch batch, Track effective) {

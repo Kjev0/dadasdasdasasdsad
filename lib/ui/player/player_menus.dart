@@ -171,6 +171,24 @@ class SleepTimerButton extends ConsumerWidget {
       onSelected: (choice) => applySleepChoice(ref, choice),
       itemBuilder: (context) => [
         _checkItem(context, const SleepChoice.off(), l10n.playerSleepOff, !active),
+        // A running timer rarely matches a preset (time has elapsed), so it
+        // gets its own checked row showing the remaining time.
+        if (endsAt != null)
+          PopupMenuItem<SleepChoice>(
+            enabled: false,
+            height: 40,
+            child: Row(
+              children: [
+                SizedBox(width: 28, child: Icon(Icons.check_rounded, size: 18, color: context.colors.accentText)),
+                Flexible(
+                  child: Text(
+                    l10n.playerSleepRemaining(formatDuration(endsAt.difference(DateTime.now()))),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
         for (final m in sleepTimerPresets) _checkItem(context, SleepChoice.minutes(m), l10n.playerSleepMinutes(m), false),
         _checkItem(context, const SleepChoice.endOfTrack(), l10n.playerSleepEndOfTrack, endOfTrack),
       ],

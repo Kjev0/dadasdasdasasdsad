@@ -33,7 +33,32 @@ extension _State on DownloadManagerImpl {
     _tasksCache = null;
   }
 
-  void _requeue(DownloadRecord r, {Track? track}) {
+  /// Deletes the file of a failed/canceled task so it can be re-downloaded —
+  /// except for `file_missing`: that flag can be stale (drive was not
+  /// mounted yet), so a file that is present again is never deleted.
+  Future<void> _discardBrokenFile(DownloadRecord r) async {
+    if (r.task.filePath == null || r.task.error == DownloadErrorCode.fileMissing) return;
+    await _withFsLock(() => _deleteFileIfUnshared(r));
+  }
+
+  /// A task flagged `file_missing` whose file is back (external drive / SD
+  /// card / NAS mounted late, file restored) is usable again.
+  Future<void> _recoverMissing(String trackId) async {
+    for (final r in _records.values.toList()) {
+      final path = r.task.filePath;
+      if (r.task.trackId != trackId ||
+          r.status != DownloadStatus.failed ||
+          r.task.error != DownloadErrorCode.fileMissing ||
+          path == null ||
+          !await File(path).exists()) {
+        continue;
+      }
+      _put(r.copyWith(task: rebuildTask(r.task, status: DownloadStatus.completed, error: null)));
+      _changed();
+    }
+  }
+
+  void _requeue(DownloadRecord r, {Track? track, bool keepFile = false}) {
     _put(
       r.copyWith(
         task: rebuildTask(
@@ -43,7 +68,7 @@ extension _State on DownloadManagerImpl {
           attempts: 0,
           error: null,
           bytesPerSecond: 0,
-          filePath: null,
+          filePath: keepFile ? r.task.filePath : null,
           completedAt: null,
           sha256: null,
         ),
@@ -115,7 +140,7 @@ extension _State on DownloadManagerImpl {
     late final Future<void> tracked;
     tracked = work
         .catchError((Object e, StackTrace st) {
-          _log.warning('Background download work failed', e, st);
+          _log.warning('Background download work failed: ${redactUrls(e)}', null, st);
         })
         .whenComplete(() => _pending.remove(tracked));
     _pending.add(tracked);

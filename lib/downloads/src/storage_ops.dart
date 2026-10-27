@@ -91,6 +91,9 @@ extension _StorageOps on DownloadManagerImpl {
           if (!deleted && !shared && await File(task.filePath!).exists()) continue; // locked / in use
           _records.remove(task.id);
           _tasksCache = null;
+          // Remember it so automatic sync does not download it again at once.
+          _index.evicted.add(task.trackId);
+          _index.scheduleSave(_snapshot);
           await _unpinArtworkIfUnused(task.track);
           if (deleted) {
             used -= size;
@@ -112,8 +115,8 @@ extension _StorageOps on DownloadManagerImpl {
   }
 
   Future<void> _changeDirectory(String newPath) async {
-    final target = p.normalize(p.absolute(newPath));
-    final old = p.normalize(p.absolute(_downloadDir));
+    var target = p.normalize(p.absolute(newPath));
+    var old = p.normalize(p.absolute(_downloadDir));
     if (p.equals(target, old)) return;
     try {
       await Directory(target).create(recursive: true);
@@ -123,6 +126,11 @@ extension _StorageOps on DownloadManagerImpl {
     } on FileSystemException catch (e) {
       throw StorageException('download_dir_not_writable', 'Cannot write to $target', cause: e);
     }
+    // The same folder spelled differently (symlink): nothing to move, and
+    // moving "onto" ourselves would delete the only copy.
+    final realTarget = await _realPath(target);
+    final realOld = await _realPath(old);
+    if (p.equals(realTarget, realOld)) return;
     await _withFsLock(() async {
       final moved = <String, String>{};
       for (final r in _records.values.toList()) {
@@ -136,18 +144,13 @@ extension _StorageOps on DownloadManagerImpl {
           final relative =
               isInside(old, path) ? p.relative(path, from: old) : DownloadPathBuilder.relativePathFor(r.task.track, ext);
           var candidate = p.join(target, relative);
+          // Never adopt a file that is already there: it is not ours (the
+          // user's own copy) and deleting the download would delete it.
           if (await File(candidate).exists()) {
-            if (r.task.sha256 != null && await IntegrityChecker.sha256Of(File(candidate)) == r.task.sha256) {
-              await source.delete();
-              dest = candidate;
-            } else {
-              candidate = await DownloadPathBuilder.uniqueTarget(target, r.task.track, ext);
-            }
+            candidate = await DownloadPathBuilder.uniqueTarget(target, r.task.track, ext);
           }
-          if (dest == null) {
-            await _mover.move(source, candidate);
-            dest = candidate;
-          }
+          await _mover.move(source, candidate);
+          dest = candidate;
           moved[path] = dest;
           if (isInside(old, path)) await removeEmptyParents(p.dirname(path), old);
         }
@@ -160,6 +163,14 @@ extension _StorageOps on DownloadManagerImpl {
     });
     await _index.flush(_snapshot);
     _changed();
+  }
+
+  Future<String> _realPath(String path) async {
+    try {
+      return await Directory(path).resolveSymbolicLinks();
+    } on FileSystemException {
+      return p.normalize(p.absolute(path));
+    }
   }
 
   Future<List<String>> _verifyAll() {
@@ -200,10 +211,12 @@ extension _StorageOps on DownloadManagerImpl {
       return;
     }
     _syncSkippedForNetwork = false;
+    _autoSkippedCount = 0;
     final playlists = await _playlists.autoDownloadPlaylists();
     final limit = _limitBytes;
     var used = limit == null ? 0 : await _downloadsBytes();
     var added = 0;
+    var skipped = 0;
     for (final playlist in playlists) {
       final tracks = await _playlists.playlistTracks(playlist.id);
       for (final track in tracks) {
@@ -211,6 +224,14 @@ extension _StorageOps on DownloadManagerImpl {
         // Existing tasks (incl. failed/canceled ones the user can retry) are
         // left alone so a canceled track is not re-added on every sync.
         if (_recordFor(track.id) != null) continue;
+        // Evicted by the storage limit: do not churn (download, evict, ...).
+        if (_index.evicted.contains(track.id)) continue;
+        // Provider terms: automatic downloads only for sources whose policy
+        // allows them (docs/COMPLIANCE.md). Reported so the UI can say why.
+        if (!_policyOf(track.sourceId).automaticDownloads) {
+          if (!track.isLocal && track.availability.offline != OfflineRights.userOwned) skipped++;
+          continue;
+        }
         if (limit != null && used >= limit) {
           _log.info('Auto-download sync stopped: storage limit reached');
           return;
@@ -218,7 +239,8 @@ extension _StorageOps on DownloadManagerImpl {
         final eligibility = await checkEligibility(track);
         if (!eligibility.canDownload) continue;
         try {
-          await enqueue(track, origin: 'playlist:${playlist.id}');
+          final (task, _) = await _enqueue(track, origin: 'playlist:${playlist.id}');
+          if (task == null) continue; // raced with a change in rights
           added++;
           used += track.format?.fileSizeBytes ?? 0;
         } on DownloadNotPermittedException {
@@ -226,6 +248,8 @@ extension _StorageOps on DownloadManagerImpl {
         }
       }
     }
+    _autoSkippedCount = skipped;
+    if (skipped > 0) _log.info('Auto-download sync skipped $skipped tracks: ${DownloadErrorCode.autoNotPermitted}');
     if (added > 0) _log.info('Auto-download sync queued $added tracks');
   }
 }

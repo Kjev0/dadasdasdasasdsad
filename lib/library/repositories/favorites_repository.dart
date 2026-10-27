@@ -26,6 +26,7 @@ class SqlFavoritesRepository implements FavoritesRepository {
     await _db.db.transaction((txn) async {
       await TrackStore.upsert(txn, [track], preserveScanned: true);
       if (favorite) {
+        if ((await TrackStore.existingIds(txn, [track.id])).isEmpty) return; // stale local track
         await txn.rawInsert('INSERT OR IGNORE INTO favorites(track_id, added_at) VALUES (?, ?)', [track.id, nowMs()]);
       } else {
         await txn.delete('favorites', where: 'track_id = ?', whereArgs: [track.id]);

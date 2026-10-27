@@ -58,8 +58,10 @@ class NativeTrayBackend implements TrayBackend {
       }
       icon.icon = image;
       // Windows: left click shows the window, right click opens the menu.
-      // Linux panels open the menu themselves and report no clicks.
-      if (Platform.isWindows) icon.setContextMenuTrigger(tm.ContextMenuTrigger.rightClicked);
+      // Linux: the native StatusNotifierItem only exports its menu over
+      // dbusmenu (instead of Menu=/NO_DBUSMENU) once a trigger is set; the
+      // panel then opens it itself.
+      if (Platform.isWindows || Platform.isLinux) icon.setContextMenuTrigger(tm.ContextMenuTrigger.rightClicked);
       _onActivate = onActivate;
       _onMenuItem = onMenuItem;
       _iconListener = icon.addListener((event) {

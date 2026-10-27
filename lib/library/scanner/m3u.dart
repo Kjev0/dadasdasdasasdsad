@@ -108,7 +108,10 @@ String buildM3u(List<Track> tracks, String exportDir, {bool extended = true, Str
       out.write('#EXTINF:$secs,${label.replaceAll(RegExp(r'[\r\n]+'), ' ')}$lineEnding');
     }
     final abs = p.normalize(p.absolute(path));
-    out.write(p.isWithin(dir, abs) ? p.relative(abs, from: dir) : abs);
+    var entry = p.isWithin(dir, abs) ? p.relative(abs, from: dir) : abs;
+    // A line starting with '#' is a comment for every M3U reader.
+    if (entry.startsWith('#')) entry = '.${p.separator}$entry';
+    out.write(entry);
     out.write(lineEnding);
   }
   return out.toString();
