@@ -1,6 +1,7 @@
 // Adversarial review: PlaylistImportServiceImpl / ImportReport defects.
 //
-// Every test in this file FAILS against the current implementation.
+// Every test in this file failed before the review fixes; they now guard
+// against regressions (see review_fixes_test.dart for the fixes' own tests).
 import 'dart:async';
 
 import 'package:fermata/core/contracts/matching.dart';

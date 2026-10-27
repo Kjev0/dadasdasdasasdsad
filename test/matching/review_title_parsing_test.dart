@@ -1,7 +1,8 @@
 // Adversarial review: title parsing defects that break the "Artist - Title"
 // requirement and the "never silently replace a studio recording" rule.
 //
-// Every test in this file FAILS against the current implementation.
+// Every test in this file failed before the review fixes; they now guard
+// against regressions (see review_fixes_test.dart for the fixes' own tests).
 import 'package:fermata/core/models/matching.dart';
 import 'package:fermata/matching/matching.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -44,7 +45,7 @@ void main() {
       final spotify = track('spotify', 's1', 'Live Forever', ['Oasis'], seconds: 276);
       final upload = track('soundcloud', 'sc1', 'Oasis - Live Forever', ['Big Brother Recordings'], seconds: 276);
       final m = scorer.score(spotify, upload);
-      // Currently: score ~0.36, confidence none, differences {live, titleMismatch}.
+      // Before the fix: score ~0.36, confidence none, differences {live, titleMismatch}.
       expect(m.differences, isNot(contains(MatchDifference.live)));
       expect(m.confidence.isAtLeast(MatchConfidence.high), isTrue,
           reason: 'score=${m.score} ${m.confidence} ${m.differences}');
@@ -55,7 +56,7 @@ void main() {
         track('spotify', 's1', '1999', ['Prince'], seconds: 379),
         track('youtube', 'y1', 'Prince - 1999 (Official Music Video)', ['Prince'], seconds: 379),
       );
-      // Currently: 0.445 none, title 0.0 (title key "prince" vs "1999").
+      // Before the fix: 0.445 none, title 0.0 (title key "prince" vs "1999").
       expect(m.confidence.isAtLeast(MatchConfidence.high), isTrue, reason: '${m.score} ${m.breakdown}');
     });
 
@@ -66,7 +67,7 @@ void main() {
       final matcher = SourceTrackMatcher(registry: FakeRegistry([deezer]), scorer: WeightedTrackScorer());
       final original = track('soundcloud', 'sc1', 'Oasis - Live Forever', ['Big Brother Recordings'], seconds: 276);
       final result = await matcher.findMatches(original, const MatchOptions(targetSources: ['deezer']));
-      // Currently notFound: the original is classified as a *live* version
+      // Before the fix: notFound: the original is classified as a *live* version
       // titled "Oasis", and the query sent is "Big Brother Recordings Oasis Live Forever".
       expect(result.decision, MatchDecision.autoAccepted,
           reason: 'queries=${deezer.queries} best=${result.best?.confidence} ${result.best?.differences}');
@@ -82,7 +83,7 @@ void main() {
       final o = track('deezer', 'd1', 'Father Stretch My Hands (Pt. 1)', ['Kanye West'], seconds: 135);
       final c = track('audius', 'a1', 'Father Stretch My Hands (Pt. 2)', ['Kanye West'], seconds: 130);
       final m = scorer.score(o, c);
-      // Currently: 0.976 high, breakdown title = 1.0, no differences.
+      // Before the fix: 0.976 high, breakdown title = 1.0, no differences.
       expect(m.confidence.isAtLeast(MatchConfidence.high), isFalse,
           reason: 'score=${m.score} ${m.confidence} ${m.breakdown}');
     });

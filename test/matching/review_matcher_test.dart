@@ -1,6 +1,7 @@
 // Adversarial review: SourceTrackMatcher defects.
 //
-// Every test in this file FAILS against the current implementation.
+// Every test in this file failed before the review fixes; they now guard
+// against regressions (see review_fixes_test.dart for the fixes' own tests).
 import 'package:fermata/core/errors.dart';
 import 'package:fermata/core/models/matching.dart';
 import 'package:fermata/core/models/track.dart';
@@ -80,7 +81,7 @@ void main() {
       final original = track('deezer', 'd1', 'Adventure', ['Rogue'], seconds: 210);
       final result = await matcher.findMatches(original, const MatchOptions(targetSources: ['spotify']));
       expect(result.error, isA<SourceMatchFailures>());
-      // Currently 6 requests (2 queries x 3 attempts) for a source that said
+      // Before the fix: 6 requests (2 queries x 3 attempts) for a source that said
       // "come back in 6 hours".
       expect(spotify.searchCalls, lessThanOrEqualTo(1), reason: 'queries: ${spotify.queries}');
     });

@@ -1,6 +1,7 @@
 // Adversarial review: Unicode / non-Latin title handling.
 //
-// Every test in this file FAILS against the current implementation.
+// Every test in this file failed before the review fixes; they now guard
+// against regressions (see review_fixes_test.dart for the fixes' own tests).
 import 'package:fermata/core/models/matching.dart';
 import 'package:fermata/matching/matching.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -27,7 +28,7 @@ void main() {
         track('spotify', 's1', '夜に駆ける', ['YOASOBI'], seconds: 261),
         track('youtube', 'y1', 'YOASOBI「夜に駆ける」 Official Music Video', ['Ayase / YOASOBI'], seconds: 262),
       );
-      // Currently 0.445 none with title 0.0.
+      // Before the fix: 0.445 none with title 0.0.
       expect(m.confidence.isAtLeast(MatchConfidence.medium), isTrue, reason: '${m.score} ${m.breakdown}');
     });
   });
