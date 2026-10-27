@@ -76,3 +76,15 @@ error states; search streaming merge order (SoundCloud first) and
 cancellation; recent searches; library filters; playlist CRUD, reorder,
 smart rule editor; downloads actions; history clear; responsive layouts at
 360×640 and 1440×900 without overflow errors.
+
+## Compliance addendum (binding — see docs/COMPLIANCE.md)
+* SoundCloud playback is siloed: when the user adds a track that cannot join
+  the current queue (`canEnqueue` false / `UnsupportedSourceOperation` with
+  operation `mix_queue`), show a dialog: "SoundCloud tracks play in their own
+  queue (SoundCloud's terms). Start a new queue?" — never silently mix.
+* Never show a download action for SoundCloud, Deezer, Spotify or YouTube
+  tracks; Audius/Jamendo downloads are per-track, user-initiated. Auto-download
+  toggles explain that only user-owned/permitted sources are downloaded
+  automatically (currently none of the streaming providers).
+* Provider attribution: SoundCloud tracks link to the track and uploader;
+  Deezer previews labeled "30-second preview · Deezer".

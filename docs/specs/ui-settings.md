@@ -120,3 +120,15 @@ Custom; restore defaults per section; connected-services card states
 (credentials missing / not connected / connected / expired / error) with a
 fake source; credentials editor saves; import wizard flow with fakes;
 review actions update decisions; onboarding completes and redirects.
+
+## Compliance addendum (binding — see docs/COMPLIANCE.md)
+* SoundCloud playback is siloed: when the user adds a track that cannot join
+  the current queue (`canEnqueue` false / `UnsupportedSourceOperation` with
+  operation `mix_queue`), show a dialog: "SoundCloud tracks play in their own
+  queue (SoundCloud's terms). Start a new queue?" — never silently mix.
+* Never show a download action for SoundCloud, Deezer, Spotify or YouTube
+  tracks; Audius/Jamendo downloads are per-track, user-initiated. Auto-download
+  toggles explain that only user-owned/permitted sources are downloaded
+  automatically (currently none of the streaming providers).
+* Provider attribution: SoundCloud tracks link to the track and uploader;
+  Deezer previews labeled "30-second preview · Deezer".

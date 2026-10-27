@@ -85,3 +85,22 @@ downloadable), share-URL parsing, ISRC lookup, missing-credentials behavior
 `docs/PROVIDERS.md`: for each provider — what works, what does not and why
 (terms), credentials needed, how to register an app (URL), exact redirect
 URIs, scopes, rate limits/quotas, attribution requirements.
+
+## Compliance & research addendum (binding — read docs/research/API_NOTES.md and docs/COMPLIANCE.md first)
+* SoundCloud: `client_secret` required for every token flow + PKCE;
+  `Authorization: OAuth <token>`; registration limited (Artist Pro) — say so
+  in `limitationsNote` and docs; **never downloadable** (`OfflineRights.streamOnly`,
+  `authorizeDownload` → null) regardless of `downloadable`; playback is siloed
+  (enforced by the playback engine via `SourcePolicies`); design for 1,500
+  stream resolutions/day (cache resolved stream URLs for their lifetime;
+  never prefetch streams speculatively more than one track ahead).
+* Spotify: dev mode (owner needs Premium, 5 allow-listed users) in
+  `limitationsNote`; playlist contents via `/playlists/{id}/items` only for
+  owned/collaborative playlists → other playlists: clear 403 explanation;
+  search max 10 per page; ISRC via `external_ids.isrc` when present.
+* YouTube: search quota 100 calls/day/project — use search sparingly (never
+  for automatic matching loops; matching should prefer other targets);
+  Android connect unsupported (needs Google AuthorizationClient) → desktop
+  only, explained; no credentials in the repo.
+* Jamendo: `type=single albumtrack` on track queries; downloads only when
+  `audiodownload_allowed`, user-initiated.

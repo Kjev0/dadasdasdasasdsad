@@ -101,6 +101,10 @@ playable item (setting) and the UI shows the localized reason.
 
 ## Offline categories
 
+Provider terms are encoded in `lib/core/sources/source_policies.dart` and
+explained in `docs/COMPLIANCE.md` (e.g. SoundCloud streams play in their own
+queue "silo" and are never downloadable).
+
 Every track maps to exactly one of: **user-owned file**, **downloadable**
 (source explicitly authorizes it), **stream-only**, **unavailable offline**
 (`OfflineRights`). Stream URLs are never persisted as downloads; DRM and

@@ -102,3 +102,19 @@ widget tree).
 * Sleep timer pauses; end-of-track mode pauses at the boundary.
 * Crossfade ramps volumes (fake backend records volume calls).
 * Stream re-resolution after expiry.
+
+## Compliance addendum (binding — added after API research, see docs/COMPLIANCE.md)
+* Use `SourcePolicies` (`lib/core/sources/source_policies.dart`). The queue has
+  a **silo** (`SourcePolicies.siloOf`): a queue containing SoundCloud streams
+  is a SoundCloud queue; only SoundCloud streams + local files/downloads may
+  play in it; an open queue never resolves SoundCloud streams.
+* The silo is determined when a queue is created (`playTracks`) from the
+  tracks' sources; `StreamResolverImpl.resolve` must accept the silo (add an
+  optional parameter in your implementation class, e.g.
+  `resolveForQueue(track, silo:)`, used by the controller) and skip links /
+  streams that `SourcePolicies.canJoinSilo` rejects.
+* `enqueue`/`playNext` of tracks that cannot join the current silo throw a
+  typed error (`UnsupportedSourceOperation(sourceId, 'mix_queue', ...)`) so
+  the UI can offer "Start a new queue". Expose a helper
+  `bool canEnqueue(List<Track>)` on the implementation class.
+* Deezer previews: `PlayableSource.expiresAt` from `previewUrlTtl` → re-resolve.

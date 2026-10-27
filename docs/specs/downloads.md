@@ -73,3 +73,15 @@ Constructor (adapt names if needed, keep it injectable):
     waiting + resume; integrity failure on HTML body; duplicate detection;
     storage limit LRU; directory change; eligibility for the four
     categories; restart restoration; auto-download sync.
+
+## Compliance addendum (binding — see docs/COMPLIANCE.md)
+* Eligibility must consult `SourcePolicies.of(track.sourceId)`:
+  SoundCloud → never downloadable (stream-only) even if the API says
+  `downloadable`; Audius/Jamendo → only user-initiated single downloads of
+  tracks the uploader marked downloadable; Deezer/Spotify/YouTube → never.
+* `syncAutoDownloads()` and any automatic enqueue only for sources with
+  `automaticDownloads` (no remote provider today) — tracks skipped this way
+  are reported (count + reason) so the UI can explain it.
+* `enqueue` takes the user-initiated path; `enqueueAll` from a playlist is
+  allowed (user tapped "Download" on the playlist) but only for sources with
+  `userInitiatedDownloads` and per-track downloadable rights.

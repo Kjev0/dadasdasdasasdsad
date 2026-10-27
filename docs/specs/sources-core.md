@@ -107,3 +107,21 @@ and stable.
     `MusicSourceBase`, capabilities, availability mapping, auth, register in
     bootstrap, tests), with a minimal example. Be honest that Flutter AOT
     builds cannot load Dart plugins at runtime — providers are compiled in.
+
+## Compliance & research addendum (binding — read docs/research/API_NOTES.md and docs/COMPLIANCE.md)
+* Audius: `app_name` optional (keep it); optional API key via credentials
+  (`FERMATA_AUDIUS_API_KEY`) is allowed; no related-tracks endpoint (implement
+  `relatedTracks` via related users' tracks or omit the capability); gated
+  downloads return 403 → `DownloadNotPermittedException`/unavailable;
+  downloads only user-initiated (policy).
+* Deezer: previews are signed and expire (~15 min) → `resolveStream` must
+  re-fetch the track to obtain a fresh preview URL and set `expiresAt`
+  (`SourcePolicies.of(deezer).previewUrlTtl`). Support importing a Deezer
+  user's PUBLIC playlists by profile URL/id (`user/{id}/playlists`, no OAuth).
+  Advanced search syntax `artist:"…"` is unreliable — use plain queries.
+  New-app OAuth registration appears closed → no `userLibrary`.
+* OAuth: desktop must use our own 127.0.0.1 loopback listener (Spotify bans
+  `localhost`, Google rejects webviews). Android: custom scheme + Custom
+  Tabs (Auth Tab falls back to Custom Tabs). Allow per-source opt-out of
+  Android support (`supportsAndroidRedirect == false` → connect throws
+  `UnsupportedSourceOperation` with an explanation) — YouTube needs this.

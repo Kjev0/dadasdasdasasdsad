@@ -59,3 +59,14 @@ Privacy-first: computed on device. No analytics, no hidden tracking.
    parser edge cases, LRCLIB request building + duration tolerance with
    MockClient (fixtures recorded from the real public API with curl are
    fine), lyrics disabled → no requests, update version comparison.
+
+## Research addendum (binding)
+* Audius has no related-tracks endpoint; SoundCloud related tracks require
+  credentials. Build "similar" pools from: SoundCloud related (when ready),
+  Audius related users' tracks, Deezer artist/related + radio (metadata,
+  preview-only) resolved to playable sources by search.
+* Mixes/queues must respect the SoundCloud silo: a generated shelf/mix is
+  either SoundCloud-only (+ local) or contains no SoundCloud tracks.
+* LRCLIB: `/api/get` matches only within ±2 s of duration — fall back to
+  `/api/search` (≤ 20 results) and pick by duration; honour `Retry-After`;
+  app-identifying User-Agent.

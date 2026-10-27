@@ -1,6 +1,6 @@
 # Fermata: music-provider API research notes
 
-Research date: **2026-10-27**. Every claim below links to the official source it was checked against on that date.
+Research date: **2026-10-27**. Each section starts with a list of the sources it was checked against on that date.
 "**Docs silent**" means the official documentation does not answer the question; treat any implementation there as unverified.
 "**Probed**" means a live unauthenticated `curl` against the public endpoint on 2026-10-27.
 
@@ -53,7 +53,7 @@ Research date: **2026-10-27**. Every claim below links to the official source it
 | Authorize URL | `https://secure.soundcloud.com/authorize?client_id=…&redirect_uri=…&response_type=code&code_challenge=…&code_challenge_method=S256&state=…` | Guide, OpenAPI `securitySchemes.oAuth2_1` |
 | Token URL (code exchange, refresh, client credentials) | `POST https://secure.soundcloud.com/oauth/token` (form-urlencoded) | Guide, OpenAPI |
 | Legacy token URL | `api.soundcloud.com/oauth2/token`: **do not use** ("deprecated and does not support OAuth 2.1") | Agents.md |
-| PKCE | **Required** (S256). OAuth 2.0 without PKCE was turned off after Oct 1, 2024 | Guide; OAuth 2.1 blog |
+| PKCE | **Required** (S256). The OAuth 2.0 flow without PKCE was deprecated after Oct 1, 2024 | Guide; OAuth 2.1 blog |
 | `client_secret` on code exchange | **Required.** The documented body is `grant_type=authorization_code, client_id, client_secret, redirect_uri, code_verifier, code`, and the OpenAPI `OAuthToken` schema marks `client_secret` as required | Guide; OpenAPI |
 | `client_secret` on refresh | **Required.** Body: `grant_type=refresh_token, client_id, client_secret, refresh_token` | Guide |
 | Public-client support | **None.** "All clients are currently treated as confidential rather than public, meaning a secret is required to obtain a token." | Guide |
@@ -123,6 +123,8 @@ Base URL `https://api.soundcloud.com`. Every request sends `Authorization: OAuth
 
 **User fields:** `urn`, `username`, `full_name`, `avatar_url`, `permalink_url`, `followers_count`, `followings_count`, `track_count`, `playlist_count`, `public_favorites_count`, `city`, `country`, `plan`, `station_urn`, `subscriptions`.
 
+**`/me` (`Me` schema) adds:** `likes_count`, `private_playlists_count`, `private_tracks_count`, `primary_email_confirmed`, `locale`, `quota`, `upload_seconds_left`, `online`. There is no email field.
+
 ### 1.6 Streaming formats (`/tracks/{urn}/streams`)
 
 - **Current `Streams` schema** in the OpenAPI spec (fetched 2026-10-27): `hls_aac_160_url`, `hls_mp3_128_url`, `preview_mp3_128_url`.
@@ -139,11 +141,11 @@ Base URL `https://api.soundcloud.com`. Every request sends `Authorization: OAuth
 
 - **Player selection order:** `hls_aac_160_url` → `hls_aac_96_url` → `hls_mp3_128_url` → (preview only if `access == preview`) `preview_mp3_128_url`. Staff say "look for AAC first and MP3 second" and "AAC is the only streaming format we're supporting going forward" (Sep 29, 2026).
 - **The URLs returned by `/streams` need the token too.** They look like `https://api.soundcloud.com/tracks/<urn>/streams/<uuid>/...`. Staff, Nov 14, 2025: "The calls to the streaming endpoint you get from `/streams` still need to stay authenticated (with a valid token)." An authenticated request answers with a 302 to a signed CDN URL (`expires=`) that plays without auth. Practical consequences:
-  - Pass `Authorization: OAuth …` as a header to the player (media_kit/just_audio both support headers), **or**
-  - resolve the 302 yourself just before playback. Never cache the signed URL for long.
+  - Pass `Authorization: OAuth …` as a request header to the player. media_kit's `Media(httpHeaders:)` and just_audio's `AudioSource.uri(headers:)` both have a headers option, but whether it applies to HLS sub-requests was not verified here. **Or**
+  - resolve the 302 yourself just before playback, which is more robust: only the first request needs auth, and the signed CDN URL then works without it. Never cache the signed URL for long.
 - **Anonymous playback may go away.** Staff (Nov 20, 2025) said anonymous (client-credentials) playback "might deprecate in the future" and suggested user login. This is an unofficial comment.
 - **DRM:** none mentioned. **Docs silent.**
-- **Guide inconsistency:** the guide still shows `stream_url` and `/tracks/TRACK_ID/stream`, while Agents.md and the skills say "Use `/tracks/{track_urn}/streams` (not legacy `/stream`)". Use `/streams`.
+- **Guide inconsistency:** the guide still shows `stream_url` and `/tracks/TRACK_ID/stream`, while Agents.md and the skills say "Use `/tracks/{track_urn}/streams` (not legacy `/stream`)". Use `/streams`. Agents.md also contains a garbled sentence, "Use the `/tracks/{track_urn}/streams` endpoint as it only returns 30sec snippets". Read in context, it probably means the *legacy* `/stream` returns only snippets, since `stream_url` is documented as "preview only". Nothing else in the docs says `/streams` is preview-only.
 - **Access levels** (`access` field, nullable): `playable` (full track), `preview` (snippet only), `blocked` (metadata only: "Restricted tracks have no stream_url and their access field is set to blocked. Calling /tracks/:id/streams for a blocked track returns an error."). Tracks may be "restricted by the creator, paywalled, or geo-blocked." The `access` query filter on search and lists defaults to `playable,preview` (search) or `playable,preview,blocked` (`/me/likes/tracks`).
 - **Region signals:** `access` (evaluated for the caller), `available_country_codes` (string), and an error from `/streams`. **Docs silent** on the exact format of `available_country_codes`.
 - **`streamable` (boolean):** documented only as "Is streamable." Treat `access` as authoritative for playback decisions.
@@ -166,7 +168,7 @@ Source: the Rate Limits page.
 - **Headers:** `X-Ratelimit-Limit`, `X-Ratelimit-Remaining`, `X-Ratelimit-Reset` (unix seconds). Over a limit the API returns **429** with `Retry-After` when present.
 - **Conflict:** the LLM-context page and the repo skills say "15,000 play-stream requests per 24h per client_id", which is 10× the Rate Limits page. Design for **1,500/day per client_id**. That budget is shared by *all* Fermata users if Fermata ships one client_id, which is another argument for bring-your-own-credentials.
 - Token endpoint limits: see 1.3.
-- **Probed:** an anonymous request to `/tracks/{urn}` returned `429`, so the anonymous budget is already exhausted by other callers. Do not rely on unauthenticated calls.
+- **Probed:** an unauthenticated `GET /tracks/soundcloud:tracks:308946187` returned `429` rather than `401`. Unauthenticated traffic appears to be throttled; the reason is undocumented. Do not rely on unauthenticated calls.
 
 ### 1.8 API Terms of Use: what Fermata may and may not do
 
@@ -242,6 +244,7 @@ What this means for Fermata's UI:
 | Redirect URIs: https://developer.spotify.com/documentation/web-api/concepts/redirect_uri | enforced for new apps from Apr 9, 2025; all apps by Nov 2025 |
 | Blog "Increasing the security requirements…": https://developer.spotify.com/blog/2025-02-12-increasing-the-security-requirements-for-integrating-with-spotify | Feb 12, 2025 |
 | Blog "Introducing some changes to our Web API": https://developer.spotify.com/blog/2024-11-27-changes-to-the-web-api | Nov 27, 2024 |
+| Blog "Reminder: OAuth Migration - 27 November 2025": https://developer.spotify.com/blog/2025-10-14-reminder-oauth-migration-27-nov-2025 | Oct 14, 2025 |
 | PKCE tutorial: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow | fetched 2026-10-27 |
 | Scopes: https://developer.spotify.com/documentation/web-api/concepts/scopes | fetched 2026-10-27 |
 | Rate limits: https://developer.spotify.com/documentation/web-api/concepts/rate-limits | fetched 2026-10-27 |
@@ -277,7 +280,7 @@ Source: Quota modes; Feb 2026 migration guide; July 2026 changelog.
 | Refresh | Same token endpoint, `grant_type=refresh_token`, `refresh_token`, `client_id`. "the response might not include a new refresh token. If it does not, continue using the existing token." |
 | Token response | `access_token`, `token_type` ("Bearer"), `scope`, `expires_in`, `refresh_token` |
 | API header | `Authorization: Bearer <token>`; base `https://api.spotify.com/v1` |
-| Implicit grant | Removed (migration deadline Nov 27, 2025) |
+| Implicit grant | Removed. The Oct 2025 reminder blog says that on 27 Nov 2025 "The implicit grant flow will no longer be supported", "HTTP redirect URIs will no longer be allowed", and "Localhost aliases … will be prohibited", while "You can still use local IP addresses like `http://127.0.0.1`" |
 
 **Redirect URI rules** (Redirect URIs page; Feb 12, 2025 blog):
 - "Use HTTPS for your redirect URI, unless you are using a loopback address, when HTTP is permitted."
@@ -335,7 +338,7 @@ Source: Quota modes; Feb 2026 migration guide; July 2026 changelog.
   - `GET /users/{id}`, `GET /users/{id}/playlists`, `GET /markets`
   - The per-type save/follow/contains endpoints, replaced by `PUT/DELETE /me/library` and `GET /me/library/contains` (Spotify URIs)
   - User fields `email`, `country`, `product`, `followers`, `explicit_content`
-- A Spotify staff forum post (Feb 2026 update thread on community.spotify.com) said the endpoint changes for *existing* dev-mode apps were postponed. That is not reflected in the docs, and a **new** Fermata app gets the restricted set either way.
+- **Unverified:** search-engine summaries say a Spotify staff post in the "February 2026 Spotify for Developers update" thread on community.spotify.com announced that endpoint changes for *existing* dev-mode apps were postponed. We could not read the thread; it renders client-side. The official docs do not mention a postponement, and a **new** Fermata app gets the restricted set either way.
 
 ### 2.6 Audio: Fermata may not stream or download Spotify audio
 
@@ -515,11 +518,11 @@ Base URL: `https://api.deezer.com`. Collections are `{ "data": [...], "total": N
 
 | Purpose | Endpoint | Probe result / key fields |
 |---|---|---|
-| Search tracks | `GET /search?q=…&limit=&index=` (also advanced syntax like `artist:"…" track:"…"`; that syntax is in the gated docs, not verified) | `data[]`: `id, readable, title, title_short, title_version, isrc, link, duration (s), rank, explicit_lyrics, explicit_content_lyrics, explicit_content_cover, preview, md5_image, artist{id,name,link,picture_*,tracklist}, album{id,title,cover_*,md5_image,tracklist}, type`, plus `total`, `next` |
+| Search tracks | `GET /search?q=…&limit=&index=`. Advanced syntax was probed on 2026-10-27: `q=track:"one more time"` worked, but `q=artist:"daft punk"` and the combined `artist:"…" track:"…"` returned `{"data":[],"total":0}`. Use plain `q="<artist> <title>"` for matching, and don't rely on the `artist:` filter | `data[]`: `id, readable, title, title_short, title_version, isrc, link, duration (s), rank, explicit_lyrics, explicit_content_lyrics, explicit_content_cover, preview, md5_image, artist{id,name,link,picture_*,tracklist}, album{id,title,cover_*,md5_image,tracklist}, type`, plus `total`, `next` |
 | Search artists / playlists / albums | `GET /search/artist?q=`, `/search/playlist?q=`, `/search/album?q=` | artist `data[]`: `id, name, link, picture_*, nb_album, nb_fan, radio, tracklist`. Playlist `data[]`: `id, title, public, nb_tracks, link, picture_*, checksum, tracklist, creation_date, user` |
 | Track | `GET /track/{id}` | `id, readable, title, isrc, link, share, duration, track_position, disk_number, rank, release_date, explicit_lyrics, preview, bpm, gain, available_countries[], contributors[], md5_image, track_token, artist{…}, album{…}` |
 | **Track by ISRC** | `GET /track/isrc:{ISRC}` | **Works.** `track/isrc:GBDUW0000059` returned track `3135556` ("Harder, Better, Faster, Stronger") |
-| Album | `GET /album/{id}` (also `/album/upc:{UPC}`, documented in the gated reference and not probed) | `id, title, upc, link, cover_*, genre_id, genres, label, nb_tracks, duration, fans, release_date, record_type, available, tracklist, contributors, artist, tracks` |
+| Album | `GET /album/{id}`; also **`GET /album/upc:{UPC}`**, probed: `album/upc:724384960650` returned album `302127` "Discovery" | `id, title, upc, link, cover_*, genre_id, genres, label, nb_tracks, duration, fans, release_date, record_type, available, tracklist, contributors, artist, tracks` |
 | Playlist | `GET /playlist/{id}`; tracks paged via `GET /playlist/{id}/tracks?index=&limit=` | Playlist: `id, title, description, duration, public, collaborative, nb_tracks, fans, link, picture_*, checksum, creator, tracks{data[], checksum}`. Note `tracks` embedded in `/playlist/{id}` held 50 items with no `next`. Use `/playlist/{id}/tracks`, which has `total` and `next`; items add `time_add` |
 | Related artists | `GET /artist/{id}/related` | `data[]` artists, `total`, `next` |
 | Artist top tracks | `GET /artist/{id}/top?limit=50` (returned in the `tracklist` field) | |
@@ -548,7 +551,7 @@ Base URL: `https://api.deezer.com`. Collections are `{ "data": [...], "total": N
 - **§II:** the Trademark Guidelines referenced for logo use are mandatory. The linked page `deezer.com/developers/simpleapi` is legacy, and the logo section on `/guidelines` ("Graphical Guidelines / Logo") did not render any content in our fetch, so **the current logo rules are unverified**. Minimum practice: label content "from Deezer", link each item to its `link` (`https://www.deezer.com/track/{id}`), and do not alter the Deezer logo.
 
 **What Fermata may do:**
-- Search and metadata, used heavily for matching. `isrc` is on every track, and `/track/isrc:` is the best ISRC resolver available without auth.
+- Search and metadata, used heavily for matching. `isrc` appears on `/track/{id}`, search results and playlist track items, but **not** on `/chart` track items. `/track/isrc:` is the best ISRC resolver available without auth.
 - 30 s preview playback, streamed rather than stored, with a link back to Deezer.
 - "Open in Deezer" via `link` (https App Link to the Deezer app) or the `deezer://www.deezer.com/track/{id}` scheme. That scheme is not documented in the readable docs; the https link is safer.
 
@@ -610,7 +613,7 @@ Base URL: `https://api.deezer.com`. Collections are `{ "data": [...], "total": N
 | **Download** | `GET /tracks/{track_id}/download?filename=` downloads "the original or MP3 file" | **Probed:** ungated downloadable track `oWgXra7` gave **302** to `…/cidstream/…?filename=…mp3&signature=…`. Follow-gated track `QVpmB` (`download_conditions: {"follow_user_id":…}`) gave **403** |
 | Stems | `GET /tracks/{track_id}/stems`, `/tracks/{track_id}/stems/download` | |
 | User | `GET /users/{id}`, `/users/handle/{handle}` | |
-| User's tracks | `GET /users/{id}/tracks?offset=&limit=&sort=…`, `/users/handle/{handle}/tracks` | |
+| User's tracks | `GET /users/{id}/tracks?offset=&limit=&sort=&sort_method=&sort_direction=&filter_tracks=`, `/users/handle/{handle}/tracks` | |
 | User's playlists / library | `GET /users/{id}/playlists`; `/users/{id}/library/tracks\|playlists\|albums` (OAuth `read` for the user's own); `/users/{id}/favorites` | |
 | Playlist | `GET /playlists/{playlist_id}`, `GET /playlists/{playlist_id}/tracks` | |
 | Related / similar | **No track-level related endpoint.** There is `GET /users/{id}/related` ("users that might be of interest to followers of this user"), plus `GET /tracks/recommended` and `/tracks/{track_id}/remixes` | |
@@ -659,7 +662,7 @@ Engineering reading:
 
 **Attribution:**
 - No attribution or logo requirement is stated in the API Terms or docs (docs silent).
-- OML §1.5 applies **only for commercial use**: "the Licensee must retain: (a) identification of the Licensor … (b) a copyright notice … (c) a notice that refers to this OML; (d) a URI or hyperlink to the Licensed Material".
+- OML §1.5 applies **only for commercial use**: "If a Licensee licenses the Licensed Material for commercial purposes, the Licensee must retain the following: a) identification of the Licensor (including by pseudonym if designated) … b) a copyright notice reflecting the copyright owner of the Licensed Material; c) a notice that refers to this OML; d) a URI or hyperlink to the Licensed Material to the extent reasonably practicable".
 - **Recommended regardless:** show artist `user.name`/`handle`, link to `https://audius.co{permalink}`, and mention "via Audius".
 
 **Other API Terms restrictions:**
@@ -697,7 +700,7 @@ Engineering reading:
 
 | Purpose | Endpoint / params |
 |---|---|
-| Track search | `tracks/?search=<free text>` or `namesearch=`, `tags=`, `fuzzytags=`, `artist_name=`, `album_name=`, `id=` (multiple), `order=relevance\|popularity_month\|…`, `boost=`, `groupby=artist_id`, `include=licenses+musicinfo+stats+lyrics`, `type=single+albumtrack`, `limit` (default 10, **max 200**), `offset`, `fullcount=true` (adds `headers.results_fullcount`) |
+| Track search | `tracks/?search=<free text>` or `namesearch=`, `tags=`, `fuzzytags=`, `artist_name=`, `album_name=`, `id=` (multiple), `order=relevance\|popularity_month\|…`, `boost=`, `groupby=artist_id`, `include=licenses+musicinfo+stats+lyrics`, **`type=single albumtrack`** (by default "we return only albumtracks", so pass both or singles are missed), `limit` (default 10, **max 200**), `offset`, `fullcount=true` (adds `headers.results_fullcount`) |
 | Audio format | `audioformat=mp31\|mp32\|ogg\|flac` for the `audio` stream URL (default `mp31` = 96 kbps). `audiodlformat=…` for `audiodownload` (default `mp32` VBR) |
 | License filters | `ccsa`, `ccnd`, `ccnc` booleans |
 | Other read methods (docs index) | `albums`, `albums/tracks`, `artists`, `artists/tracks`, `artists/albums`, `artists/locations`, `autocomplete`, `feeds`, `playlists`, `playlists/tracks`, `radios`, `radios/stream`, `reviews/*`, `tracks/file` (file/stream redirect), `tracks/similar`, `users/*` |
@@ -720,3 +723,137 @@ Engineering reading:
 - **Other.** Do not replicate "the overall experience of JAMENDO services". Reflect content changes promptly. A privacy policy is required.
 
 ---
+
+## 7. LRCLIB (lyrics) and other lyrics sources
+
+### 7.1 Sources checked
+
+| Source | Version / date visible |
+|---|---|
+| API docs: https://lrclib.net/docs | No date. The page is a JS app; the markdown was read from the site's bundle `/assets/index-7ca6a2e5.js` on 2026-10-27 and mentions a "New update" on stricter limits for unregistered clients |
+| Live probes `https://lrclib.net/api/get`, `/api/search` | 2026-10-27 |
+| Musixmatch developer portal https://developer.musixmatch.com/ → redirects to login. Pricing https://www.musixmatch.com/pro/api/pricing | JS-rendered; content not readable |
+
+### 7.2 LRCLIB API
+
+- **Base and access:** base `https://lrclib.net`. "No API key is required, and anonymous API access remains available." CORS `*`.
+- **Required client identification (etiquette):** "We require you to identify your client in requests. Set the `User-Agent` header with your application's name, version, and a link to its homepage or project page, or an email address". The docs' example is `LRCGET v0.2.0 (https://github.com/tranxuanthang/lrcget)`.
+  - Where the UA can't be set, use `X-User-Agent` or `Lrclib-Client`.
+  - For Fermata, send `User-Agent: Fermata vX.Y.Z (https://<project-url>)`.
+- **Optional registration** at https://lrclib.net/developers:
+  - Client apps send the public `Lrclib-App-Id` header, which is "safe to ship in a client".
+  - Server apps send a secret `Lrclib-Api-Key`.
+  - Invalid values return 401.
+- **Rate limits** ("approximations … may change"):
+
+| Client type | Allowance |
+|---|---|
+| Generic, no app-specific UA | ~45 req/min per IP |
+| UA naming the app | ~90 req/min per IP |
+| `Lrclib-App-Id` | ~180 req/min per IP, plus ~6,000/min app-wide |
+| API key | ~6,000/min app-wide only |
+
+- **Over the limit** the server returns **429** with `Retry-After`, which "**must**" be honoured (add jitter up to about 30%). Ignoring it "may result in a temporary ban".
+- 503 `ServerOverloaded` also carries `Retry-After`.
+- **Throttling advice:** "send requests sequentially … add a short delay between requests (200–500 ms), especially for batch operations like scanning a full music library."
+- **`GET /api/get?track_name=&artist_name=&album_name=&duration=`:** `track_name` and `artist_name` are required; `album_name` is recommended; `duration` is in seconds, 1–3600.
+  - "LRCLIB will attempt to provide the lyrics only when the duration matches the record in LRCLIB's database, or at least with a difference of ±2 seconds".
+  - A miss returns 404 `{"name":"TrackNotFound"}`, and "Missing tracks can be picked up by the background lyrics fetching service and may become available in a later request."
+  - **Probed** (200) with the docs' example: the record has keys `albumName, artistName, duration (233.0), hasWordSync, id (3396226), instrumental, lyricsfile, name, plainLyrics, syncedLyrics, trackName`.
+- **`GET /api/get/{id}`:** returns one record by ID.
+- **`GET /api/search?q=…`** (or `track_name=` + optional `artist_name=`, `album_name=`): returns an array, at most 20 results, with no pagination. **Probed:** `q=still+alive+portal` gave a list of 20 records with the same keys.
+- **Record fields:**
+  - `syncedLyrics` is LRC text with `[mm:ss.xx]` stamps.
+  - `plainLyrics` is plain text.
+  - Both are null when `instrumental: true`.
+  - `lyricsfile` is a YAML document; word-level timings are present when `hasWordSync`.
+- **Note:** `/api/get-cached`, seen in older third-party clients, is **not in the current docs**; do not use it.
+- **Errors:** JSON `{message,name,statusCode}`. Malformed queries return **plain text** ("Failed to deserialize query string…"), so check `Content-Type`.
+- **Write endpoints** (optional, for later): `POST /api/request-challenge` (proof-of-work prefix and target, 5-minute expiry), then `POST /api/publish` or `POST /api/flag` with a single-use `X-Publish-Token: {prefix}:{nonce}`.
+- **Terms and licensing: docs silent.**
+  - The site states only that the Lyricsfile *specification* is "dedicated to the public domain under CC0". It offers DB dumps at `db-dumps.lrclib.net`.
+  - No ToS or licence for the **lyrics text** was found. Lyrics are copyrighted works of their publishers, and LRCLIB does not claim to license them to apps.
+  - Engineering reading: fetching on demand and displaying for the user's personal playback is the norm among open-source players (e.g. LRCGET). Caching lyrics locally per track is reasonable and reduces load.
+  - Do **not** redistribute lyrics in bulk, and do not ship a commercial product that relies on them without checking lyric licensing.
+  - Add a "report wrong lyrics" path via `/api/flag` if desired.
+
+### 7.3 Other lyrics sources
+
+- **Musixmatch:** the API requires a developer account. The pricing page (https://www.musixmatch.com/pro/api/pricing) is JS-rendered and could not be read. Third-party summaries, **unverified against official docs**, say the free plan returns only a partial (about 30%) lyrics preview for non-commercial use, and that full or synced lyrics need a paid commercial licence. Treat Musixmatch as **requiring a commercial licence and agreement**; not usable for Fermata without one.
+- **Scraping lyrics sites** (Genius pages, AZLyrics, Google, Apple/Spotify lyrics endpoints): **not permissible**. These are unlicensed, against the sites' ToS, and for Spotify forbidden by the Developer Terms (no undocumented APIs or scraping; "song lyrics" are listed as Spotify Content).
+- **Genius API** (https://docs.genius.com): community clients consistently report that the official API returns song metadata and a lyrics *page URL*, but **not the lyrics text**. Examples: the `lyricist` README says "the Genius API doesn't offer lyrics", and the geniURL README agrees. The official page was not re-read on this pass, so treat this as **unverified**. Do not scrape the page.
+- **Embedded tags:** local files' embedded lyrics (ID3 `USLT`/`SYLT`, Vorbis `LYRICS`) and sidecar `.lrc` files are always permissible to display.
+
+---
+
+## 8. OAuth redirects for a Flutter app without a webview (Android + desktop), 2026
+
+### 8.1 Sources checked
+
+| Source | Version / date |
+|---|---|
+| RFC 8252 "OAuth 2.0 for Native Apps" (BCP 212): https://www.rfc-editor.org/rfc/rfc8252 | Oct 2017 |
+| Chrome "Simplify authentication using Auth Tab": https://developer.chrome.com/docs/android/custom-tabs/guide-auth-tab | "Last updated 2025-01-31" |
+| `AuthTabIntent` reference: https://developer.android.com/reference/androidx/browser/auth/AuthTabIntent | fetched 2026-10-27 |
+| `flutter_web_auth_2` on pub.dev: https://pub.dev/packages/flutter_web_auth_2 | v5.1.0 ("Published 2 months ago"); 6.0.0-alpha.9 prerelease |
+| Provider pages cited in sections 1–6 | see above |
+
+### 8.2 Best practice
+
+- **No embedded webviews.** RFC 8252 §8.12: "native apps MUST NOT use embedded user-agents to perform authorization requests". Google actively blocks them (`disallowed_useragent`). Always use the system browser.
+- **Three redirect types** (RFC 8252 §7):
+  - Private-use URI scheme, §7.1: use reverse-domain notation, e.g. `com.example.fermata:/oauth/<provider>`.
+  - Claimed https / App Links, §7.2.
+  - Loopback, §7.3: `http://127.0.0.1:{ephemeral}/…`, mainly for desktop.
+- **Android 2026: Auth Tab first, then Custom Tabs.**
+  - Chrome 137+ ships **Auth Tab** (`androidx.browser:browser:1.9.x`, `AuthTabIntent`). It returns the redirect through an Activity Result: "Implementing Auth Tab alone eliminates the need for an intent to receive data from the browser."
+  - It supports custom-scheme redirects and https redirects. For https, "the browser verifies that the redirect domain and client app are owned by the same publisher" via Digital Asset Links. "http schemes are not allowed with Auth Tab."
+  - On browsers without Auth Tab it "automatically launches a Custom Tab instead", so **keep an `<intent-filter>`** for the custom scheme on a callback Activity as the fallback receiver. Chrome recommends "keeping your existing Custom Tabs code handling auth flows as fallback".
+- **Flutter implementation:** `flutter_web_auth_2` 5.x uses Auth Tab on Android ("Chrome Auth Tab on Android"). It needs a `CallbackActivity` with `<data android:scheme="…"/>` and `android:exported="true"`. For `https` callbacks, `httpsHost`/`httpsPath` are required.
+  - On Windows/Linux its default is a **webview** (`useWebview: true`), which Google rejects. With `useWebview: false` the callback "must start with `http://localhost:{port}`", which **Spotify rejects**: localhost is banned and 127.0.0.1 is required.
+  - **Recommendation:** on desktop, run your own `HttpServer.bind(InternetAddress.loopbackIPv4, 0)` listener, open the system browser with `url_launcher`, and use `http://127.0.0.1:<port>/callback`.
+- **Always PKCE (S256) and `state`.** Store refresh tokens in secure storage (Android Keystore-backed; libsecret on Linux; DPAPI/Credential Locker on Windows).
+
+**Example AndroidManifest fallback receiver (custom scheme):**
+```xml
+<activity android:name="com.linusu.flutter_web_auth_2.CallbackActivity" android:exported="true">
+  <intent-filter android:label="flutter_web_auth_2">
+    <action android:name="android.intent.action.VIEW" />
+    <category android:name="android.intent.category.DEFAULT" />
+    <category android:name="android.intent.category.BROWSABLE" />
+    <data android:scheme="com.example.fermata" />
+  </intent-filter>
+</activity>
+```
+
+### 8.3 Which redirect types each provider accepts
+
+| Provider | Android custom scheme | https App Link | Desktop loopback | Notes |
+|---|---|---|---|---|
+| **SoundCloud** | **Yes**: the Guide says "Use a custom protocol scheme for the redirect_uri (e.g., `my-app://soundcloud/callback`)" | Docs silent | Docs silent. The redirect must "match … exactly", and dynamic ports are not documented, so use a fixed port or the custom scheme on desktop too (registering a URL handler on Linux/Windows) | **The client secret is required** for token exchange and refresh. That needs a token-proxy backend or user-supplied credentials. The repo README and the Your Apps page talk about a single "redirect_uri" per app; whether multiple are allowed is **docs silent** |
+| **Spotify** | **Yes**: "Redirects using a custom scheme will still be supported" (blog, Feb 2025). Not restated on the current Redirect URI page; test early | Yes (https) | **Yes**: `http://127.0.0.1` or `http://[::1]`, registered without a port; dynamic port allowed. **`localhost` forbidden** | PKCE with no secret: a true public client |
+| **Google / YouTube** | **No**: "Custom URI schemes are no longer supported on Android and Chrome apps"; loopback is "DEPRECATED" for Android | n/a for Android client type | **Yes** (Desktop client type): `http://127.0.0.1:port` or `http://[::1]:port` (localhost "may cause issues with client firewalls") | Android must use **AuthorizationClient** (Google Play services; Android client ID with package name and SHA-1). There is no documented redirect-based path for Android devices without Play services |
+| **Deezer** | Docs login-gated, **unknown** | Unknown | Unknown | **New app creation appears closed** (community reports, 2025–2026). The token exchange uses the app `secret` |
+| **Audius** | **Contradictory docs**: the validation rules say "Must use `http` or `https`", but the same page tells React Native apps to register `myapp://oauth/callback`. Test it | Yes (https) | **Yes**: "localhost IPs are allowed". Dynamic port matching is docs silent | PKCE with no secret; the API key is public-safe. Use `response_mode=query` |
+| **Jamendo** | Docs silent. The `redirect_uri` must share the registered URL's domain/prefix, and the examples are http(s) | Likely, since it is a normal https URL; unverified | Docs silent | The grant needs `client_secret`, so a backend is required. No PKCE |
+| **LRCLIB** | n/a, no OAuth | | | |
+
+---
+
+## 9. Summary table
+
+| Provider | Auth needed | Search | Full stream | Preview | Download | Import playlists | Open externally | Credentials the developer/user must supply | Key restrictions |
+|---|---|---|---|---|---|---|---|---|---|
+| **SoundCloud** | Yes, **every** request (`Authorization: OAuth <token>`). Client-credentials for public data; auth-code + PKCE **+ client_secret** for user data | Yes | **Technically yes** (HLS AAC via `/streams`), but see restrictions: **mixing SoundCloud with other services in one playback experience is prohibited**, so silo it and get written OK from SoundCloud | Yes (`preview_mp3_128_url` when `access == preview`) | **No.** ToU bans in-app downloads and offline mode "regardless of whether Uploaders have set that User Content as allowed to be downloaded" | Yes (`/me/playlists`, `/me/likes/tracks`) | Yes (`permalink_url`) | Artist Pro account → app `client_id` + `client_secret` (one app per person). The secret must not ship in the client: use a Fermata token proxy or BYO credentials | Attribution: uploader credit, SoundCloud logo linking to `permalink_url`. Session-only caching. ~1,500 stream calls/day/client_id. No AI or fingerprinting. Disconnect must delete data within 7 days. Commercial use limited |
+| **Spotify** | Yes, auth-code + PKCE (no secret) | Yes (max 10 per page) | **No.** No audio via Web API; streaming only via Spotify SDKs for Premium users; no ripping | **No** (`preview_url` deprecated) | **No** | **Only playlists the user owns or collaborates on** (dev mode), plus saved tracks. ISRC via `external_ids.isrc` | Yes (`external_urls.spotify`, `spotify:` URI) | Developer **must hold Premium**. Dev mode = **5 allow-listed users**; extended quota is for orgs with 250k+ MAU only. In practice each user registers their own Client ID | "Transfer … metadata of the user's playlists to another service" is **permitted**. No integration with other services' streams; no persistent Spotify metadata database; attribution with the Spotify logo and back-links |
+| **YouTube / YT Music** | API key for search and public data; OAuth `youtube.readonly` for the user's playlists and likes | Yes, but **100 search calls/day per project by default** (since Jun 2026) | **Only via a visible embedded IFrame player** (≥200×200 px, ads intact, no background). **No audio-only** | n/a | **No** | Yes (`playlists?mine=true`, `playlistItems`, likes playlist) | **Yes**: recommended default (`music.youtube.com/watch?v=…`) | Google Cloud project, API key, and OAuth client (Desktop type: loopback; Android: AuthorizationClient + SHA-1). Credentials must not be embedded in open-source repos. Probably app verification for >100 users | No YouTube Music API exists. No separating audio, background play, caching or offline. No unofficial or undocumented APIs (ytmusicapi, yt-dlp). Data cache at most 30 days. Branding required |
+| **Deezer** | **None** for the public catalogue. OAuth (app id + secret) for private library, but **new apps appear closed** | Yes | **No** (full tracks only via official SDKs for Premium users) | **Yes**: 30 s `preview` MP3 (signed URL, expires after ~15 min) | **No** (local or offline storage "strictly forbidden") | Public playlists and public user playlists **without auth** (paste URL or ID). Private ones are not possible for new developers | Yes (`link`) | None for public API. OAuth needs an existing app id + secret, unavailable to new developers | **Non-commercial use only**. Private/family use notice to users. Credit Deezer with back-links; logo rules not readable. Rate limit undocumented |
+| **Audius** | **None** for reads (an API key is optional and public-safe, for higher limits). OAuth PKCE (API key as client_id) for the user's library | Yes | **Yes** (OML grants Music Players stream rights). Respect `access.stream` and gating | `preview=true` param for gated or premium tracks | **Ambiguous.** The endpoint exists and works for creator-enabled downloads, but the API Terms allow only session caching. At most a user-initiated file save for `is_downloadable` tracks; confirm with Audius | Yes (`/users/{id}/playlists`, `/users/{id}/library/*` with OAuth) | Yes (`https://audius.co{permalink}`) | Optional API key from api.audius.co/plans. Never ship the bearer token or secret | Session-only caching. Show users the Audius Privacy Policy and API Terms. No scraping, benchmarking or AI training. OML attribution if commercial. Free tier 10 rps / 500k per month |
+| **Jamendo** | `client_id` on every call. OAuth (needs secret, backend) for user data | Yes | **Yes** (`audio` URL; CC-licensed) | n/a | **Only if `audiodownload_allowed`**, user-initiated. No automatic offline cache (2013 ToU vs 2021 docs; ask Jamendo if it is core) | Public playlists via `playlists/tracks`. User favourites need OAuth | Yes (track page backlink) | Jamendo dev account → `client_id` (one account per person). `client_secret` only for OAuth | **Non-commercial free; commercial needs a licence**. Credit artist and Jamendo with a backlink. Respect the CC licence terms. 35k requests/month (non-commercial) |
+| **LRCLIB** | None. Identify via `User-Agent`; optional `Lrclib-App-Id` (public) | Yes (lyrics search, max 20) | n/a | n/a | Lyrics text: fetch on demand; local per-track cache is reasonable | n/a | n/a | Optional app registration for higher limits | Honour 429/`Retry-After`; requests sequential with 200–500 ms gaps. **No published ToS or licence for lyrics text**: personal display only, no bulk redistribution. Musixmatch and others need commercial licences |
+
+**Matching strategy implied by the above:** ISRC is available from Spotify (`external_ids.isrc`), Deezer (`isrc`, plus `GET /track/isrc:{ISRC}` lookup without auth), SoundCloud (`isrc` field exists; how often it is filled was not verified) and Audius (`isrc` field exists; it was filled on the probed trending track). The cheapest and most compliant import pipeline is:
+
+1. Read the user's own playlist metadata from Spotify or YouTube.
+2. Resolve by ISRC on Deezer, where it is free and needs no auth. Fall back to title + artist + duration search.
+3. Play on a provider whose terms allow full streaming in a third-party player: **Audius, Jamendo, or the user's local files**. Otherwise **open externally** in YouTube Music, Spotify, Deezer or SoundCloud.
