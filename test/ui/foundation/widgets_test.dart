@@ -10,6 +10,7 @@ import 'package:fermata/ui/widgets/widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../fakes/fakes.dart';
@@ -272,11 +273,19 @@ void main() {
       expect(find.byType(FermataMark), findsOneWidget);
     });
 
-    testWidgets('FermataLogo falls back to the painted mark without assets', (tester) async {
+    testWidgets('FermataLogo renders the mark (SVG asset or painted fallback) + wordmark', (tester) async {
       await pumpInApp(tester, const FermataLogo());
       await pumpFrames(tester);
       expect(find.text('Fermata'), findsOneWidget);
-      expect(find.byType(FermataMark), findsOneWidget);
+      // Works whether or not the branding asset is bundled.
+      expect(find.descendant(of: find.byType(FermataLogo), matching: find.byType(SvgPicture)), findsOneWidget);
+      expect(tester.getSize(find.byType(SvgPicture)).width, 28);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('FermataMark paints without assets', (tester) async {
+      await pumpInApp(tester, const FermataMark(size: 40));
+      expect(tester.getSize(find.byType(FermataMark)), const Size(40, 40));
     });
   });
 

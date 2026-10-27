@@ -31,6 +31,10 @@ void main() {
       expect(onboardingRedirect(Uri.parse(''), onboardingCompleted: true), '/home');
     });
 
+    test('OAuth deep links go to connected services', () {
+      expect(onboardingRedirect(Uri.parse('/oauth/soundcloud?code=x'), onboardingCompleted: true), '/settings/services');
+    });
+
     test('other locations are untouched', () {
       expect(onboardingRedirect(Uri.parse('/search'), onboardingCompleted: false), isNull);
       expect(onboardingRedirect(Uri.parse('/onboarding'), onboardingCompleted: true), isNull);

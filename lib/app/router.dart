@@ -36,11 +36,16 @@ final routerProvider = Provider<GoRouter>((ref) {
   return router;
 });
 
-/// `/` → `/onboarding` until onboarding is completed, else `/home`. Other
-/// locations are left alone.
+/// `/` → `/onboarding` until onboarding is completed, else `/home`.
+/// OAuth redirect deep links (`fermata://oauth/<source>`, handled by the
+/// auth module via app_links) land on Settings → Connected services if the
+/// router receives them too. Other locations are left alone.
 String? onboardingRedirect(Uri uri, {required bool onboardingCompleted}) {
   if (uri.path.isEmpty || uri.path == AppRoutes.root) {
     return onboardingCompleted ? AppRoutes.home : AppRoutes.onboarding;
+  }
+  if (uri.path == '/oauth' || uri.path.startsWith('/oauth/')) {
+    return AppRoutes.settingsSection(SettingsSections.services);
   }
   return null;
 }
