@@ -151,6 +151,7 @@ AAPT2="$(find_build_tool aapt2 || true)"
 # --- Copy + verify ------------------------------------------------------------
 mkdir -p "$OUT_DIR"
 DEBUG_SIGNED=0
+CERT_SHA256=""
 OUTPUTS=()
 
 verify_apk() {
@@ -178,6 +179,9 @@ verify_apk() {
   grep -E '^Signer #1 certificate (DN|SHA-256 digest):' <<<"$certs" | sed 's/^/     /' || true
   if grep -q 'CN=Android Debug' <<<"$certs"; then
     DEBUG_SIGNED=1
+  fi
+  if [[ -z "$CERT_SHA256" ]]; then
+    CERT_SHA256="$(sed -n -E 's/^Signer #1 certificate SHA-256 digest: ([0-9a-f]+)$/\1/p' <<<"$certs" | head -n1)"
   fi
 }
 
@@ -213,6 +217,12 @@ EOF
   ((REQUIRE_RELEASE == 0)) || die "APK is debug-signed but --require-release-signing was given" 3
 else
   [[ -z "$APKSIGNER" ]] || ok "Release-signed (not the debug key)"
+fi
+
+# CI: expose the signing status (the release notes warn about debug-signed APKs).
+if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
+  if [[ -z "$APKSIGNER" ]]; then signing=unknown; elif ((DEBUG_SIGNED)); then signing=debug; else signing=release; fi
+  printf 'signing=%s\ncert_sha256=%s\n' "$signing" "$CERT_SHA256" >>"$GITHUB_OUTPUT"
 fi
 
 info "Done: ${OUTPUTS[*]}"

@@ -139,8 +139,8 @@ class SidebarItem extends StatelessWidget {
             borderRadius: context.radii.smAll,
             onTap: onTap,
             child: Container(
-              height: 40,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              constraints: const BoxConstraints(minHeight: 40),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: selected ? c.accent.withValues(alpha: 0.12) : null,
                 borderRadius: context.radii.smAll,

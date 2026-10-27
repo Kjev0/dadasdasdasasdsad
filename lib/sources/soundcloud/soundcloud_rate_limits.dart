@@ -59,7 +59,10 @@ class SoundCloudRateGate {
     for (final g in {group, SoundCloudRateGroup.general}) {
       final until = _blockedUntil[g];
       if (until != null && now.isBefore(until)) {
-        throw RateLimitedException('SoundCloud rate limit reached; try again later.', retryAfter: until.difference(now));
+        throw RateLimitedException(
+          'SoundCloud rate limit reached; try again later.',
+          retryAfter: until.difference(now),
+        );
       }
     }
     if (group == SoundCloudRateGroup.streams && budget) {

@@ -115,7 +115,7 @@ class _TrackListViewState extends ConsumerState<TrackListView> {
 
   @override
   Widget build(BuildContext context) {
-    final rowHeight = context.spacing.rowHeight;
+    final rowHeight = context.rowExtent;
     return ListenableBuilder(
       listenable: _selection,
       builder: (context, _) {

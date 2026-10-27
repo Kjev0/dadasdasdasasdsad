@@ -85,7 +85,7 @@ class SkeletonTrackTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: context.spacing.rowHeight,
+      height: context.rowExtent,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Row(

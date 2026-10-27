@@ -20,8 +20,11 @@ export 'text/title_parser.dart' show TitleParser, TitleParts;
 /// Most tracks have exactly one reading. Titles of the form "X - Y" get a
 /// second one where X is the artist and Y the title, because uploader-style
 /// sources (SoundCloud, YouTube) often publish "Artist - Title" from a label
-/// or channel account. The scorer compares every pair of readings and keeps
-/// the best, so the right interpretation wins without guessing up front.
+/// or channel account. When Y could also be a version qualifier ("Oasis -
+/// Live Forever"), the unsplit reading treats Y as a qualifier, so each
+/// reading carries its own [version]. The scorer compares every pair of
+/// readings and keeps the best, so the right interpretation wins without
+/// guessing up front.
 @immutable
 class TrackReading {
   const TrackReading({
@@ -31,10 +34,28 @@ class TrackReading {
     required this.featuredArtists,
     required this.displayArtist,
     this.isArtistTitleSplit = false,
+    this.titleQualifier = FoldedText.empty,
+    this.version = VersionInfo.none,
+    this.versionQualifiers = const [],
   });
 
   /// Normalized base title (no qualifiers, featured credits or noise).
   final FoldedText title;
+
+  /// Normalized qualifiers that are neither a version nor a neutral edition
+  /// word and therefore name *which* song this is ("pt 1" for "(Pt. 1)",
+  /// "interlude", "i cant get no"). Empty for most tracks. Compared by
+  /// `Similarity.qualifiedTitle`, so "Song (Pt. 1)" never equals "Song (Pt.
+  /// 2)", while "Song (Part 2)" still equals "Song, Pt. 2".
+  final FoldedText titleQualifier;
+
+  /// Versions of this reading: its title qualifiers, the explicit hint and
+  /// the album.
+  final VersionInfo version;
+
+  /// Display text of this reading's qualifiers that make it a significantly
+  /// different version ("Kygo Remix", "Live at Wembley").
+  final List<String> versionQualifiers;
 
   /// Cleaned title in display form (for search queries).
   final String displayTitle;
@@ -58,8 +79,6 @@ class NormalizedTrack {
   const NormalizedTrack({
     required this.track,
     required this.readings,
-    required this.version,
-    required this.versionQualifiers,
     required this.album,
     required this.albumIsSingle,
     required this.explicit,
@@ -70,11 +89,14 @@ class NormalizedTrack {
 
   /// Preferred reading first; never empty.
   final List<TrackReading> readings;
-  final VersionInfo version;
 
-  /// Display text of the qualifiers that make this a significantly different
-  /// version ("Kygo Remix", "Live at Wembley"); added to search queries.
-  final List<String> versionQualifiers;
+  /// Versions of the preferred reading.
+  VersionInfo get version => primary.version;
+
+  /// Display text of the preferred reading's qualifiers that make it a
+  /// significantly different version ("Kygo Remix", "Live at Wembley");
+  /// added to search queries.
+  List<String> get versionQualifiers => primary.versionQualifiers;
 
   /// Normalized album title without edition words, or null.
   final FoldedText? album;
@@ -85,7 +107,8 @@ class NormalizedTrack {
   /// [Track.explicit], or the "(Explicit)"/"(Clean)" title hint.
   final bool? explicit;
 
-  /// Upper-case ISRC without separators, or null.
+  /// Upper-case ISRC without separators, or null (also for values that are
+  /// not a well-formed ISRC, e.g. "N/A" or "unknown").
   final String? isrc;
 
   TrackReading get primary => readings.first;
@@ -112,16 +135,25 @@ class TrackNormalizer {
 
   static final _isrcJunk = RegExp(r'[\s\-_.]');
 
+  /// ISO 3901: country (2 letters), registrant (3 alphanumerics), year (2
+  /// digits) and designation (5 digits).
+  static final _isrcFormat = RegExp(r'^[A-Z]{2}[A-Z0-9]{3}\d{7}$');
+
   /// Trailing album words that name an edition rather than the album.
   static const _editionTokens = {
     'deluxe', 'edition', 'expanded', 'remastered', 'remaster', 'anniversary', 'version', 'special', 'bonus',
     'track', 'tracks', 'super', 'collectors', 'ep', 'single', 'lp', 'reissue', 'complete', 'legacy',
   };
 
+  /// Upper-case ISRC without separators ("us-um7-17-03861" →
+  /// "USUM71703861"), or null when [isrc] is missing or not a well-formed
+  /// ISRC. Placeholders found in tags and uploader metadata ("N/A", "0",
+  /// "unknown", "none") are rejected so they can never make two unrelated
+  /// tracks an exact match.
   static String? normalizeIsrc(String? isrc) {
     if (isrc == null) return null;
     final n = isrc.toUpperCase().replaceAll(_isrcJunk, '');
-    return n.isEmpty ? null : n;
+    return _isrcFormat.hasMatch(n) ? n : null;
   }
 
   /// Normalized form of one artist name (see [TextKeys.artistName]).
@@ -134,11 +166,13 @@ class TrackNormalizer {
     final parts = parser.parse(track.title);
     final credits = ArtistParser.splitRefs(track.artists);
     final titleFeatured = parts.featured.expand(ArtistParser.splitNames).toList();
+    final shared = VersionInfo(explicitHint: parts.explicitHint).merge(detector.detectInAlbum(track.album));
 
     final primaryKeys = _keys(credits.primary);
-    final readingA = TrackReading(
-      title: TextKeys.title(parts.base),
-      displayTitle: parts.base,
+    final readingA = _reading(
+      title: parts.base,
+      qualifiers: parts.qualifiers,
+      shared: shared,
       primaryArtists: primaryKeys,
       featuredArtists: _dedupe([..._keys(credits.featured), ..._keys(titleFeatured)], exclude: primaryKeys),
       displayArtist: credits.primary.isEmpty ? '' : _displayArtist(credits.primary.first),
@@ -148,9 +182,10 @@ class TrackNormalizer {
     if (parts.hasArtistTitleSplit) {
       final left = ArtistParser.split(parts.splitArtist!);
       final leftPrimary = _keys(left.primary);
-      final readingB = TrackReading(
-        title: TextKeys.title(parts.splitTitle!),
-        displayTitle: parts.splitTitle!,
+      final readingB = _reading(
+        title: parts.splitTitle!,
+        qualifiers: parts.splitQualifiers,
+        shared: shared,
         primaryArtists: leftPrimary,
         featuredArtists: _dedupe([..._keys(left.featured), ..._keys(titleFeatured)], exclude: leftPrimary),
         displayArtist: left.primary.isEmpty ? '' : left.primary.first,
@@ -159,31 +194,51 @@ class TrackNormalizer {
       final uploaderIsArtist = primaryKeys.any(
         (u) => [...leftPrimary, ..._keys(left.featured)].any((l) => Similarity.foldedName(u, l) >= 0.9),
       );
-      final preferSplit =
-          uploaderStyleSources.contains(track.sourceId) || uploaderIsArtist || track.artists.isEmpty;
+      final preferSplit = uploaderIsArtist ||
+          (!parts.preferUnsplit && (uploaderStyleSources.contains(track.sourceId) || track.artists.isEmpty));
       readings = preferSplit ? [readingB, readingA] : [readingA, readingB];
     }
-
-    final version = detector
-        .detectSegments(parts.qualifiers)
-        .merge(VersionInfo(explicitHint: parts.explicitHint))
-        .merge(detector.detectInAlbum(track.album));
-    final versionQualifiers = [
-      for (final q in parts.qualifiers)
-        if (detector.detectSegment(q).isSignificant) q,
-    ];
 
     final (album, albumIsSingle) = _album(track.album, readingA.title, readings.last.title);
 
     return NormalizedTrack(
       track: track,
       readings: List.unmodifiable(readings),
-      version: version,
-      versionQualifiers: List.unmodifiable(versionQualifiers),
       album: album,
       albumIsSingle: albumIsSingle,
-      explicit: track.explicit ?? version.explicitHint,
+      explicit: track.explicit ?? readingA.version.explicitHint,
       isrc: normalizeIsrc(track.isrc),
+    );
+  }
+
+  TrackReading _reading({
+    required String title,
+    required List<String> qualifiers,
+    required VersionInfo shared,
+    required List<FoldedText> primaryArtists,
+    required List<FoldedText> featuredArtists,
+    required String displayArtist,
+    bool isArtistTitleSplit = false,
+  }) {
+    final versionQualifiers = <String>[];
+    final titleQualifiers = <String>[];
+    var version = VersionInfo.none;
+    for (final q in qualifiers) {
+      final info = detector.detectSegment(q);
+      version = version.merge(info);
+      if (info.isSignificant) versionQualifiers.add(q);
+      if (info.isEmpty && !detector.isNeutralQualifier(q)) titleQualifiers.add(q);
+    }
+    return TrackReading(
+      title: TextKeys.title(title),
+      displayTitle: title,
+      primaryArtists: primaryArtists,
+      featuredArtists: featuredArtists,
+      displayArtist: displayArtist,
+      isArtistTitleSplit: isArtistTitleSplit,
+      titleQualifier: titleQualifiers.isEmpty ? FoldedText.empty : TextKeys.title(titleQualifiers.join(' ')),
+      version: version.merge(shared),
+      versionQualifiers: List.unmodifiable(versionQualifiers),
     );
   }
 

@@ -84,9 +84,14 @@ class FermataLogo extends StatelessWidget {
         children: [
           mark,
           const SizedBox(width: 10),
-          Text(
-            context.l10n.appName,
-            style: context.type.title.copyWith(fontWeight: FontWeight.w700, letterSpacing: -0.2),
+          Flexible(
+            child: Text(
+              context.l10n.appName,
+              maxLines: 1,
+              overflow: TextOverflow.fade,
+              softWrap: false,
+              style: context.type.title.copyWith(fontWeight: FontWeight.w700, letterSpacing: -0.2),
+            ),
           ),
         ],
       ),

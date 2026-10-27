@@ -187,6 +187,48 @@ abstract final class Similarity {
   /// [title] over both folding variants (so "Ålborg" ≈ "Aalborg").
   static double foldedTitle(FoldedText a, FoldedText b) => _bestVariant(a, b, title);
 
+  /// Title similarity including each side's *title qualifier*: bracketed
+  /// text that is neither a version nor an edition word ("(Pt. 1)",
+  /// "(Interlude)", "(I Can't Get No)"; see `TrackReading.titleQualifier`).
+  ///
+  /// * Same qualifier words on both sides, or none: the base titles decide
+  ///   (or the full titles, if they agree better).
+  /// * The qualifiers differ in a number or a word naming a distinct piece
+  ///   ("Pt. 1" vs "Pt. 2", "Interlude" vs nothing): only the full titles
+  ///   count, so "Song (Pt. 1)" ≠ "Song (Pt. 2)" (number penalty) while
+  ///   "Song (Part 2)" = "Song, Pt. 2" (same full title).
+  /// * Other qualifier text on one side only (a subtitle such as "(I Can't
+  ///   Get No) Satisfaction" vs "Satisfaction") does not lower the score;
+  ///   different subtitles on both sides cost 10 %.
+  static double qualifiedTitle(FoldedText titleA, FoldedText qualifierA, FoldedText titleB, FoldedText qualifierB) {
+    final base = foldedTitle(titleA, titleB);
+    if (qualifierA.isEmpty && qualifierB.isEmpty) return base;
+    final full = foldedTitle(_append(titleA, qualifierA), _append(titleB, qualifierB));
+    final qa = qualifierA.tokens.toSet(), qb = qualifierB.tokens.toSet();
+    if (setEquals(qa, qb) || setEquals(_tokens(qualifierA.alt).toSet(), _tokens(qualifierB.alt).toSet())) {
+      return math.max(base, full);
+    }
+    final differing = qa.union(qb).difference(qa.intersection(qb));
+    if (differing.any(_isDistinguishing)) return full;
+    if (qa.isNotEmpty && qb.isNotEmpty) return math.max(full, base * 0.9);
+    return math.max(full, base);
+  }
+
+  /// Words that name a distinct piece rather than describe the same one.
+  static const _pieceWords = {
+    'part', 'interlude', 'intro', 'introduction', 'outro', 'skit', 'prelude', 'postlude', 'overture', 'coda',
+    'segue', 'reprise', 'epilogue', 'prologue', 'chapter', 'act', 'movement', 'scene', 'suite', 'volume',
+    'continued', 'cont', 'finale', 'intermezzo', 'interludio', 'interlud', 'mvt',
+  };
+
+  static bool _isDistinguishing(String token) => _isNumber(token) || _pieceWords.contains(token);
+
+  static FoldedText _append(FoldedText title, FoldedText qualifier) {
+    if (qualifier.isEmpty) return title;
+    if (title.isEmpty) return qualifier;
+    return FoldedText('${title.key} ${qualifier.key}', alt: '${title.alt} ${qualifier.alt}');
+  }
+
   /// [name] over both folding variants (so "Mø" ≈ "MO" ≈ "Moe").
   static double foldedName(FoldedText a, FoldedText b) => _bestVariant(a, b, name);
 

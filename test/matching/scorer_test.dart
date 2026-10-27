@@ -164,13 +164,18 @@ void main() {
   });
 
   group('explicit / clean', () {
-    test('explicit vs clean is a small penalty plus a flag', () {
+    test('explicit vs clean is flagged and capped at medium (a censored edit is never auto-accepted)', () {
       final o = track('spotify', '1', 'Song', ['A'], seconds: 200, explicit: true);
       final clean = score(o, track('deezer', '2', 'Song', ['A'], seconds: 200, explicit: false));
       final same = score(o, track('deezer', '3', 'Song', ['A'], seconds: 200, explicit: true));
       expect(clean.differences, contains(MatchDifference.explicitMismatch));
+      expect(clean.confidence, MatchConfidence.medium);
+      expect(same.confidence, MatchConfidence.high);
       expect(clean.score, lessThan(same.score));
-      expect(same.score - clean.score, lessThan(0.06));
+      // ... and the other way round: a clean original vs the explicit one.
+      final cleanOriginal = track('spotify', '4', 'Song', ['A'], seconds: 200, explicit: false);
+      expect(score(cleanOriginal, track('deezer', '5', 'Song', ['A'], seconds: 200, explicit: true)).confidence,
+          MatchConfidence.medium);
     });
 
     test('"(Clean)" in the title counts as clean', () {

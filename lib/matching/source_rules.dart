@@ -23,4 +23,15 @@ abstract final class MatchingSourceRules {
   /// targets; it never makes a candidate `exact`, because it was derived
   /// from a metadata match rather than from the original.
   static const isrcResolvers = [SourceIds.deezer];
+
+  /// Sources where ISRCs are entered by uploaders rather than delivered by
+  /// distributors (API_NOTES: SoundCloud/Audius `isrc` fields). An
+  /// identical ISRC from them is only trusted when title, artist and
+  /// duration agree as well.
+  static const uploaderIsrcSources = {SourceIds.soundcloud, SourceIds.youtube, SourceIds.audius};
+
+  /// Sources whose originals are stored minimized when an import is saved
+  /// (no cover art, marked for purge): Spotify's Developer Terms forbid a
+  /// persistent mirror of Spotify metadata and cover art (API_NOTES §2.7).
+  static const minimizedOriginalSources = {SourceIds.spotify};
 }

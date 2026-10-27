@@ -253,15 +253,17 @@ to deobfuscate Java stack traces. More platform details:
 
 ## Continuous integration
 
-`.github/workflows/build.yml` runs on every push, pull request, manual
-dispatch and `v*` tag:
+`.github/workflows/build.yml`: branch pushes and pull requests (except
+docs-only changes) run only `test`; `v*` tags run everything and publish a
+release; a manual run (*workflow_dispatch*) builds all packages as artifacts
+without publishing.
 
 | Job | Runner | Does |
 |---|---|---|
 | `test` | ubuntu-latest | shellcheck + desktop/AppStream validation, `merge_arb`, `gen-l10n`, `flutter analyze`, `flutter test`; on tags, checks that the tag equals `v<pubspec version>` |
 | `linux` | ubuntu-22.04 | `tool/package_linux.sh`, installer smoke test (install into a temporary HOME, launch under Xvfb, uninstall); artifact `linux` |
 | `windows` | windows-latest | Rust + `tool/package_windows.ps1` (Inno Setup is preinstalled on the image, else installed with Chocolatey); artifact `windows` |
-| `android` | ubuntu-latest | JDK 17, keystore from secrets if present, `tool/build_android.sh`; artifacts `android` and `android-r8-mapping` |
-| `release` | ubuntu-latest | tags only: `SHA256SUMS` + GitHub Release |
+| `android` | ubuntu-latest | JDK 17, keystore from secrets if present (else debug-signed), `tool/build_android.sh`; artifacts `android` and `android-r8-mapping` |
+| `release` | ubuntu-latest | tags only: `SHA256SUMS`, release notes (install instructions, signing status) + GitHub Release |
 
 Secrets and variables are listed in [RELEASING.md](RELEASING.md#ci-secrets-and-variables).

@@ -31,9 +31,14 @@ abstract final class MatchPolicy {
   /// A candidate the user can reasonably pick (confidence low or better).
   static bool isViable(MatchCandidate c) => c.confidence.isAtLeast(MatchConfidence.low);
 
-  /// Sorts best-first: score (in 0.01 buckets), then the preferred source,
-  /// then [sourceOrder] (the user's target order), then playback quality,
-  /// then exact score and id for determinism.
+  /// Sorts best-first: confidence band, then score (in 0.01 buckets), then
+  /// the preferred source, then [sourceOrder] (the user's target order),
+  /// then playback quality, then exact score and id for determinism.
+  ///
+  /// The band comes first so a candidate capped at a lower band (a cover by
+  /// another artist, an unknown artist) never outranks a better band
+  /// through the source preference, even when its score is just below the
+  /// band floor.
   static List<MatchCandidate> rank(
     Iterable<MatchCandidate> candidates, {
     String? preferredSource,
@@ -46,6 +51,8 @@ abstract final class MatchPolicy {
     }
 
     return candidates.sorted((a, b) {
+      final band = a.confidence.index.compareTo(b.confidence.index);
+      if (band != 0) return band;
       final bucket = (b.score * 100).round().compareTo((a.score * 100).round());
       if (bucket != 0) return bucket;
       final source = sourceRank(a.candidate.sourceId).compareTo(sourceRank(b.candidate.sourceId));

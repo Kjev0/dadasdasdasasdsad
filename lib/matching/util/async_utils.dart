@@ -87,19 +87,30 @@ class RateLimitPolicy {
   /// Wait when the source gives no Retry-After (multiplied by the attempt).
   final Duration defaultDelay;
 
-  /// Upper bound for any single wait (a huge Retry-After fails fast instead
-  /// of stalling an import).
+  /// Longest wait before a retry. A source that asks for a longer
+  /// Retry-After (a daily quota, Spotify's dev-mode `QUOTA_EXCEEDED`) is not
+  /// retried at all: the request fails fast instead of stalling an import.
+  /// Self-chosen back-off ([defaultDelay] × attempt) is capped at this value.
   final Duration maxDelay;
 
-  Duration delayFor(RateLimitedException e, int attempt) {
-    final wanted = e.retryAfter ?? defaultDelay * attempt;
-    if (wanted > maxDelay) return maxDelay;
-    return wanted < Duration.zero ? Duration.zero : wanted;
+  /// The wait before retry number [attempt] (1-based), or null when the
+  /// request should not be retried because the source asked for more than
+  /// [maxDelay].
+  Duration? delayFor(RateLimitedException e, int attempt) {
+    final retryAfter = e.retryAfter;
+    if (retryAfter != null) {
+      if (retryAfter > maxDelay) return null;
+      return retryAfter < Duration.zero ? Duration.zero : retryAfter;
+    }
+    final backoff = defaultDelay * attempt;
+    return backoff > maxDelay ? maxDelay : backoff;
   }
 }
 
 /// Runs [action], waiting and retrying on [RateLimitedException] according
-/// to [policy]. Other errors propagate unchanged.
+/// to [policy]. The exception is rethrown once [RateLimitPolicy.maxRetries]
+/// is used up or when the source asks to wait longer than
+/// [RateLimitPolicy.maxDelay]. Other errors propagate unchanged.
 Future<T> withRateLimitRetry<T>(
   Future<T> Function() action, {
   RateLimitPolicy policy = const RateLimitPolicy(),
@@ -114,8 +125,12 @@ Future<T> withRateLimitRetry<T>(
       return await action();
     } on RateLimitedException catch (e) {
       if (attempt >= policy.maxRetries) rethrow;
+      final delay = policy.delayFor(e, attempt + 1);
+      if (delay == null) {
+        log?.info('${label ?? 'request'} rate limited for ${e.retryAfter}; not retrying');
+        rethrow;
+      }
       attempt++;
-      final delay = policy.delayFor(e, attempt);
       log?.info('${label ?? 'request'} rate limited; retry $attempt/${policy.maxRetries} in ${delay.inMilliseconds} ms');
       await cancellableDelay(delay, cancel);
     }

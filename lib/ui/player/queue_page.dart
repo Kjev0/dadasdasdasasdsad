@@ -49,9 +49,12 @@ class QueueList extends ConsumerWidget {
     final title = showTitle
         ? Padding(
             padding: const EdgeInsets.fromLTRB(4, 16, 4, 8),
-            child: Row(
+            child: Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 8,
               children: [
-                Expanded(child: Semantics(header: true, child: Text(l10n.navQueue, style: context.type.headline))),
+                Semantics(header: true, child: Text(l10n.navQueue, style: context.type.headline)),
                 if (queue.upNext.isNotEmpty)
                   TextButton.icon(
                     onPressed: () => _confirmClear(context, ref),
@@ -225,13 +228,18 @@ class _SectionLabel extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(4, 8, 4, 6),
       child: Row(
         children: [
-          Semantics(header: true, child: Text(label, style: context.type.titleSmall)),
+          Flexible(
+            child: Semantics(
+              header: true,
+              child: Text(label, style: context.type.titleSmall, maxLines: 1, overflow: TextOverflow.ellipsis),
+            ),
+          ),
           const SizedBox(width: 12),
           if (trailing != null)
             Expanded(child: Text(trailing!, style: context.type.caption, maxLines: 1, overflow: TextOverflow.ellipsis))
           else
             const Spacer(),
-          ?action,
+          if (action != null) Flexible(child: action!),
         ],
       ),
     );
@@ -260,7 +268,7 @@ class QueueRow extends StatelessWidget {
         borderRadius: context.radii.smAll,
         onTap: onTap,
         child: SizedBox(
-          height: context.spacing.rowHeight,
+          height: context.rowExtent,
           child: Row(
             children: [
               const SizedBox(width: 4),

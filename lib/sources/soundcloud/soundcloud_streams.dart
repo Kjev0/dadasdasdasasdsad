@@ -55,7 +55,11 @@ class SoundCloudStreams {
   static const _preview = ['preview_mp3_128_url'];
 
   /// Picks the best available variant (see class docs); null when none.
-  static SoundCloudStreamChoice? pick(Map<String, Object?> streams, {required bool preview, required AudioQuality quality}) {
+  static SoundCloudStreamChoice? pick(
+    Map<String, Object?> streams, {
+    required bool preview,
+    required AudioQuality quality,
+  }) {
     final order = preview ? _preview : (quality == AudioQuality.low ? _low : _full);
     for (final field in order) {
       final url = jsonHttpUri(streams[field]);

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../core/models/matching.dart';
+import 'source_rules.dart';
 
 /// Default thresholds of the matching engine. See docs/MATCHING.md for the
 /// rationale and how to tune them; [ScoringConfig] lets callers override
@@ -18,6 +19,10 @@ abstract final class MatchThresholds {
   /// Score floor for identical ISRCs (without significant version
   /// differences). Metadata agreement fills the remaining 0.02.
   static const double isrcFloor = 0.98;
+
+  /// `breakdown['isrc']` of an identical ISRC that the metadata contradicts
+  /// (different duration, title and/or artist), which is therefore ignored.
+  static const double isrcContradicted = 0.5;
 
   /// High confidence additionally needs a strong title and artist signal,
   /// so a perfect duration/album cannot compensate for a doubtful artist.
@@ -128,6 +133,9 @@ class ScoringConfig {
     this.significantVersionPenalty = MatchThresholds.significantVersionPenalty,
     this.farDurationPenalty = MatchThresholds.farDurationPenalty,
     this.significantVersionCap = MatchConfidence.low,
+    this.explicitMismatchCap = MatchConfidence.medium,
+    this.isrcMaxDurationDelta = DurationBands.fair,
+    this.uploaderIsrcSources = MatchingSourceRules.uploaderIsrcSources,
   });
 
   final ScoringWeights weights;
@@ -147,6 +155,20 @@ class ScoringConfig {
   /// get. `low` by default so it is never auto-accepted nor bulk-accepted
   /// at "medium or better"; it still shows in review as an alternative.
   final MatchConfidence significantVersionCap;
+
+  /// Best confidence of an explicit original vs. a clean (censored) edit or
+  /// the other way round. `medium`: never auto-accepted, but the user may
+  /// bulk-accept it knowingly.
+  final MatchConfidence explicitMismatchCap;
+
+  /// An identical ISRC only counts when the durations differ by at most
+  /// this much (or one is unknown).
+  final Duration isrcMaxDurationDelta;
+
+  /// Sources whose ISRCs are typed in by uploaders (SoundCloud, YouTube,
+  /// Audius). An identical ISRC involving one of them additionally needs
+  /// both title and artist to agree.
+  final Set<String> uploaderIsrcSources;
 
   MatchConfidence band(double score) {
     if (score >= highThreshold) return MatchConfidence.high;

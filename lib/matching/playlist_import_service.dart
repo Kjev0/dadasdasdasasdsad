@@ -3,7 +3,6 @@ import 'dart:collection';
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:uuid/uuid.dart';
 
@@ -19,57 +18,13 @@ import 'alternative_search.dart';
 import 'import_report.dart';
 import 'import_saver.dart';
 import 'import_session.dart';
+import 'import_settings.dart';
 import 'match_policy.dart';
 import 'normalizer.dart';
+import 'playlist_fetcher.dart';
 import 'scoring_config.dart';
-import 'source_rules.dart';
-import 'util/async_utils.dart';
 
-/// Tunables of [PlaylistImportServiceImpl].
-@immutable
-class ImportSettings {
-  const ImportSettings({
-    this.maxConcurrentMatches = 3,
-    this.maxTracks = 10000,
-    this.maxPages = 1000,
-    this.progressInterval = const Duration(milliseconds: 100),
-    this.rateLimit = const RateLimitPolicy(maxRetries: 3),
-    this.alternativesLimit = 20,
-    this.writeChunkSize = 500,
-    this.explicitOnlySources = MatchingSourceRules.explicitOnlySources,
-    this.maxSearchPageSize = MatchingSourceRules.maxSearchPageSize,
-  });
-
-  /// Tracks matched in parallel.
-  final int maxConcurrentMatches;
-
-  /// Imports stop fetching after this many tracks.
-  final int maxTracks;
-
-  /// Safety cap on playlist pages (guards against cursor loops).
-  final int maxPages;
-
-  /// Minimum spacing of progress events while matching (phase changes are
-  /// always emitted immediately). Zero emits after every track.
-  final Duration progressInterval;
-
-  /// Retry policy for playlist page fetches and alternative searches.
-  final RateLimitPolicy rateLimit;
-
-  /// Results requested per source by `searchAlternatives`.
-  final int alternativesLimit;
-
-  /// Tracks per repository write.
-  final int writeChunkSize;
-
-  /// Sources searched for alternatives only when the user picks them (by
-  /// `sourceId` or in the session's target sources); YouTube's search quota
-  /// is tiny.
-  final Set<String> explicitOnlySources;
-
-  /// Per-source cap on the search page size.
-  final Map<String, int> maxSearchPageSize;
-}
+export 'import_settings.dart';
 
 /// Imports a playlist from one source and matches every track on the
 /// user's other sources.
@@ -77,7 +32,10 @@ class ImportSettings {
 /// Sessions live in memory. Lifecycle:
 /// `fetching → matching → reviewing → saving → done`, or `failed` (fetch
 /// error) / `canceled`. A failed save returns to `reviewing` with
-/// [ImportSessionState.error] set so it can be retried.
+/// [ImportSessionState.error] set so it can be retried. Finished sessions
+/// are forgotten after [ImportSettings.finishedSessionTtl] or beyond
+/// [ImportSettings.maxFinishedSessions] (checked when an import starts);
+/// [discard] forgets one right away.
 ///
 /// Saving creates a local playlist holding the *original* tracks in their
 /// original order (metadata stays faithful to the source), upserts the
@@ -95,6 +53,7 @@ class PlaylistImportServiceImpl implements PlaylistImportService {
     this.settings = const ImportSettings(),
     TrackNormalizer normalizer = const TrackNormalizer(),
     String Function()? idGenerator,
+    DateTime Function()? clock,
   })  : _alternatives = AlternativeSearch(
           scorer: scorer,
           normalizer: normalizer,
@@ -107,16 +66,28 @@ class PlaylistImportServiceImpl implements PlaylistImportService {
           playlists: playlistRepository,
           links: linkRepository,
           chunkSize: settings.writeChunkSize,
+          minimizedSources: settings.minimizedOriginalSources,
         ),
-        _newId = idGenerator ?? const Uuid().v4;
+        _fetcher = PlaylistFetcher(
+          maxTracks: settings.maxTracks,
+          maxPages: settings.maxPages,
+          rateLimit: settings.rateLimit,
+        ),
+        _newId = idGenerator ?? const Uuid().v4,
+        _clock = clock ?? DateTime.now;
 
   final ImportSettings settings;
   final SourceRegistry _registry;
   final TrackMatcher _matcher;
   final AlternativeSearch _alternatives;
   final ImportSaver _saver;
+  final PlaylistFetcher _fetcher;
   final String Function() _newId;
+  final DateTime Function() _clock;
   final _sessions = <String, MutableImportSession>{};
+
+  /// Ids of the sessions held in memory, oldest first.
+  List<String> get sessionIds => List.unmodifiable(_sessions.keys);
 
   static final _log = Logger('matching.import');
 
@@ -144,8 +115,10 @@ class PlaylistImportServiceImpl implements PlaylistImportService {
       );
     }
     final session = _createSession(sourceId, options);
-    _log.info('import ${session.id}: fetching $playlistIdOrUrl from $sourceId');
-    unawaited(_run(session, () => _fetchPlaylist(session, source, playlistIdOrUrl)));
+    // Playlist links can be capabilities (SoundCloud private "s-…" tokens,
+    // unlisted YouTube lists), and the log file ends up in bug reports.
+    _log.info('import ${session.id}: fetching ${PlaylistFetcher.redact(playlistIdOrUrl)} from $sourceId');
+    unawaited(_run(session, () => _fetcher.fetch(session, source, playlistIdOrUrl)));
     return session.id;
   }
 
@@ -165,20 +138,38 @@ class PlaylistImportServiceImpl implements PlaylistImportService {
       trackCount: tracks.length,
     );
     session.tracks.addAll(tracks.take(settings.maxTracks));
+    session.truncated = tracks.length > settings.maxTracks;
     _log.info('import ${session.id}: ${session.tracks.length} provided tracks from $sourceId');
     unawaited(_run(session, null));
     return session.id;
   }
 
   MutableImportSession _createSession(String sourceId, MatchOptions options) {
+    _evictFinished();
     final session = MutableImportSession(
       id: _newId(),
       source: sourceId,
       options: options,
       progressInterval: settings.progressInterval,
+      clock: _clock,
     );
     _sessions[session.id] = session;
     return session;
+  }
+
+  /// Forgets finished sessions past [ImportSettings.finishedSessionTtl] and
+  /// all but the newest [ImportSettings.maxFinishedSessions] finished ones.
+  void _evictFinished() {
+    final now = _clock();
+    final finished = _sessions.values.where((s) => s.isTerminal && s.finishedAt != null).toList()
+      ..sort((a, b) => b.finishedAt!.compareTo(a.finishedAt!));
+    for (var i = 0; i < finished.length; i++) {
+      final s = finished[i];
+      if (i >= settings.maxFinishedSessions || now.difference(s.finishedAt!) > settings.finishedSessionTtl) {
+        _sessions.remove(s.id);
+        unawaited(s.close());
+      }
+    }
   }
 
   Future<void> _run(MutableImportSession s, Future<void> Function()? fetch) async {
@@ -186,7 +177,7 @@ class PlaylistImportServiceImpl implements PlaylistImportService {
       s.emit(immediate: true);
       if (fetch != null) await fetch();
       s.cancelToken.throwIfCanceled();
-      s.results = List<TrackMatchResult?>.filled(s.tracks.length, null);
+      s.prepareResults();
       s.phase = ImportPhase.matching;
       s.emit(immediate: true);
       await _matchAll(s);
@@ -208,46 +199,10 @@ class PlaylistImportServiceImpl implements PlaylistImportService {
     }
   }
 
-  /// Follows `nextCursor` until the last page, [ImportSettings.maxTracks],
-  /// [ImportSettings.maxPages] or a repeated cursor.
-  Future<void> _fetchPlaylist(MutableImportSession s, MusicSource source, String idOrUrl) async {
-    String? cursor;
-    final seenCursors = <String>{};
-    for (var page = 0; page < settings.maxPages; page++) {
-      s.cancelToken.throwIfCanceled();
-      final requestCursor = cursor;
-      final detail = await withRateLimitRetry(
-        () => source.getPlaylist(idOrUrl, cursor: requestCursor, cancel: s.cancelToken),
-        policy: settings.rateLimit,
-        cancel: s.cancelToken,
-        log: _log,
-        label: '${source.id} playlist page ${page + 1}',
-      );
-      s.playlist ??= detail.playlist;
-      s.tracks.addAll(detail.tracks.items.take(settings.maxTracks - s.tracks.length));
-      s.emit();
-      final next = detail.tracks.nextCursor;
-      if (next == null) return;
-      if (s.tracks.length >= settings.maxTracks) {
-        _log.warning('import ${s.id}: playlist truncated at ${settings.maxTracks} tracks');
-        return;
-      }
-      if (!seenCursors.add(next)) {
-        _log.warning('import ${s.id}: ${source.id} repeated cursor "$next"; stopping');
-        return;
-      }
-      cursor = next;
-    }
-    _log.warning('import ${s.id}: stopped after ${settings.maxPages} pages');
-  }
-
   /// Matches every distinct track once (duplicates share the result) with
   /// [ImportSettings.maxConcurrentMatches] workers.
   Future<void> _matchAll(MutableImportSession s) async {
-    final positions = <String, List<int>>{};
-    for (var i = 0; i < s.tracks.length; i++) {
-      positions.putIfAbsent(s.tracks[i].id, () => []).add(i);
-    }
+    final positions = s.positionsByTrack;
     final queue = Queue.of(positions.keys);
 
     Future<void> worker() async {
@@ -293,10 +248,13 @@ class PlaylistImportServiceImpl implements PlaylistImportService {
   @override
   ImportSessionState? current(String sessionId) => _sessions[sessionId]?.snapshot();
 
-  /// Summary of the session's current results.
+  /// Summary of the session's current results with real playlist
+  /// positions (also while matching or after a cancel) and whether the
+  /// playlist was cut short. Null for an unknown session.
   ImportReport? report(String sessionId) {
-    final state = current(sessionId);
-    return state == null ? null : ImportReport.fromState(state);
+    final s = _sessions[sessionId];
+    if (s == null) return null;
+    return ImportReport.fromPositions(s.results, expectedTotal: s.playlist?.trackCount, truncated: s.truncated);
   }
 
   // ---------------------------------------------------------------------
@@ -344,7 +302,9 @@ class PlaylistImportServiceImpl implements PlaylistImportService {
   void acceptAllAtLeast(String sessionId, MatchConfidence minConfidence) {
     final s = _reviewable(sessionId);
     var accepted = 0;
-    for (final r in s.uniqueResults.toList()) {
+    for (final at in s.positionsByTrack.values) {
+      final r = s.results[at.first];
+      if (r == null) continue;
       final best = r.best;
       if (r.decision != MatchDecision.needsReview ||
           best == null ||
@@ -355,7 +315,7 @@ class PlaylistImportServiceImpl implements PlaylistImportService {
         continue;
       }
       final updated = r.copyWith(decision: MatchDecision.userAccepted, chosen: best);
-      for (final p in s.resultPositionsOf(r.original.id)) {
+      for (final p in at) {
         s.results[p] = updated;
       }
       accepted++;
@@ -367,6 +327,8 @@ class PlaylistImportServiceImpl implements PlaylistImportService {
   /// Searches one source ([sourceId]) or all of the session's target
   /// sources (all ready sources except explicit-only ones when the session
   /// has none). An empty [query] searches "artist + title" of the original.
+  /// Every failure (unknown session, track or source included) completes
+  /// the returned future with the error.
   @override
   Future<List<MatchCandidate>> searchAlternatives(
     String sessionId,
@@ -374,7 +336,7 @@ class PlaylistImportServiceImpl implements PlaylistImportService {
     String query, {
     String? sourceId,
     CancelToken? cancel,
-  }) {
+  }) async {
     final s = _require(sessionId);
     final original = s.tracks.firstWhereOrNull((t) => t.id == originalTrackId);
     if (original == null) {

@@ -24,37 +24,44 @@ class PlayerBar extends ConsumerWidget {
 
   static const height = 88.0;
 
+  /// Largest text scale used inside the fixed-height bar.
+  static const maxTextScale = 1.2;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SizedBox(
-      height: height,
-      child: GlassSurface(
-        edges: GlassEdges.topOnly,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final w = constraints.maxWidth;
-            final full = w >= 1100;
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Row(
-                children: [
-                  Expanded(flex: 3, child: const _NowPlayingInfo()),
-                  Expanded(flex: 4, child: const _CenterControls()),
-                  Expanded(
-                    flex: 3,
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
+    // Fixed-height chrome: text scaling is clamped here (pages scale fully).
+    return MediaQuery.withClampedTextScaling(
+      maxScaleFactor: maxTextScale,
+      child: SizedBox(
+        height: height,
+        child: GlassSurface(
+          edges: GlassEdges.topOnly,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final w = constraints.maxWidth;
+              final full = w >= 1100;
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Row(
+                  children: [
+                    Expanded(flex: 3, child: const _NowPlayingInfo()),
+                    Expanded(flex: 4, child: const _CenterControls()),
+                    Expanded(
+                      flex: 3,
+                      child: Align(
                         alignment: Alignment.centerRight,
-                        child: full ? const _RightClusterFull() : const _RightClusterCompact(),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerRight,
+                          child: full ? const _RightClusterFull() : const _RightClusterCompact(),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            );
-          },
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -75,7 +82,9 @@ class _NowPlayingInfo extends ConsumerWidget {
         children: [
           const ArtworkImage(uri: null, size: 56),
           const SizedBox(width: 12),
-          Flexible(child: Text(l10n.playerNothingPlaying, style: context.type.bodySmall, overflow: TextOverflow.ellipsis)),
+          Flexible(
+            child: Text(l10n.playerNothingPlaying, style: context.type.bodySmall, overflow: TextOverflow.ellipsis),
+          ),
         ],
       );
     }
@@ -99,7 +108,12 @@ class _NowPlayingInfo extends ConsumerWidget {
             children: [
               InkWell(
                 onTap: () => context.push(AppRoutes.nowPlaying),
-                child: Text(track.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: context.type.body.copyWith(fontWeight: FontWeight.w600)),
+                child: Text(
+                  track.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.type.body.copyWith(fontWeight: FontWeight.w600),
+                ),
               ),
               const SizedBox(height: 2),
               InkWell(
@@ -208,13 +222,7 @@ class _RightClusterCompact extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Row(
       mainAxisSize: MainAxisSize.min,
-      children: [
-        _LyricsButton(),
-        _QueueButton(),
-        VolumePopoverButton(),
-        SleepTimerButton(),
-        _MoreButton(),
-      ],
+      children: [_LyricsButton(), _QueueButton(), VolumePopoverButton(), SleepTimerButton(), _MoreButton()],
     );
   }
 }

@@ -67,10 +67,12 @@ class _RailItem extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           borderRadius: context.radii.smAll,
-          child: SizedBox(
+          child: Container(
             width: 72,
-            height: 58,
+            constraints: const BoxConstraints(minHeight: 58),
+            padding: const EdgeInsets.symmetric(vertical: 4),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(

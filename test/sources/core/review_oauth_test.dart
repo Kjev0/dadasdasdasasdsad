@@ -15,13 +15,17 @@ import 'helpers.dart';
 class _GatedOAuthClient implements OAuthClient {
   Completer<OAuthToken>? refreshGate;
   int refreshCalls = 0;
+  Object? authorizeError;
 
   @override
-  Future<OAuthToken> authorize(OAuthConfig config) async => OAuthToken(
-    accessToken: 'at-1',
-    refreshToken: 'rt-1',
-    expiresAt: DateTime.now().add(const Duration(hours: 1)),
-  );
+  Future<OAuthToken> authorize(OAuthConfig config) async {
+    if (authorizeError != null) throw authorizeError!;
+    return OAuthToken(
+      accessToken: 'at-1',
+      refreshToken: 'rt-1',
+      expiresAt: DateTime.now().add(const Duration(hours: 1)),
+    );
+  }
 
   @override
   Future<OAuthToken> refresh(OAuthConfig config, OAuthToken token) {
@@ -46,7 +50,7 @@ OAuthConfig _build(SourceCredentials c) => OAuthConfig(
 );
 
 void main() {
-  group('OAuthSession: disconnect racing an in-flight refresh', () {
+  group('OAuthSession state machine', () {
     late Directory tmp;
     late CredentialsStoreImpl creds;
     late InMemoryTokenStore tokens;
@@ -143,6 +147,37 @@ void main() {
       expect(next.state.status, isNot(SourceConnectionStatus.connected));
       await session.dispose();
       await next.dispose();
+    });
+    test('a failed re-connect (e.g. loopback port busy) must not disable a still-valid session', () async {
+      final api = RecordingHttp((req) async => jsonResponse('{"name":"Ada"}'));
+      final session = OAuthSession(
+        sourceId: 'acme',
+        displayName: 'Acme',
+        client: oauth,
+        tokens: tokens,
+        credentials: creds,
+        http: api.fermata,
+        buildConfig: _build,
+        fetchAccountOnInit: false,
+        platform: const PlatformInfo(os: HostOs.linux),
+        fetchAccount: (s, cancel) async => const OAuthAccount(name: 'Ada'),
+      );
+      addTearDown(session.dispose);
+      await session.init();
+      await session.connect();
+      expect(session.state.status, SourceConnectionStatus.connected);
+
+      // The user presses "Reconnect"/"Switch account"; the flow fails hard
+      // before the provider was even reached.
+      oauth.authorizeError = const OAuthFlowException('acme', OAuthFailure.portInUse, 'Port 43821 is in use');
+      await expectLater(session.connect(), throwsA(isA<OAuthFlowException>()));
+
+      // BUG: _connect() emits SourceConnectionStatus.error for every
+      // non-"soft" failure even though _token is still the valid old token,
+      // so OAuthSourceMixin.isReady turns false and the registry drops the
+      // source from search until the app is restarted.
+      expect(await session.validToken(), isNotNull, reason: 'the old token still works');
+      expect(session.state.isConnected, isTrue, reason: 'state is ${session.state.status}');
     });
   });
 }

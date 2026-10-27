@@ -1,7 +1,10 @@
 # Releasing Fermata
 
 Releases are built and published by CI (`.github/workflows/build.yml`) when a
-`v*` tag is pushed. How to build by hand: [BUILDING.md](BUILDING.md).
+`v*` tag is pushed. Branch pushes and pull requests only run the `test` job;
+the packaging jobs run for `v*` tags and for manual runs (*Actions → Build →
+Run workflow*, which produces downloadable artifacts but no release). How to
+build by hand: [BUILDING.md](BUILDING.md).
 
 ## Versioning
 
@@ -37,10 +40,12 @@ rolled back). Pre-releases use a suffix (`1.5.0-beta.1+13`, tag
 
 5. CI checks that the tag equals `v` + the pubspec version, runs the tests,
    builds `setup.exe`, `setup.sh`, the Linux tarball and `app.apk`, writes
-   `SHA256SUMS` and creates the GitHub Release with generated release notes.
-6. Edit the release notes: highlights, known issues, and the Android signing
-   certificate fingerprint (see below). Say whether `setup.exe` is
-   code-signed.
+   `SHA256SUMS` and creates the GitHub Release. Its body starts with short
+   install instructions per platform, a link to [INSTALL.md](INSTALL.md), the
+   checksum note, the Android certificate fingerprint (or a warning that
+   `app.apk` is debug-signed) and a SmartScreen note when `setup.exe` is
+   unsigned; GitHub's generated changelog follows.
+6. Edit the release notes: add highlights and known issues.
 7. Smoke-test the published files: download them, check `SHA256SUMS`, install
    on a clean Windows VM, a Linux VM (`./setup.sh`) and an Android device,
    and test an in-place update from the previous release.
@@ -59,14 +64,19 @@ without them; what changes is noted.
 
 | Secret | Purpose | Without it |
 |---|---|---|
-| `FERMATA_KEYSTORE_BASE64` | Android release keystore, `base64 -w0 fermata-release.jks` | APK is debug-signed; **tag builds fail** (see variable below) |
+| `FERMATA_KEYSTORE_BASE64` | Android release keystore, `base64 -w0 fermata-release.jks` | APK is debug-signed and the release notes warn about it |
 | `FERMATA_KEYSTORE_PASSWORD`, `FERMATA_KEY_ALIAS`, `FERMATA_KEY_PASSWORD` | Keystore password, key alias, key password | as above (setting only some of them fails the build on purpose) |
 | `WINDOWS_CERT_PFX_BASE64`, `WINDOWS_CERT_PASSWORD` | Authenticode certificate (.pfx, base64) and its password; signs `fermata.exe`, `setup.exe` and the uninstaller | `setup.exe` is unsigned |
 | `FERMATA_DART_DEFINES_JSON` | Contents of a `dart_defines.json` compiled into all builds | Users enter credentials in the app |
 
 | Variable | Purpose |
 |---|---|
-| `FERMATA_ALLOW_DEBUG_SIGNED_APK` = `true` | Lets tag builds publish a debug-signed APK (only until a release keystore exists; users of such an APK must uninstall, losing data, to move to a properly signed one) |
+| `FERMATA_REQUIRE_RELEASE_SIGNING` = `true` | Strict mode: tag builds fail instead of publishing a debug-signed APK. Turn it on once the keystore secrets exist. |
+
+A debug-signed `app.apk` installs and works, but users have to uninstall it
+(losing the app's data) before they can install a later properly signed
+build. Set up the keystore before the first release that many people will
+install.
 
 Notes:
 

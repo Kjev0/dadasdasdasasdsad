@@ -33,6 +33,7 @@ class MatcherSettings {
     this.maxQueriesPerTrack = MatchingSourceRules.maxQueriesPerTrack,
     this.maxSearchPageSize = MatchingSourceRules.maxSearchPageSize,
     this.isrcResolvers = MatchingSourceRules.isrcResolvers,
+    this.rateLimitCooldown = const Duration(seconds: 30),
   });
 
   /// Tracks matched at the same time through one matcher (each searches its
@@ -61,6 +62,12 @@ class MatcherSettings {
   /// Sources asked for a missing ISRC before matching (empty disables the
   /// enrichment). Only used when some target supports ISRC lookup.
   final List<String> isrcResolvers;
+
+  /// How long a source that is still rate limited after [rateLimit]'s
+  /// retries is left alone when it did not say (no Retry-After). While a
+  /// source is blocked, requests wait for the block to end if that is at
+  /// most [RateLimitPolicy.maxDelay] away, and skip the source otherwise.
+  final Duration rateLimitCooldown;
 }
 
 /// Finds an original track on other sources: ISRC lookup first where
@@ -78,6 +85,13 @@ class MatcherSettings {
 /// [TrackMatchResult.error] as [SourceMatchFailures] and the other sources'
 /// candidates are still returned. Cancellation propagates as
 /// [OperationCanceledException].
+///
+/// Rate limits are shared across all tracks of this matcher: once a source
+/// stays rate limited after the retries, it is blocked until its
+/// Retry-After (or [MatcherSettings.rateLimitCooldown]) has passed. Short
+/// blocks make later requests wait; long ones (a daily quota) make the
+/// matcher skip the source and report a [RateLimitedException] for it
+/// instead of asking again for every query and track.
 class SourceTrackMatcher implements TrackMatcher {
   /// Uses the registry's sources; when [MatchOptions.targetSources] is empty
   /// all sources except [MatcherSettings.explicitOnlySources] are searched
@@ -87,11 +101,13 @@ class SourceTrackMatcher implements TrackMatcher {
     required TrackScorer scorer,
     TrackNormalizer normalizer = const TrackNormalizer(),
     MatcherSettings settings = const MatcherSettings(),
+    DateTime Function()? clock,
   }) : this.withSources(
           sources: () => registry.ordered,
           scorer: scorer,
           normalizer: normalizer,
           settings: settings,
+          clock: clock,
         );
 
   /// Uses whatever [sources] returns at call time (preference order).
@@ -100,8 +116,10 @@ class SourceTrackMatcher implements TrackMatcher {
     required this.scorer,
     this.normalizer = const TrackNormalizer(),
     this.settings = const MatcherSettings(),
+    DateTime Function()? clock,
   })  : _slots = AsyncSemaphore(math.max(1, settings.maxConcurrentTracks)),
-        _queries = SearchQueryBuilder(uploaderStyleSources: settings.uploaderStyleSources);
+        _queries = SearchQueryBuilder(uploaderStyleSources: settings.uploaderStyleSources),
+        _clock = clock ?? DateTime.now;
 
   final TrackScorer scorer;
   final TrackNormalizer normalizer;
@@ -109,6 +127,23 @@ class SourceTrackMatcher implements TrackMatcher {
   final List<MusicSource> Function() _sources;
   final AsyncSemaphore _slots;
   final SearchQueryBuilder _queries;
+  final DateTime Function() _clock;
+
+  /// Source id → end of its rate-limit block.
+  final _blockedUntil = <String, DateTime>{};
+
+  /// End of the current rate-limit block of [sourceId], or null when the
+  /// source may be asked (e.g. for a "Spotify is rate limited until …"
+  /// notice).
+  DateTime? rateLimitedUntil(String sourceId) {
+    final until = _blockedUntil[sourceId];
+    if (until == null) return null;
+    if (!until.isAfter(_clock())) {
+      _blockedUntil.remove(sourceId);
+      return null;
+    }
+    return until;
+  }
 
   static final _log = Logger('matching.matcher');
 
@@ -123,7 +158,7 @@ class SourceTrackMatcher implements TrackMatcher {
     final (targets, notReady) = _resolveTargets(original, options, available);
     final run = _MatchRun(original: original, normalized: normalized, cancel: cancel);
 
-    run.isrc = normalized.isrc != null ? original.isrc : null;
+    run.isrc = normalized.isrc;
     if (run.isrc == null && targets.any((s) => s.supports(SourceCapability.isrcLookup))) {
       run.isrc = await _resolveIsrc(run, available);
     }
@@ -221,10 +256,11 @@ class SourceTrackMatcher implements TrackMatcher {
       try {
         final page = await _search(source, query, run);
         final strong = MatchPolicy.rank(page.items.map((t) => scorer.score(run.original, t)))
-            .firstWhereOrNull((c) => _isStrong(c) && (c.candidate.isrc?.trim().isNotEmpty ?? false));
+            .firstWhereOrNull((c) => _isStrong(c) && TrackNormalizer.normalizeIsrc(c.candidate.isrc) != null);
         if (strong != null) {
-          _log.fine('enriched ${run.original.id} with ISRC ${strong.candidate.isrc} from ${source.id}');
-          return strong.candidate.isrc;
+          final isrc = TrackNormalizer.normalizeIsrc(strong.candidate.isrc);
+          _log.fine('enriched ${run.original.id} with ISRC $isrc from ${source.id}');
+          return isrc;
         }
       } on OperationCanceledException {
         rethrow;
@@ -243,14 +279,50 @@ class SourceTrackMatcher implements TrackMatcher {
     final limit = cap == null ? settings.searchLimit : math.min(cap, settings.searchLimit);
     return run.searches.putIfAbsent(
       '${source.id}\u0000$query',
-      () => withRateLimitRetry(
+      () => _request(
+        source,
         () => source.searchTracks(query, limit: limit, cancel: run.cancel),
-        policy: settings.rateLimit,
         cancel: run.cancel,
-        log: _log,
         label: '${source.id} search',
       ),
     );
+  }
+
+  /// Runs one request to [source] through the shared rate-limit gate:
+  /// waits out a short block, skips the source during a long one (throws
+  /// [RateLimitedException] without a request), retries per
+  /// [MatcherSettings.rateLimit], and blocks the source when it is still
+  /// rate limited afterwards.
+  Future<T> _request<T>(
+    MusicSource source,
+    Future<T> Function() call, {
+    required CancelToken? cancel,
+    required String label,
+  }) async {
+    final until = rateLimitedUntil(source.id);
+    if (until != null) {
+      final wait = until.difference(_clock());
+      if (wait > settings.rateLimit.maxDelay) {
+        throw RateLimitedException('${source.displayName} is rate limited; skipped until $until', retryAfter: wait);
+      }
+      await cancellableDelay(wait, cancel);
+    }
+    try {
+      return await withRateLimitRetry(call, policy: settings.rateLimit, cancel: cancel, log: _log, label: label);
+    } on RateLimitedException catch (e) {
+      _block(source, e);
+      rethrow;
+    }
+  }
+
+  void _block(MusicSource source, RateLimitedException e) {
+    final retryAfter = e.retryAfter;
+    final wait = retryAfter != null && retryAfter > Duration.zero ? retryAfter : settings.rateLimitCooldown;
+    final until = _clock().add(wait);
+    final current = _blockedUntil[source.id];
+    if (current != null && !until.isAfter(current)) return;
+    _blockedUntil[source.id] = until;
+    _log.warning('${source.id} is rate limited; pausing requests for ${wait.inSeconds} s');
   }
 
   Future<_SourceOutcome> _searchSource(MusicSource source, _MatchRun run) async {
@@ -258,6 +330,7 @@ class SourceTrackMatcher implements TrackMatcher {
     final cancel = run.cancel;
     final candidates = <String, MatchCandidate>{};
     var searched = false;
+    var rateLimited = false;
     Object? error;
 
     void add(Track track) {
@@ -271,11 +344,10 @@ class SourceTrackMatcher implements TrackMatcher {
       final isrc = run.isrc;
       if (isrc != null && source.supports(SourceCapability.isrcLookup)) {
         try {
-          final found = await withRateLimitRetry(
+          final found = await _request(
+            source,
             () => source.lookupByIsrc(isrc, cancel: cancel),
-            policy: settings.rateLimit,
             cancel: cancel,
-            log: _log,
             label: '${source.id} isrc lookup',
           );
           searched = true;
@@ -284,6 +356,9 @@ class SourceTrackMatcher implements TrackMatcher {
           // Declared but not available for this track/region; search instead.
         } on OperationCanceledException {
           rethrow;
+        } on RateLimitedException catch (e) {
+          error = e;
+          rateLimited = true;
         } catch (e) {
           if (_isFatalForSource(e)) rethrow;
           error = e;
@@ -291,7 +366,9 @@ class SourceTrackMatcher implements TrackMatcher {
         }
       }
 
-      if (!hasStrong() && source.supports(SourceCapability.searchTracks)) {
+      if (rateLimited) {
+        // The source is blocked; the queries would only fail or wait again.
+      } else if (!hasStrong() && source.supports(SourceCapability.searchTracks)) {
         var queries = _queries.build(run.normalized, source.id);
         final maxQueries = settings.maxQueriesPerTrack[source.id];
         if (maxQueries != null) queries = queries.take(maxQueries).toList();
@@ -307,6 +384,11 @@ class SourceTrackMatcher implements TrackMatcher {
             break;
           } on OperationCanceledException {
             rethrow;
+          } on RateLimitedException catch (e) {
+            // Still limited after the retries: the remaining queries of this
+            // track would hit the same limit.
+            error = e;
+            break;
           } catch (e) {
             if (_isFatalForSource(e)) rethrow;
             error = e;

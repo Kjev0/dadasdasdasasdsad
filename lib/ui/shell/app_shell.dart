@@ -55,47 +55,47 @@ class _AppShellState extends ConsumerState<AppShell> {
     final size = LayoutSize.of(context);
     final Widget layout = switch (size) {
       LayoutSize.compact => Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Column(
-            children: [
-              Expanded(child: content),
-              const MiniPlayer(),
-            ],
-          ),
-          bottomNavigationBar: _BottomNav(location: widget.location),
+        backgroundColor: Colors.transparent,
+        body: Column(
+          children: [
+            Expanded(child: content),
+            const MiniPlayer(),
+          ],
         ),
+        bottomNavigationBar: _BottomNav(location: widget.location),
+      ),
       LayoutSize.medium => Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Column(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    SafeArea(right: false, child: FermataNavRail(location: widget.location)),
-                    Expanded(child: content),
-                  ],
-                ),
+        backgroundColor: Colors.transparent,
+        body: Column(
+          children: [
+            Expanded(
+              child: Row(
+                children: [
+                  SafeArea(right: false, child: FermataNavRail(location: widget.location)),
+                  Expanded(child: content),
+                ],
               ),
-              const SafeArea(top: false, child: PlayerBar()),
-            ],
-          ),
+            ),
+            const SafeArea(top: false, child: PlayerBar()),
+          ],
         ),
+      ),
       LayoutSize.expanded => Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Column(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Sidebar(location: widget.location),
-                    Expanded(child: content),
-                  ],
-                ),
+        backgroundColor: Colors.transparent,
+        body: Column(
+          children: [
+            Expanded(
+              child: Row(
+                children: [
+                  Sidebar(location: widget.location),
+                  Expanded(child: content),
+                ],
               ),
-              const SafeArea(top: false, child: PlayerBar()),
-            ],
-          ),
+            ),
+            const SafeArea(top: false, child: PlayerBar()),
+          ],
         ),
+      ),
     };
 
     return ShellLocation(
@@ -121,16 +121,17 @@ class _BottomNav extends StatelessWidget {
     final l10n = context.l10n;
     final items = NavDestination.compactItems;
     final selected = items.indexOf(NavDestination.compactFor(location.path));
-    return GlassSurface(
-      edges: GlassEdges.topOnly,
-      child: NavigationBar(
-        backgroundColor: Colors.transparent,
-        selectedIndex: selected < 0 ? 0 : selected,
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-        onDestinationSelected: (i) => context.go(items[i].path),
-        destinations: [
-          for (final d in items) NavigationDestination(icon: Icon(d.icon), label: d.label(l10n)),
-        ],
+    return MediaQuery.withClampedTextScaling(
+      maxScaleFactor: 1.3,
+      child: GlassSurface(
+        edges: GlassEdges.topOnly,
+        child: NavigationBar(
+          backgroundColor: Colors.transparent,
+          selectedIndex: selected < 0 ? 0 : selected,
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+          onDestinationSelected: (i) => context.go(items[i].path),
+          destinations: [for (final d in items) NavigationDestination(icon: Icon(d.icon), label: d.label(l10n))],
+        ),
       ),
     );
   }

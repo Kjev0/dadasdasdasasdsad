@@ -37,7 +37,7 @@ class LyricsView extends ConsumerWidget {
     final l10n = context.l10n;
     final enabled = ref.watch(settingsProvider.select((s) => s.playback.lyricsEnabled));
     if (!enabled) {
-      return EmptyState(icon: Icons.lyrics_outlined, title: l10n.playerLyricsDisabled, compact: true);
+      return EmptyState(icon: Icons.lyrics_rounded, title: l10n.playerLyricsDisabled, compact: true);
     }
     final lyrics = ref.watch(lyricsProvider(track));
     return lyrics.when(
@@ -49,7 +49,7 @@ class LyricsView extends ConsumerWidget {
         onRetry: () => ref.invalidate(lyricsProvider(track)),
       ),
       data: (data) {
-        if (data == null) return EmptyState(icon: Icons.lyrics_outlined, title: l10n.playerLyricsNotFound, compact: true);
+        if (data == null) return EmptyState(icon: Icons.lyrics_rounded, title: l10n.playerLyricsNotFound, compact: true);
         if (data.instrumental) return EmptyState(icon: Icons.music_note_rounded, title: l10n.playerLyricsInstrumental, compact: true);
         return Column(
           children: [

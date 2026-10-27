@@ -23,7 +23,9 @@ abstract final class ScoreKeys {
   /// 0 = significantly different version.
   static const version = 'version';
 
-  /// 1 = identical ISRC, 0 = both known but different.
+  /// 1 = identical ISRC, 0 = both known but different,
+  /// [MatchThresholds.isrcContradicted] = identical but contradicted by the
+  /// title/artist/duration, so it was ignored.
   static const isrc = 'isrc';
 
   /// Weighted metadata score before penalties.
@@ -61,13 +63,14 @@ class WeightedTrackScorer implements TrackScorer {
     final c = normalized(candidate);
     final w = config.weights;
 
-    // Title and artist signals depend on how each title is read ("Artist -
-    // Title" uploads); keep the best combination.
+    // Title, artist and version depend on how each title is read ("Artist -
+    // Title" uploads, dash tails that may be qualifiers); keep the best
+    // combination.
     late _ReadingMatch reading;
     var first = true;
     for (final ro in o.readings) {
       for (final rc in c.readings) {
-        final m = _ReadingMatch.of(ro, rc, w);
+        final m = _ReadingMatch.of(ro, rc, w, detector, config.significantVersionPenalty);
         if (first || m.weighted > reading.weighted) reading = m;
         first = false;
       }
@@ -100,9 +103,10 @@ class WeightedTrackScorer implements TrackScorer {
     raw = totalWeight == 0 ? 0 : raw / totalWeight;
 
     // ---- Differences -----------------------------------------------------
-    final diffs = detector.compare(o.version, c.version);
-    final significant = diffs.any(MatchCandidate.significantVersionDifferences.contains);
-    if (signals[ScoreKeys.explicit] == 0) diffs.add(MatchDifference.explicitMismatch);
+    final diffs = {...reading.versionDiffs};
+    final significant = reading.significant;
+    final explicitMismatch = signals[ScoreKeys.explicit] == 0;
+    if (explicitMismatch) diffs.add(MatchDifference.explicitMismatch);
     if (absDelta != null && absDelta > DurationBands.good) diffs.add(MatchDifference.durationMismatch);
     final album = signals[ScoreKeys.album];
     if (album != null && album < MatchThresholds.albumMismatchBelow) diffs.add(MatchDifference.albumMismatch);
@@ -119,18 +123,24 @@ class WeightedTrackScorer implements TrackScorer {
     if (reading.title < MatchThresholds.titleMismatchBelow) diffs.add(MatchDifference.titleMismatch);
     if (candidate.availability.playback == PlaybackRights.preview) diffs.add(MatchDifference.previewOnly);
 
-    // ---- Score -----------------------------------------------------------
+    // ---- ISRC --------------------------------------------------------------
+    // An identical ISRC is only trusted when the metadata does not
+    // contradict it: uploader platforms let anyone type an ISRC, and a fan
+    // re-upload or edit can carry the original's code.
     final isrcEqual = o.isrc != null && o.isrc == c.isrc;
+    final isrcTrusted = isrcEqual && _isrcConsistent(original, candidate, reading, absDelta);
+
+    // ---- Score -----------------------------------------------------------
     final farDuration = absDelta != null && absDelta > DurationBands.disqualifying;
     var score = raw;
-    if (isrcEqual) score = config.isrcFloor + (1 - config.isrcFloor) * raw;
+    if (isrcTrusted) score = config.isrcFloor + (1 - config.isrcFloor) * raw;
     if (significant) score *= config.significantVersionPenalty;
-    if (farDuration && !isrcEqual) score *= config.farDurationPenalty;
+    if (farDuration && !isrcTrusted) score *= config.farDurationPenalty;
     score = score.clamp(0.0, 1.0);
 
     // ---- Confidence ------------------------------------------------------
     MatchConfidence confidence;
-    if (isrcEqual && !significant) {
+    if (isrcTrusted && !significant) {
       confidence = MatchConfidence.exact;
     } else {
       confidence = config.band(score);
@@ -139,6 +149,9 @@ class WeightedTrackScorer implements TrackScorer {
       if (confidence == MatchConfidence.high && !(strongIdentity && durationOk)) {
         confidence = MatchConfidence.medium;
       }
+      // A clean (censored) edit is not the explicit original, nor the other
+      // way round: never accepted without the user.
+      if (explicitMismatch) confidence = confidence.cappedAt(config.explicitMismatchCap);
       if (significant) confidence = confidence.cappedAt(config.significantVersionCap);
       final weakIdentity = reading.title < config.capMinTitle || (primary != null && primary < config.capMinArtist);
       if (farDuration || weakIdentity) confidence = confidence.cappedAt(MatchConfidence.low);
@@ -154,7 +167,8 @@ class WeightedTrackScorer implements TrackScorer {
       ...signals,
       ScoreKeys.version: significant ? 0 : (nonSignificantOnly ? 0.9 : 1),
       ScoreKeys.raw: raw,
-      if (o.isrc != null && c.isrc != null) ScoreKeys.isrc: isrcEqual ? 1 : 0,
+      if (o.isrc != null && c.isrc != null)
+        ScoreKeys.isrc: isrcTrusted ? 1 : (isrcEqual ? MatchThresholds.isrcContradicted : 0),
       if (reading.split) ScoreKeys.artistTitleSplit: 1,
     };
 
@@ -167,9 +181,26 @@ class WeightedTrackScorer implements TrackScorer {
       confidence: confidence,
       differences: Set.unmodifiable(diffs),
       durationDelta: durationDelta,
-      matchedByIsrc: isrcEqual,
+      matchedByIsrc: isrcTrusted,
       breakdown: Map.unmodifiable(breakdown),
     );
+  }
+
+  /// Whether the metadata agrees with an identical ISRC: the durations
+  /// match within [ScoringConfig.isrcMaxDurationDelta] (or one is unknown)
+  /// and the title or the artist agrees. When either track comes from a
+  /// platform where uploaders type ISRCs in ([ScoringConfig.uploaderIsrcSources])
+  /// both title and artist must agree. Titles/artists are only "or"-ed for
+  /// curated catalogs because they legitimately differ there (another
+  /// script or a translated title).
+  bool _isrcConsistent(Track original, Track candidate, _ReadingMatch reading, Duration? absDelta) {
+    if (absDelta != null && absDelta > config.isrcMaxDurationDelta) return false;
+    final titleOk = reading.title >= config.capMinTitle;
+    final primary = reading.primary;
+    final artistOk = primary == null || primary >= config.capMinArtist;
+    final uploaded = config.uploaderIsrcSources.contains(original.sourceId) ||
+        config.uploaderIsrcSources.contains(candidate.sourceId);
+    return uploaded ? titleOk && artistOk : titleOk || artistOk;
   }
 
   /// Non-significant version differences.
@@ -183,7 +214,10 @@ class WeightedTrackScorer implements TrackScorer {
         MatchConfidence.none => config.lowThreshold - _bandGap,
       };
 
-  static const _bandGap = 0.005;
+  /// Distance of a capped score below the next band's floor. 0.01 keeps a
+  /// capped candidate out of the next band's 0.01 ranking bucket and below
+  /// its displayed percentage (0.69 → "69 %", not "70 %").
+  static const _bandGap = 0.01;
 
   double? _albumScore(NormalizedTrack o, NormalizedTrack c) {
     final a = o.album, b = c.album;
@@ -210,27 +244,50 @@ class WeightedTrackScorer implements TrackScorer {
   }
 }
 
-/// Title/artist agreement of one reading pair.
+/// Title/artist/version agreement of one reading pair.
 class _ReadingMatch {
-  _ReadingMatch(this.title, this.primary, this.featured, this.hasFeatured, this.split, this.weighted);
+  _ReadingMatch(
+    this.title,
+    this.primary,
+    this.featured,
+    this.hasFeatured,
+    this.split,
+    this.versionDiffs,
+    this.significant,
+    this.weighted,
+  );
 
-  factory _ReadingMatch.of(TrackReading a, TrackReading b, ScoringWeights w) {
-    final title = Similarity.foldedTitle(a.title, b.title);
+  factory _ReadingMatch.of(
+    TrackReading a,
+    TrackReading b,
+    ScoringWeights w,
+    VersionDetector detector,
+    double significantPenalty,
+  ) {
+    final title = Similarity.qualifiedTitle(a.title, a.titleQualifier, b.title, b.titleQualifier);
     final overlap = Similarity.artistOverlap(
       primaryA: a.primaryArtists,
       featuredA: a.featuredArtists,
       primaryB: b.primaryArtists,
       featuredB: b.featuredArtists,
     );
-    // Unknown artists count as neutral for choosing the reading only.
-    final weighted =
+    final versionDiffs = detector.compare(a.version, b.version);
+    final significant = versionDiffs.any(MatchCandidate.significantVersionDifferences.contains);
+    // Unknown artists count as neutral for choosing the reading only. A
+    // version difference costs what it costs in the final score, so a
+    // reading that explains a dash tail as the title ("Oasis - Live
+    // Forever") beats one that reads it as a live qualifier.
+    var weighted =
         title * w.title + (overlap.primary ?? 0.5) * w.primaryArtist + overlap.featured * w.featuredArtists;
+    if (significant) weighted *= significantPenalty;
     return _ReadingMatch(
       title,
       overlap.primary,
       overlap.featured,
       overlap.hasFeatured,
       a.isArtistTitleSplit || b.isArtistTitleSplit,
+      versionDiffs,
+      significant,
       weighted,
     );
   }
@@ -240,5 +297,7 @@ class _ReadingMatch {
   final double featured;
   final bool hasFeatured;
   final bool split;
+  final Set<MatchDifference> versionDiffs;
+  final bool significant;
   final double weighted;
 }

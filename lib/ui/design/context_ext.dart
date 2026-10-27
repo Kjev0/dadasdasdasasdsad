@@ -27,4 +27,12 @@ extension FermataContext on BuildContext {
       FermataTypography.build(primary: colors.textPrimary, secondary: colors.textSecondary);
 
   AppLocalizations get l10n => AppLocalizations.of(this);
+
+  /// Height of a two-line list row (track / queue rows): the density's row
+  /// height, grown with the text scale so large text never overflows.
+  double get rowExtent {
+    final scale = MediaQuery.textScalerOf(this).scale(100) / 100;
+    final text = 42 * scale + 6;
+    return text > spacing.rowHeight ? text : spacing.rowHeight;
+  }
 }

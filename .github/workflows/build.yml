@@ -1,19 +1,28 @@
-# Fermata CI: analyze + test, build the Linux/Windows/Android packages, and
-# publish a GitHub Release for v* tags. See docs/BUILDING.md and docs/RELEASING.md.
+# Fermata CI. See docs/BUILDING.md and docs/RELEASING.md.
 #
-# Optional repository secrets (everything builds without them):
-#   FERMATA_DART_DEFINES_JSON   contents of dart_defines.json (developer client IDs)
-#   FERMATA_KEYSTORE_BASE64     base64 of the Android release keystore (.jks)
-#   FERMATA_KEYSTORE_PASSWORD, FERMATA_KEY_ALIAS, FERMATA_KEY_PASSWORD
-#   WINDOWS_CERT_PFX_BASE64     base64 of an Authenticode code-signing certificate (.pfx)
-#   WINDOWS_CERT_PASSWORD
+#   push to a branch / pull request  -> `test` only (analyze + unit tests)
+#   push of a v* tag                  -> test + Linux/Windows/Android packages + GitHub Release
+#   manual run (workflow_dispatch)    -> test + Linux/Windows/Android packages (artifacts, no release)
+#
+# Optional repository secrets (releases work without any of them):
+#   FERMATA_KEYSTORE_BASE64     base64 of the Android release keystore (.jks); without it
+#   FERMATA_KEYSTORE_PASSWORD   the APK is debug-signed and the release notes say so
+#   FERMATA_KEY_ALIAS, FERMATA_KEY_PASSWORD
+#   WINDOWS_CERT_PFX_BASE64     base64 of an Authenticode certificate (.pfx); without it
+#   WINDOWS_CERT_PASSWORD       setup.exe is unsigned and the release notes say so
+#   FERMATA_DART_DEFINES_JSON   dart_defines.json with PUBLIC client IDs only
+# Optional repository variable:
+#   FERMATA_REQUIRE_RELEASE_SIGNING = 'true'  fail tag builds that would ship a debug-signed APK
 name: Build
 
 on:
   push:
     branches: ['**']
     tags: ['v*']
+    # Docs-only commits do not need CI (path filters are ignored for tag pushes).
+    paths-ignore: ['docs/**', '**/*.md']
   pull_request:
+    paths-ignore: ['docs/**', '**/*.md']
   workflow_dispatch:
 
 permissions:
@@ -21,7 +30,7 @@ permissions:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  # Never cancel a release build.
+  # Superseded branch/PR runs are cancelled; release builds never are.
   cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
 env:
@@ -31,7 +40,7 @@ jobs:
   test:
     name: Analyze and test
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
         with:
@@ -81,6 +90,7 @@ jobs:
   linux:
     name: Linux installer
     needs: test
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
     # Built on the oldest supported Ubuntu so the binary only needs glibc 2.35:
     # an executable runs on systems with the glibc it was linked against or newer
     # (Ubuntu 22.04+, Debian 12+, Fedora 36+, current Arch/openSUSE). Building
@@ -157,8 +167,11 @@ jobs:
   windows:
     name: Windows installer
     needs: test
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
     runs-on: windows-latest
     timeout-minutes: 60
+    outputs:
+      signed: ${{ steps.package.outputs.signed }}
     defaults:
       run:
         shell: pwsh
@@ -178,6 +191,7 @@ jobs:
 
       - name: Inno Setup
         run: |
+          # Preinstalled on the windows-2025 image; install it if that ever changes.
           $iscc = Join-Path ${env:ProgramFiles(x86)} 'Inno Setup 6\ISCC.exe'
           if (-not (Test-Path $iscc)) { choco install innosetup -y --no-progress }
 
@@ -200,10 +214,12 @@ jobs:
           flutter gen-l10n
 
       - name: Build and package
+        id: package
         env:
           WINDOWS_CERT_PFX_BASE64: ${{ secrets.WINDOWS_CERT_PFX_BASE64 }}
           WINDOWS_CERT_PASSWORD: ${{ secrets.WINDOWS_CERT_PASSWORD }}
         run: |
+          $signed = 'false'
           if ($env:WINDOWS_CERT_PFX_BASE64) {
             $pfx = Join-Path $env:RUNNER_TEMP 'fermata-codesign.pfx'
             [IO.File]::WriteAllBytes($pfx, [Convert]::FromBase64String($env:WINDOWS_CERT_PFX_BASE64))
@@ -213,8 +229,10 @@ jobs:
             # Inno Setup sign tool syntax: $q = quote, $f = file to sign, $$ = literal $.
             $password = $env:WINDOWS_CERT_PASSWORD.Replace('$', '$$')
             $env:FERMATA_SIGN_COMMAND = "`$q$($signtool.FullName)`$q sign /fd sha256 /tr http://timestamp.digicert.com /td sha256 /f `$q$pfx`$q /p `$q$password`$q `$f"
+            $signed = 'true'
           }
           ./tool/package_windows.ps1
+          "signed=$signed" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
 
       - uses: actions/upload-artifact@v7
         with:
@@ -225,8 +243,12 @@ jobs:
   android:
     name: Android APK
     needs: test
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    outputs:
+      signing: ${{ steps.build.outputs.signing }}
+      cert_sha256: ${{ steps.build.outputs.cert_sha256 }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -244,6 +266,8 @@ jobs:
           channel: stable
           cache: true
 
+      # Without the keystore secrets the APK is debug-signed (installable; the
+      # release notes warn that a later properly signed build needs a reinstall).
       - name: Release keystore (optional)
         env:
           FERMATA_KEYSTORE_BASE64: ${{ secrets.FERMATA_KEYSTORE_BASE64 }}
@@ -252,14 +276,11 @@ jobs:
             printf '%s' "$FERMATA_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/fermata-release.jks"
             echo "FERMATA_KEYSTORE_PATH=$RUNNER_TEMP/fermata-release.jks" >> "$GITHUB_ENV"
           else
-            echo "No FERMATA_KEYSTORE_BASE64 secret: the APK will be debug-signed."
+            echo "::warning::No FERMATA_KEYSTORE_BASE64 secret: the APK will be debug-signed."
           fi
 
-      # A release must never ship a debug-signed APK, unless the repository
-      # variable FERMATA_ALLOW_DEBUG_SIGNED_APK is set to 'true' (before a
-      # keystore exists). docs/RELEASING.md
-      - name: Require release signing for tags
-        if: startsWith(github.ref, 'refs/tags/v') && vars.FERMATA_ALLOW_DEBUG_SIGNED_APK != 'true'
+      - name: Strict signing (opt-in)
+        if: startsWith(github.ref, 'refs/tags/v') && vars.FERMATA_REQUIRE_RELEASE_SIGNING == 'true'
         run: echo "FERMATA_REQUIRE_RELEASE_SIGNING=1" >> "$GITHUB_ENV"
 
       - name: Developer credentials (optional)
@@ -280,6 +301,7 @@ jobs:
           flutter gen-l10n
 
       - name: Build APK
+        id: build
         env:
           FERMATA_KEYSTORE_PASSWORD: ${{ secrets.FERMATA_KEYSTORE_PASSWORD }}
           FERMATA_KEY_ALIAS: ${{ secrets.FERMATA_KEY_ALIAS }}
@@ -321,8 +343,45 @@ jobs:
           sha256sum setup.exe setup.sh fermata-*-linux-x64.tar.gz app.apk > SHA256SUMS
           cat SHA256SUMS
 
+      - name: Release notes
+        env:
+          APK_SIGNING: ${{ needs.android.outputs.signing }}
+          APK_CERT_SHA256: ${{ needs.android.outputs.cert_sha256 }}
+          SETUP_EXE_SIGNED: ${{ needs.windows.outputs.signed }}
+          INSTALL_DOC: ${{ github.server_url }}/${{ github.repository }}/blob/${{ github.ref_name }}/docs/INSTALL.md
+        run: |
+          tarball="$(cd release && ls fermata-*-linux-x64.tar.gz)"
+          {
+            echo "## Install"
+            echo
+            echo "- **Windows 10/11 (x64):** download \`setup.exe\` and run it. It installs for your user only (no administrator rights); choose \"Install for all users\" if you prefer."
+            echo "- **Linux (x86_64, glibc 2.35+):** download \`setup.sh\`, then run \`chmod +x setup.sh && ./setup.sh\` (per-user, no root; \`./setup.sh --system\` for all users, \`./setup.sh --help\` for options). It checks the required libraries and offers to install missing ones. Portable alternative: \`$tarball\`."
+            echo "- **Android 7.0+:** download \`app.apk\` on the phone and open it; allow \"Install unknown apps\" for your browser or Files app when asked."
+            echo
+            echo "Updating: install the new version over the old one; your library and settings are kept. Full instructions, uninstalling and troubleshooting: [docs/INSTALL.md]($INSTALL_DOC)."
+            echo
+            echo "## Verify your download"
+            echo
+            echo "Compare the SHA-256 checksum of the file you downloaded with \`SHA256SUMS\`:"
+            echo "\`sha256sum --check --ignore-missing SHA256SUMS\` (Linux) or \`Get-FileHash .\\setup.exe\` (Windows PowerShell)."
+            echo
+            if [[ "$APK_SIGNING" == release ]]; then
+              echo "Android signing certificate (SHA-256): \`$APK_CERT_SHA256\`"
+              echo
+            else
+              echo "> **Warning:** \`app.apk\` is debug-signed. It installs and works, but a future properly signed build can only be installed after uninstalling this one (which deletes the app's data)."
+              echo
+            fi
+            if [[ "$SETUP_EXE_SIGNED" != true ]]; then
+              echo "> **Note:** \`setup.exe\` is not code-signed, so Windows SmartScreen shows \"Windows protected your PC\". If the checksum matches, choose **More info** and then **Run anyway**."
+              echo
+            fi
+          } > release-notes.md
+          cat release-notes.md
+
       - uses: softprops/action-gh-release@v3
         with:
+          body_path: release-notes.md
           files: |
             release/setup.exe
             release/setup.sh

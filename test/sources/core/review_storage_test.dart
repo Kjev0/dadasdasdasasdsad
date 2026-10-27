@@ -1,5 +1,6 @@
 // Adversarial review tests for secure token / credentials storage.
 // Each test demonstrates a defect; they are expected to FAIL until fixed.
+import 'dart:convert';
 
 import 'package:fermata/core/models/auth.dart';
 import 'package:fermata/sources/auth/secure_storage.dart';
@@ -18,7 +19,50 @@ class _DeleteFails extends InMemoryKeyValueStore {
   }
 }
 
+/// A working Secret Service whose login keyring is locked at startup: the
+/// first call blocks while GNOME shows the "unlock your keyring" prompt
+/// (flutter_secure_storage_linux calls secret_service_unlock_sync), then
+/// everything works.
+class _LockedAtStartup extends InMemoryKeyValueStore {
+  _LockedAtStartup(super.initial);
+  bool _unlocked = false;
+
+  Future<void> _prompt() async {
+    if (_unlocked) return;
+    await Future<void>.delayed(const Duration(milliseconds: 4500)); // user types the password
+    _unlocked = true;
+  }
+
+  @override
+  Future<String?> read(String key) async {
+    await _prompt();
+    return super.read(key);
+  }
+
+  @override
+  Future<void> write(String key, String value) async {
+    await _prompt();
+    return super.write(key, value);
+  }
+}
+
 void main() {
+  test('a locked-but-working keyring (unlock prompt answered after 4.5 s) is not treated as '
+      '"no secure storage" for the whole session', () async {
+    final stored = jsonEncodeToken(const OAuthToken(accessToken: 'a', refreshToken: 'r'));
+    final backend = _LockedAtStartup({SecureTokenStore.keyFor('spotify'): stored});
+    // Production default probe timeout (4 s).
+    final storage = await ProbedSecureStorage.open(backend: backend);
+    final tokens = SecureTokenStore(storage);
+
+    // BUG: the 4 s probe timeout is shorter than an interactive keyring
+    // unlock; the store then stays memory-only for the entire session (no
+    // re-probe): the stored Spotify token is invisible (account shows as
+    // disconnected) and a reconnect is not persisted either.
+    expect(storage.isPersistent, isTrue, reason: 'keyring was unlocked by the user and works');
+    expect(await tokens.read('spotify'), isNotNull);
+  }, timeout: const Timeout(Duration(seconds: 30)));
+
   test('a failed delete on the persistent backend must not be reported as success '
       '(disconnect would leave the token in the keyring)', () async {
     final backend = _DeleteFails();
@@ -53,3 +97,5 @@ void main() {
     expect(await nextStart.read('soundcloud'), isNull);
   });
 }
+
+String jsonEncodeToken(OAuthToken t) => jsonEncode(t.toJson());

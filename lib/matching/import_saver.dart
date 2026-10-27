@@ -6,6 +6,7 @@ import '../core/models/catalog.dart';
 import '../core/models/matching.dart';
 import '../core/models/track.dart';
 import 'import_report.dart';
+import 'source_rules.dart';
 
 /// Persists a reviewed import: tracks, the local playlist and track links.
 class ImportSaver {
@@ -14,6 +15,7 @@ class ImportSaver {
     required this._playlists,
     required this._links,
     this.chunkSize = 500,
+    this.minimizedSources = MatchingSourceRules.minimizedOriginalSources,
   });
 
   final TrackRepository _tracks;
@@ -23,12 +25,44 @@ class ImportSaver {
   /// Tracks per repository call.
   final int chunkSize;
 
+  /// Sources whose terms forbid keeping a persistent copy of their
+  /// metadata and cover art (Spotify). Their tracks (originals and accepted
+  /// matches) are stored minimized (see [minimize]) and an imported
+  /// playlist gets no cover from them.
+  final Set<String> minimizedSources;
+
+  /// [Track.extra] key set on originals stored minimized, so the library
+  /// can find (and purge) them when the user disconnects the source.
+  static const minimizedMarker = 'matching.minimizedOriginal';
+
+  /// [track] without cover art and marked with [minimizedMarker]. Title,
+  /// artists, album, duration, ISRC and the permalink stay: they are the
+  /// provenance of the playlist entry and the attribution back-link.
+  static Track minimize(Track track) => Track(
+        sourceId: track.sourceId,
+        sourceTrackId: track.sourceTrackId,
+        title: track.title,
+        artists: track.artists,
+        album: track.album,
+        albumArtist: track.albumArtist,
+        duration: track.duration,
+        isrc: track.isrc,
+        explicit: track.explicit,
+        year: track.year,
+        trackNumber: track.trackNumber,
+        discNumber: track.discNumber,
+        permalink: track.permalink,
+        availability: track.availability,
+        extra: {...track.extra, minimizedMarker: '1'},
+      );
+
   static final _log = Logger('matching.import');
 
   /// Saves and returns the new playlist id.
   ///
   /// 1. Upserts every original (so the playlist's metadata stays faithful
-  ///    to the source) and every accepted candidate.
+  ///    to the source) and every accepted candidate; tracks of
+  ///    [minimizedSources] are stored minimized.
   /// 2. Creates a local playlist with [originals] in order; entries without
   ///    an accepted match stay as originals.
   /// 3. Links original ↔ accepted candidate. Per the `TrackLink` contract
@@ -50,11 +84,12 @@ class ImportSaver {
     };
 
     final toStore = <String, Track>{};
+    Track stored(Track t) => minimizedSources.contains(t.sourceId) ? minimize(t) : t;
     for (final t in originals) {
-      toStore.putIfAbsent(t.id, () => t);
+      toStore.putIfAbsent(t.id, () => stored(t));
     }
     for (final r in accepted.values) {
-      toStore.putIfAbsent(r.chosen!.candidate.id, () => r.chosen!.candidate);
+      toStore.putIfAbsent(r.chosen!.candidate.id, () => stored(r.chosen!.candidate));
     }
     for (final chunk in toStore.values.slices(chunkSize)) {
       await _tracks.upsertTracks(chunk);
@@ -66,7 +101,7 @@ class ImportSaver {
       description: sourcePlaylist?.description,
       sourceId: sourceId,
       sourcePlaylistId: providerPlaylistId(sourcePlaylist, sourceId),
-      artworkUrl: sourcePlaylist?.artworkUrl,
+      artworkUrl: minimizedSources.contains(sourceId) ? null : sourcePlaylist?.artworkUrl,
     );
     try {
       for (final chunk in originals.map((t) => t.id).slices(chunkSize)) {

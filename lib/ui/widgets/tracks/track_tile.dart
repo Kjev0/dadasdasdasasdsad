@@ -122,7 +122,7 @@ class _TrackTileState extends ConsumerState<TrackTile> {
     final width = MediaQuery.sizeOf(context).width;
     final wide = width >= 900;
     final touch = width < 600;
-    final rowHeight = context.spacing.rowHeight;
+    final rowHeight = context.rowExtent;
 
     Widget leading;
     if (widget.selectionMode) {
@@ -247,7 +247,9 @@ class _TrackTileState extends ConsumerState<TrackTile> {
         child: Semantics(
           button: true,
           selected: widget.selectionMode ? widget.selected : isCurrent,
-          label: '${track.title}, ${track.artistLine}',
+          label: isCurrent
+              ? '${l10n.shellNowPlayingIndicator}: ${track.title}, ${track.artistLine}'
+              : '${track.title}, ${track.artistLine}',
           child: Material(
             type: MaterialType.transparency,
             child: InkWell(

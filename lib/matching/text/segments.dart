@@ -10,7 +10,9 @@ class TextSegments {
   /// Text outside any bracket, brackets replaced by a space.
   final String outside;
 
-  /// Contents of top-level `()`, `[]`, `{}`, `【】`, `「」`... in order.
+  /// Contents of top-level `()`, `[]`, `{}`, `【】`, `〔〕`... in order.
+  /// Japanese quotation marks `「」`/`『』` are not brackets: they quote the
+  /// title itself (see `TitleParser`).
   final List<String> bracketed;
 
   /// [outside] split on spaced dashes (" - ", " – ", "Song- Remix"). The
@@ -20,7 +22,7 @@ class TextSegments {
   /// Everything that qualifies the head: bracket contents and dash tails.
   List<String> get qualifierCandidates => [...bracketed, ...dashParts.skip(1)];
 
-  static const _open = {'(': ')', '[': ']', '{': '}', '【': '】', '「': '」', '『': '』', '〔': '〕', '（': '）', '［': '］'};
+  static const _open = {'(': ')', '[': ']', '{': '}', '【': '】', '〔': '〕', '（': '）', '［': '］'};
 
   // En/em dashes are always separators; ASCII hyphens only when spaced on at
   // least the right side ("Jay-Z", "Re-Work" stay intact).

@@ -167,7 +167,7 @@ class SleepTimerButton extends ConsumerWidget {
             : l10n.playerSleepTimer;
     return PopupMenuButton<SleepChoice>(
       tooltip: tooltip,
-      icon: Icon(active ? Icons.bedtime_rounded : Icons.bedtime_outlined, color: active ? context.colors.accentText : null),
+      icon: Icon(Icons.bedtime_rounded, color: active ? context.colors.accentText : null),
       onSelected: (choice) => applySleepChoice(ref, choice),
       itemBuilder: (context) => [
         _checkItem(context, const SleepChoice.off(), l10n.playerSleepOff, !active),

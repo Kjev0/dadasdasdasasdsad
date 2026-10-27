@@ -90,12 +90,13 @@ void main() {
       await pumpFrames(tester);
       expect(kit.playback.argsOf('setSpeed'), [1.5]);
 
-      await tester.tap(_bar(find.byIcon(Icons.bedtime_outlined)));
+      await tester.tap(_bar(find.byTooltip('Sleep timer')));
       await pumpFrames(tester);
       await tester.tap(find.text('15 minutes').last);
       await pumpFrames(tester);
       expect(kit.playback.argsOf('setSleepTimer'), [const Duration(minutes: 15), false]);
-      expect(_bar(find.byIcon(Icons.bedtime_rounded)), findsOneWidget);
+      // Active timer: highlighted icon and remaining time in the tooltip.
+      expect(_bar(find.byTooltip(RegExp(r'^Pauses in '))), findsOneWidget);
 
       await tester.tap(_bar(find.byIcon(Icons.bedtime_rounded)));
       await pumpFrames(tester);

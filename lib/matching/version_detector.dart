@@ -1,13 +1,19 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 import '../core/models/matching.dart';
 import 'text/segments.dart';
 import 'text/text_keys.dart';
+import 'version_keywords.dart';
+
+export 'version_keywords.dart' show VersionKeywords;
 
 /// A recording version detected from title qualifiers or the album name.
 enum VersionTag {
   /// Remix, VIP, bootleg, flip, rework, refix, someone else's edit, dub,
-  /// mash-up, 8D, a cappella, reprise, medley, "X Mix".
+  /// mash-up, 8D, a cappella, reprise, medley, lo-fi, bass boosted, "X Mix",
+  /// and any other "X Version" that is not a known neutral edition
+  /// ("Dance Version", "Jay-Z Version").
   remix,
   live,
   acoustic,
@@ -33,17 +39,31 @@ enum VersionTag {
   demo,
 
   /// A new recording by the original artist ("Taylor's Version",
-  /// "Re-Recorded"). Reported as [MatchDifference.cover]: the contract has
-  /// no dedicated value and "different performance of the same song" is the
-  /// closest semantic. It is significant, so never auto-accepted.
+  /// "Re-Recorded", "Nyindspilning"). Reported as [MatchDifference.cover]:
+  /// the contract has no dedicated value and "different performance of the
+  /// same song" is the closest semantic. It is significant, so never
+  /// auto-accepted.
   reRecorded,
+
+  /// A version sung in another language ("Spanish Version", "Versión en
+  /// Español", "På Dansk"). Like [reRecorded] it is a different vocal
+  /// recording and is reported as a significant [MatchDifference.cover].
+  language,
 }
 
 /// Versions a track carries plus details used to tell two versions of the
-/// same kind apart (whose remix, which concert, which remaster year).
+/// same kind apart (whose remix, which concert, which remaster year, which
+/// language).
 @immutable
 class VersionInfo {
-  const VersionInfo({this.tags = const {}, this.remixer, this.remasterYear, this.liveDetail, this.explicitHint});
+  const VersionInfo({
+    this.tags = const {},
+    this.remixer,
+    this.remasterYear,
+    this.liveDetail,
+    this.language,
+    this.explicitHint,
+  });
 
   static const none = VersionInfo();
 
@@ -55,6 +75,9 @@ class VersionInfo {
 
   /// Normalized venue/occasion of a live recording ("wembley 1986").
   final String? liveDetail;
+
+  /// Language code of a [VersionTag.language] version ("es").
+  final String? language;
 
   /// true for "(Explicit)"/"(Dirty)", false for "(Clean)"/"(Edited)".
   final bool? explicitHint;
@@ -71,21 +94,26 @@ class VersionInfo {
         remixer: remixer ?? other.remixer,
         remasterYear: remasterYear ?? other.remasterYear,
         liveDetail: liveDetail ?? other.liveDetail,
+        language: language ?? other.language,
         explicitHint: explicitHint ?? other.explicitHint,
       );
 
   @override
   String toString() => 'VersionInfo(${tags.map((t) => t.name).join(',')}'
-      '${remixer == null ? '' : ', remixer: $remixer'}${liveDetail == null ? '' : ', live: $liveDetail'})';
+      '${remixer == null ? '' : ', remixer: $remixer'}${liveDetail == null ? '' : ', live: $liveDetail'}'
+      '${language == null ? '' : ', language: $language'})';
 }
 
 extension on MatchDifference {
   bool get isSignificant => MatchCandidate.significantVersionDifferences.contains(this);
 }
 
+typedef _K = VersionKeywords;
+
 /// Detects [VersionTag]s in qualifier segments ("Remastered 2011",
 /// "Kygo Remix", "Live at Wembley"), in full titles (brackets and dash tails)
-/// and in album names. Keyword lists include common non-English forms.
+/// and in album names. Keyword lists (see [VersionKeywords]) include common
+/// non-English forms.
 ///
 /// Keywords are only looked for in *qualifiers* (bracketed text or the part
 /// after " - "), never in the bare title, so "Live Forever" or "Acoustic
@@ -95,74 +123,38 @@ extension on MatchDifference {
 class VersionDetector {
   const VersionDetector();
 
-  static final _yearRe = RegExp(r'^(19|20)\d\d$');
-  static final _takeRe = RegExp(r' take \d+ ');
   static final _liveAlbumPrefix = RegExp(r'^live (at|in|from|on|aus|i|pa|a|en|au|im|fra) ');
+  static final _fromReference =
+      RegExp(r'^(?:from|taken from|theme from|music from|as heard in|as featured in|featured in|as seen on) ');
 
-  // Single-token keywords.
-  static const _remasterPrefix = 'remaster';
-  static const _remasterTokens = {'mono', 'stereo', 'remastering', 'remasterizada', 'remasterizado'};
-  static const _liveTokens = {'live', 'unplugged', 'koncert', 'konzert', 'concierto', 'livemitschnitt'};
-  static const _livePhrases = [
-    'en vivo', 'en directo', 'ao vivo', 'dal vivo', 'in concert', 'en concert', 'en public', 'live session',
-    'bbc session', 'peel session', 'recorded live', 'recorded at', 'live from', 'live at', 'live in',
-  ];
-  static const _acousticTokens = {
-    'acoustic', 'akustisk', 'akustik', 'akustisch', 'acustico', 'acustica', 'acoustique', 'unplugged', 'stripped',
-  };
-  static const _acousticPhrases = ['piano version', 'piano acoustic', 'acoustic version'];
-  static const _instrumentalTokens = {
-    'instrumental', 'instrumentals', 'instrumentale', 'instrumentalversion', 'inst', 'instr', 'instrumentaal',
-  };
-  static const _instrumentalPhrases = ['off vocal', 'no vocals', 'no vocal', 'without vocals'];
-  static const _karaokeTokens = {'karaoke', 'karaokeversion'};
-  static const _karaokePhrases = ['backing track', 'in the style of', 'sing along', 'singalong', 'minus one'];
-  static const _coverTokens = {'cover', 'covers', 'tribute'};
-  static const _coverPhrases = ['originally performed by', 'made famous by', 'covered by'];
-  static const _spedTokens = {'sped', 'spedup', 'nightcore', 'speedup'};
-  static const _spedPhrases = ['speed up', 'sped up', 'speeded up', 'fast version', 'faster version'];
-  static const _slowedTokens = {'slowed', 'reverb', 'reverbed', 'daycore', 'screwed'};
-  static const _slowedPhrases = ['slow version', 'slowed down', 'chopped and screwed', 'chopped not slopped'];
-  static const _demoTokens = {'demo', 'demos', 'outtake', 'outtakes', 'worktape'};
-  static const _demoPhrases = [
-    'rough mix', 'alternate take', 'alternative take', 'alternate version', 'alternative version', 'alt take',
-    'work tape', 'early version', 'work in progress', 'rough demo',
-  ];
-  static const _reRecordedTokens = {'rerecorded', 'rerecording'};
-  static const _reRecordedPhrases = ['taylors version', 're recorded', 're recording', 're record', 'from the vault', 'new recording'];
-  static const _extendedTokens = {'extended', 'maxi', 'extendedmix'};
-  static const _extendedPhrases = [
-    'club mix', 'club version', 'club edit', '12 inch', '12 version', '12 mix', 'long version', 'full length version',
-    'twelve inch',
-  ];
-  static const _radioPhrases = [
-    'radio edit', 'radio version', 'radio mix', 'single edit', 'single version', 'single mix', 'short version',
-    'short edit', 'radio cut', 'short mix',
-  ];
-  static const _remixTokens = {
-    'remix', 'remixed', 'remixes', 'rmx', 'bootleg', 'rework', 'reworked', 'refix', 'reedit', 'flip', 'vip',
-    'mashup', 'remake', '8d', 'dub', 'acapella', 'acappella', 'reprise', 'medley', 'mixed', 'redux',
-  };
-  static const _remixPhrases = ['re edit', 're work', 'mash up', 'a cappella', 'a capella', 'orchestral version', 'symphonic version'];
-
-  /// Words in front of "mix"/"edit" that do not name a remixer.
-  static const _mixNeutral = {
-    'original', 'radio', 'extended', 'club', 'album', 'single', 'mono', 'stereo', 'main', 'clean', 'dirty',
-    'explicit', 'instrumental', 'short', 'long', '12', 'maxi', 'inch', 'the', 'full', 'final', 'new', 'video',
-    'edit', 'version', 'and', 'a', 'an', 're', 'rough', 'dub', 'vocal',
-  };
-  static const _explicitTrue = {'explicit', 'explicit version', 'dirty', 'dirty version', 'explicit edit', 'uncensored'};
-  static const _explicitFalse = {'clean', 'clean version', 'clean edit', 'edited', 'edited version', 'censored', 'radio clean'};
-
-  /// Neutral qualifiers that explicitly denote the original recording.
-  static const _originalMarkers = {'original mix', 'original version', 'album version', 'original', 'main version'};
+  /// Folded tokens of [segment]. Compound version words are split when the
+  /// prefix is known ("Koncertversion" → koncert version, "Liveversion" →
+  /// live version), so they hit the same keywords.
+  static List<String> tokensOf(String segment) {
+    final key = TextKeys.plain(segment);
+    if (key.isEmpty) return const [];
+    final out = <String>[];
+    for (final t in key.split(' ')) {
+      final suffix = _K.compoundSuffixes.firstWhereOrNull((x) => t.length > x.length + 2 && t.endsWith(x));
+      final prefix = suffix == null ? null : t.substring(0, t.length - suffix.length);
+      if (prefix != null && _K.isStrongVocabulary(prefix)) {
+        out
+          ..add(prefix)
+          ..add(suffix!);
+      } else {
+        out.add(t);
+      }
+    }
+    return out;
+  }
 
   /// Detects tags in one qualifier segment (bracket content or dash tail).
   VersionInfo detectSegment(String segment) {
-    final key = TextKeys.plain(segment);
-    if (key.isEmpty || _originalMarkers.contains(key)) return VersionInfo.none;
+    final tokens = tokensOf(segment);
+    if (tokens.isEmpty) return VersionInfo.none;
+    final key = tokens.join(' ');
+    if (_K.originalMarkers.contains(key)) return VersionInfo.none;
     final padded = ' $key ';
-    final tokens = key.split(' ');
     final tokenSet = tokens.toSet();
     bool anyToken(Set<String> set) => tokenSet.any(set.contains);
     bool anyPhrase(List<String> phrases) => phrases.any((p) => padded.contains(' $p '));
@@ -172,40 +164,44 @@ class VersionDetector {
     String? remixer;
     String? liveDetail;
 
-    final yearMix = tokens.length >= 2 && _yearRe.hasMatch(tokens[tokens.length - 2]) && tokens.last == 'mix';
-    if (tokens.any((t) => t.startsWith(_remasterPrefix)) ||
-        anyToken(_remasterTokens) ||
+    final yearMix = tokens.length >= 2 && _K.isYear(tokens[tokens.length - 2]) && tokens.last == 'mix';
+    if (tokens.any((t) => t.startsWith(_K.remasterPrefix)) ||
+        anyToken(_K.remasterTokens) ||
         padded.contains(' re master') ||
         yearMix) {
       tags.add(VersionTag.remaster);
-      year = tokens.where(_yearRe.hasMatch).map(int.parse).firstOrNullValue;
+      year = tokens.where(_K.isYear).map(int.parse).firstOrNull;
     }
-    if (anyToken(_liveTokens) || anyPhrase(_livePhrases)) {
+    if (anyToken(_K.liveTokens) || anyPhrase(_K.livePhrases)) {
       tags.add(VersionTag.live);
       liveDetail = _liveDetail(tokens);
     }
-    if (anyToken(_acousticTokens) || anyPhrase(_acousticPhrases)) tags.add(VersionTag.acoustic);
-    if (anyToken(_instrumentalTokens) || anyPhrase(_instrumentalPhrases)) tags.add(VersionTag.instrumental);
-    if (anyToken(_karaokeTokens) || anyPhrase(_karaokePhrases)) tags.add(VersionTag.karaoke);
-    if (anyToken(_coverTokens) || anyPhrase(_coverPhrases)) tags.add(VersionTag.cover);
-    final sped = anyToken(_spedTokens) || anyPhrase(_spedPhrases);
+    if (anyToken(_K.acousticTokens) || anyPhrase(_K.acousticPhrases)) tags.add(VersionTag.acoustic);
+    if (anyToken(_K.instrumentalTokens) || anyPhrase(_K.instrumentalPhrases)) tags.add(VersionTag.instrumental);
+    if (anyToken(_K.karaokeTokens) || anyPhrase(_K.karaokePhrases)) tags.add(VersionTag.karaoke);
+    if (anyToken(_K.coverTokens) || anyPhrase(_K.coverPhrases)) tags.add(VersionTag.cover);
+    final sped = anyToken(_K.spedTokens) || anyPhrase(_K.spedPhrases);
     if (sped) tags.add(VersionTag.sped);
     // "Sped Up + Reverb" is a sped-up version; bare "reverb" alone means
     // "slowed + reverb".
-    final slowed = anyToken(_slowedTokens.difference(const {'reverb', 'reverbed'})) ||
-        anyPhrase(_slowedPhrases) ||
+    final slowed = anyToken(_K.slowedTokens.difference(const {'reverb', 'reverbed'})) ||
+        anyPhrase(_K.slowedPhrases) ||
         (!sped && (tokenSet.contains('reverb') || tokenSet.contains('reverbed')));
     if (slowed) tags.add(VersionTag.slowed);
-    if (anyToken(_demoTokens) || anyPhrase(_demoPhrases) || _takeRe.hasMatch(padded)) tags.add(VersionTag.demo);
-    if (anyToken(_reRecordedTokens) || anyPhrase(_reRecordedPhrases)) tags.add(VersionTag.reRecorded);
-    if (anyToken(_extendedTokens) || anyPhrase(_extendedPhrases)) tags.add(VersionTag.extended);
-    final radio = anyPhrase(_radioPhrases) || key == 'edit';
+    if (anyToken(_K.demoTokens) || anyPhrase(_K.demoPhrases) || _K.takePattern.hasMatch(padded)) {
+      tags.add(VersionTag.demo);
+    }
+    if (anyToken(_K.reRecordedTokens) || anyPhrase(_K.reRecordedPhrases)) tags.add(VersionTag.reRecorded);
+    if (anyToken(_K.extendedTokens) || anyPhrase(_K.extendedPhrases)) tags.add(VersionTag.extended);
+    final radio = anyPhrase(_K.radioPhrases) || key == 'edit';
     if (radio) tags.add(VersionTag.radioEdit);
+    final language = _language(tokens);
+    if (language != null) tags.add(VersionTag.language);
 
     // Remixes: explicit keywords, or "<name> mix" / "<name> edit".
-    var remixIndex = tokens.indexWhere(_remixTokens.contains);
+    var remixIndex = tokens.indexWhere(_K.remixTokens.contains);
     if (remixIndex < 0) {
-      for (final phrase in _remixPhrases) {
+      for (final phrase in _K.remixPhrases) {
         final i = _phraseIndex(tokens, phrase);
         if (i >= 0) {
           remixIndex = i;
@@ -219,7 +215,7 @@ class VersionDetector {
         if (i < 0) continue;
         // "(Mix)" alone is a remix; "(Edit)" alone is a radio edit.
         if (i == 0 && word == 'edit') continue;
-        if (i == 0 || !_mixNeutral.contains(tokens[i - 1]) && !_yearRe.hasMatch(tokens[i - 1])) {
+        if (i == 0 || !_K.mixNeutral.contains(tokens[i - 1]) && !_K.isYear(tokens[i - 1])) {
           remixIndex = i;
           break;
         }
@@ -228,19 +224,48 @@ class VersionDetector {
     if (remixIndex >= 0) {
       tags.add(VersionTag.remix);
       remixer = _remixer(tokens, remixIndex);
+    } else if (tags.isEmpty) {
+      // Any other "X Version" ("Dance Version", "Jay-Z Version", "TV
+      // Version") is an alternative arrangement unless every word is a
+      // neutral edition word ("Album Version", "Deluxe Version").
+      final v = tokens.indexWhere(_K.versionWords.contains);
+      if (v >= 0) {
+        final named = tokens.where((t) => !_K.isNeutralToken(t) && !_K.mixNeutral.contains(t)).toList();
+        if (named.isNotEmpty) {
+          tags.add(VersionTag.remix);
+          remixer = named.join(' ');
+        }
+      }
     }
 
     bool? explicit;
-    if (_explicitTrue.contains(key)) explicit = true;
-    if (_explicitFalse.contains(key)) explicit = false;
+    if (_K.explicitTrue.contains(key)) explicit = true;
+    if (_K.explicitFalse.contains(key)) explicit = false;
 
     return VersionInfo(
       tags: tags,
       remixer: remixer,
       remasterYear: year,
       liveDetail: liveDetail,
+      language: language,
       explicitHint: explicit,
     );
+  }
+
+  /// Whether [segment] only names the edition or release of the same
+  /// recording ("Original Mix", "Album Version", "Bonus Track", "Deluxe",
+  /// "From 'Movie'", "2011"), so it neither changes the version nor the
+  /// song. Qualifiers that are neither versions nor neutral ("Pt. 1",
+  /// "Interlude", "I Can't Get No") belong to the title.
+  bool isNeutralQualifier(String segment) {
+    final tokens = tokensOf(segment);
+    if (tokens.isEmpty) return true;
+    final key = tokens.join(' ');
+    if (_K.originalMarkers.contains(key) || _K.explicitTrue.contains(key) || _K.explicitFalse.contains(key)) {
+      return true;
+    }
+    if (_fromReference.hasMatch('$key ')) return true;
+    return tokens.every(_K.isNeutralToken);
   }
 
   /// Merges the tags of several qualifier segments.
@@ -268,12 +293,12 @@ class VersionDetector {
     if (head == 'live' ||
         _liveAlbumPrefix.hasMatch(head) ||
         head.endsWith(' live') ||
-        _livePhrases.any((p) => padded.contains(' $p ') && p != 'recorded at')) {
+        _K.livePhrases.any((p) => padded.contains(' $p ') && p != 'recorded at' && p != 'first take')) {
       extra.add(VersionTag.live);
     }
     if (padded.contains(' unplugged ')) extra.addAll(const {VersionTag.live, VersionTag.acoustic});
     // "Stripped" is a well-known studio album title, so only for tracks.
-    if (_acousticTokens.any((t) => t != 'stripped' && padded.contains(' $t '))) {
+    if (_K.acousticTokens.any((t) => t != 'stripped' && padded.contains(' $t '))) {
       extra.add(VersionTag.acoustic);
     }
     if (padded.contains(' karaoke ')) extra.add(VersionTag.karaoke);
@@ -289,14 +314,15 @@ class VersionDetector {
       tags: kept,
       remasterYear: info.remasterYear,
       liveDetail: info.liveDetail,
+      language: info.language,
       explicitHint: info.explicitHint,
     );
   }
 
   /// Version differences between two tracks. Tags present on one side only
   /// are differences; two remixes by different remixers, two live
-  /// recordings of different occasions and two remasters of different years
-  /// are differences too.
+  /// recordings of different occasions, two different languages and two
+  /// remasters of different years are differences too.
   Set<MatchDifference> compare(VersionInfo a, VersionInfo b) {
     final diffs = <MatchDifference>{};
     for (final tag in {...a.tags, ...b.tags}) {
@@ -307,6 +333,13 @@ class VersionDetector {
     }
     if (a.has(VersionTag.live) && b.has(VersionTag.live) && !_sameName(a.liveDetail, b.liveDetail)) {
       diffs.add(MatchDifference.live);
+    }
+    if (a.has(VersionTag.language) &&
+        b.has(VersionTag.language) &&
+        a.language != null &&
+        b.language != null &&
+        a.language != b.language) {
+      diffs.add(MatchDifference.cover);
     }
     if (a.has(VersionTag.remaster) &&
         b.has(VersionTag.remaster) &&
@@ -332,7 +365,20 @@ class VersionDetector {
         VersionTag.slowed => MatchDifference.slowed,
         VersionTag.demo => MatchDifference.demo,
         VersionTag.reRecorded => MatchDifference.cover,
+        VersionTag.language => MatchDifference.cover,
       };
+
+  /// Language code when [tokens] name a sung language: "Spanish Version",
+  /// "Versión en Español", "En/In/Auf/På + language", or the language
+  /// alone. Lyric/subtitle videos ("English Lyrics") do not count.
+  static String? _language(List<String> tokens) {
+    final i = tokens.indexWhere(_K.languages.containsKey);
+    if (i < 0 || tokens.any(_K.lyricWords.contains)) return null;
+    final cue = tokens.length == 1 ||
+        tokens.any(_K.versionWords.contains) ||
+        (i > 0 && _K.languagePrepositions.contains(tokens[i - 1]));
+    return cue ? _K.languages[tokens[i]] : null;
+  }
 
   /// Unknown on either side counts as "same": we only flag a difference we
   /// can actually see.
@@ -362,26 +408,22 @@ class VersionDetector {
   }
 
   static String? _liveDetail(List<String> tokens) {
-    final rest = tokens.where((t) => !_liveStopwords.contains(t) && !t.startsWith(_remasterPrefix)).join(' ');
+    final rest = tokens.where((t) => !_liveStopwords.contains(t) && !t.startsWith(_K.remasterPrefix)).join(' ');
     return rest.isEmpty ? null : rest;
   }
 
   static String? _remixer(List<String> tokens, int keywordIndex) {
     final byIndex = tokens.indexOf('by');
     if (byIndex >= 0 && byIndex < tokens.length - 1) {
-      return tokens.sublist(byIndex + 1).where((t) => !_remixTokens.contains(t)).join(' ').trimOrNull;
+      return tokens.sublist(byIndex + 1).where((t) => !_K.remixTokens.contains(t)).join(' ').trimOrNull;
     }
     final start = (keywordIndex - 4).clamp(0, keywordIndex);
     final name = tokens
         .sublist(start, keywordIndex.clamp(0, tokens.length))
-        .where((t) => !_mixNeutral.contains(t) && !_yearRe.hasMatch(t) && t != 'feat' && t != 'ft')
+        .where((t) => !_K.mixNeutral.contains(t) && !_K.isYear(t) && t != 'feat' && t != 'ft')
         .join(' ');
     return name.trimOrNull;
   }
-}
-
-extension on Iterable<int> {
-  int? get firstOrNullValue => isEmpty ? null : first;
 }
 
 extension on String {

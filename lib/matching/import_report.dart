@@ -33,18 +33,40 @@ class ImportReport {
     this.truncated = false,
   });
 
-  factory ImportReport.fromState(ImportSessionState state) =>
-      ImportReport.fromResults(state.results, expectedTotal: state.playlist?.trackCount);
+  /// Report of a session state.
+  ///
+  /// [ImportSessionState.results] only holds matched entries, so while
+  /// matching (or after a cancel) the positions are those of the matched
+  /// entries in order, not playlist positions. `PlaylistImportServiceImpl.report`
+  /// knows the real positions and whether the fetch stopped early; prefer it.
+  /// [truncated] marks a playlist cut short by the import caps.
+  factory ImportReport.fromState(ImportSessionState state, {bool truncated = false}) =>
+      ImportReport.fromResults(state.results, expectedTotal: state.playlist?.trackCount, truncated: truncated);
 
   /// [results] in playlist order (one per position). [expectedTotal] is the
   /// track count the source reported; a larger value means the import was
-  /// cut at the track cap.
-  factory ImportReport.fromResults(List<TrackMatchResult> results, {int? expectedTotal}) {
+  /// cut at the track cap. [truncated] says so directly (the source may not
+  /// report a count).
+  factory ImportReport.fromResults(List<TrackMatchResult> results, {int? expectedTotal, bool truncated = false}) =>
+      ImportReport.fromPositions(results, expectedTotal: expectedTotal, truncated: truncated);
+
+  /// [byPosition] holds one entry per playlist position, null for positions
+  /// not matched yet (still matching, or canceled). Unmatched positions are
+  /// left out of every count, and [MissingTrack.position] is the playlist
+  /// position.
+  factory ImportReport.fromPositions(
+    List<TrackMatchResult?> byPosition, {
+    int? expectedTotal,
+    bool truncated = false,
+  }) {
     final counts = {for (final d in MatchDecision.values) d: 0};
     final bySource = <String, int>{};
     final missing = <MissingTrack>[];
-    for (var i = 0; i < results.length; i++) {
-      final r = results[i];
+    var covered = 0;
+    for (var i = 0; i < byPosition.length; i++) {
+      final r = byPosition[i];
+      if (r == null) continue;
+      covered++;
       counts[r.decision] = counts[r.decision]! + 1;
       final chosen = r.chosen;
       if (isAccepted(r) && chosen != null) {
@@ -54,11 +76,11 @@ class ImportReport {
       }
     }
     return ImportReport(
-      total: results.length,
+      total: covered,
       counts: Map.unmodifiable(counts),
       matchedBySource: Map.unmodifiable(bySource),
       missing: List.unmodifiable(missing),
-      truncated: expectedTotal != null && expectedTotal > results.length,
+      truncated: truncated || (expectedTotal != null && expectedTotal > byPosition.length),
     );
   }
 
@@ -77,7 +99,9 @@ class ImportReport {
   /// Entries without an accepted match, in playlist order.
   final List<MissingTrack> missing;
 
-  /// Whether the source playlist had more tracks than were imported.
+  /// Whether the source playlist had more tracks than were imported (track
+  /// or page cap, a repeated cursor, or fewer tracks than the source
+  /// reported).
   final bool truncated;
 
   int count(MatchDecision decision) => counts[decision] ?? 0;

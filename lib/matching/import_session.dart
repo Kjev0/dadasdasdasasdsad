@@ -15,7 +15,8 @@ class MutableImportSession {
     required this.source,
     required this.options,
     required this.progressInterval,
-  });
+    DateTime Function()? clock,
+  }) : _clock = clock ?? DateTime.now;
 
   final String id;
   final String source;
@@ -27,22 +28,52 @@ class MutableImportSession {
 
   final cancelToken = CancelToken();
   final _controller = StreamController<ImportSessionState>.broadcast();
+  final DateTime Function() _clock;
   Timer? _pendingEmit;
 
-  ImportPhase phase = ImportPhase.fetching;
+  ImportPhase _phase = ImportPhase.fetching;
+  DateTime? _finishedAt;
+
+  ImportPhase get phase => _phase;
+  set phase(ImportPhase value) {
+    _phase = value;
+    _finishedAt = isTerminal ? (_finishedAt ?? _clock()) : null;
+  }
+
+  /// When the session reached done/failed/canceled (null while active).
+  DateTime? get finishedAt => _finishedAt;
+
   Playlist? playlist;
 
   /// Original tracks in playlist order (may contain the same track twice).
   final List<Track> tracks = [];
 
+  /// Whether the source playlist had more tracks than were imported (track
+  /// cap, page cap, repeated cursor).
+  bool truncated = false;
+
   /// Result per playlist position; null until that position is matched.
   List<TrackMatchResult?> results = const [];
+
+  /// Track id → its playlist positions, in order of first occurrence (built
+  /// by [prepareResults]).
+  Map<String, List<int>> positionsByTrack = const {};
   int processed = 0;
   Object? error;
   String? savedPlaylistId;
 
   bool get isTerminal =>
-      phase == ImportPhase.done || phase == ImportPhase.failed || phase == ImportPhase.canceled;
+      _phase == ImportPhase.done || _phase == ImportPhase.failed || _phase == ImportPhase.canceled;
+
+  /// Sizes [results] to [tracks] and indexes the positions of every track.
+  void prepareResults() {
+    results = List<TrackMatchResult?>.filled(tracks.length, null);
+    final positions = <String, List<int>>{};
+    for (var i = 0; i < tracks.length; i++) {
+      positions.putIfAbsent(tracks[i].id, () => []).add(i);
+    }
+    positionsByTrack = positions;
+  }
 
   bool get isClosed => _controller.isClosed;
 
@@ -91,14 +122,16 @@ class MutableImportSession {
 
   /// Positions of [trackId] in the playlist that already have a result.
   List<int> resultPositionsOf(String trackId) => [
-        for (var i = 0; i < results.length; i++)
-          if (results[i]?.original.id == trackId) i,
+        for (final p in positionsByTrack[trackId] ?? const <int>[])
+          if (results[p] != null) p,
       ];
 
   /// Unique results (one per distinct original track), in playlist order.
-  Iterable<TrackMatchResult> get uniqueResults {
-    final seen = <String>{};
-    return results.nonNulls.where((r) => seen.add(r.original.id));
+  Iterable<TrackMatchResult> get uniqueResults sync* {
+    for (final at in positionsByTrack.values) {
+      final r = results[at.first];
+      if (r != null) yield r;
+    }
   }
 
   Future<void> close() async {

@@ -174,7 +174,7 @@ class MiniModeView extends ConsumerWidget {
                   IconButton(
                     tooltip: l10n.playerAlwaysOnTop,
                     isSelected: mini.alwaysOnTop,
-                    icon: const Icon(Icons.push_pin_outlined, size: 20),
+                    icon: const Icon(Icons.push_pin_rounded, size: 20),
                     selectedIcon: const Icon(Icons.push_pin_rounded, size: 20),
                     onPressed: () => ref.read(miniModeProvider.notifier).setAlwaysOnTop(!mini.alwaysOnTop),
                   ),

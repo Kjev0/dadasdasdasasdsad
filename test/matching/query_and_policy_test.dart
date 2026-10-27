@@ -99,7 +99,7 @@ void main() {
       expect(sem.inUse, 0);
     });
 
-    test('rate-limit retry waits Retry-After, caps it and gives up after maxRetries', () async {
+    test('rate-limit retry waits Retry-After, caps its own back-off and gives up after maxRetries', () async {
       var calls = 0;
       final value = await withRateLimitRetry(() async {
         if (++calls < 3) throw const RateLimitedException('429', retryAfter: Duration(milliseconds: 5));
@@ -107,11 +107,14 @@ void main() {
       }, policy: const RateLimitPolicy(maxRetries: 2));
       expect(value, 'ok');
       expect(calls, 3);
-      expect(
-        const RateLimitPolicy(maxDelay: Duration(seconds: 1))
-            .delayFor(const RateLimitedException('429', retryAfter: Duration(hours: 1)), 1),
-        const Duration(seconds: 1),
-      );
+      const policy = RateLimitPolicy(defaultDelay: Duration(milliseconds: 600), maxDelay: Duration(seconds: 1));
+      // A Retry-After beyond maxDelay (a daily quota) is not waited for at all.
+      expect(policy.delayFor(const RateLimitedException('429', retryAfter: Duration(hours: 1)), 1), isNull);
+      expect(policy.delayFor(const RateLimitedException('429', retryAfter: Duration(milliseconds: 300)), 1),
+          const Duration(milliseconds: 300));
+      // Without Retry-After the back-off grows per attempt, capped at maxDelay.
+      expect(policy.delayFor(const RateLimitedException('429'), 1), const Duration(milliseconds: 600));
+      expect(policy.delayFor(const RateLimitedException('429'), 2), const Duration(seconds: 1));
       await expectLater(
         withRateLimitRetry(() async => throw const RateLimitedException('429', retryAfter: Duration.zero),
             policy: const RateLimitPolicy(maxRetries: 1)),

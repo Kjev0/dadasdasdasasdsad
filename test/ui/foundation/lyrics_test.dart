@@ -1,6 +1,5 @@
 import 'package:fermata/core/contracts/discovery.dart';
 import 'package:fermata/core/errors.dart';
-import 'package:fermata/core/models/playback.dart';
 import 'package:fermata/settings/app_settings.dart';
 import 'package:fermata/ui/player/lyrics_view.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../fakes/fakes.dart';
 
 TextStyle _styleOf(WidgetTester tester, String text) =>
-    tester.widget<AnimatedDefaultTextStyle>(find.ancestor(of: find.text(text), matching: find.byType(AnimatedDefaultTextStyle))).style;
+    tester.widget<AnimatedDefaultTextStyle>(find.ancestor(of: find.text(text), matching: find.byType(AnimatedDefaultTextStyle)).first).style;
 
 void main() {
   group('activeLyricIndex', () {
@@ -89,10 +88,6 @@ void main() {
 
       await pumpLyrics(tester, settings: const AppSettings(playback: PlaybackSettings(lyricsEnabled: false)));
       expect(find.text('Lyrics are turned off in Settings.'), findsOneWidget);
-    });
-
-    testWidgets('unused snapshot field sanity', (tester) async {
-      expect(const PlaybackSnapshot().position, Duration.zero);
     });
   });
 }

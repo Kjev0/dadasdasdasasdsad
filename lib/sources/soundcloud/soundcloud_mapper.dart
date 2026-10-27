@@ -119,9 +119,7 @@ abstract final class SoundCloudMapper {
     final names = metadataArtist == null
         ? <String>[?uploader]
         : metadataArtist.split(',').map((s) => s.trim()).where((s) => s.isNotEmpty).toList();
-    return [
-      for (var i = 0; i < names.length; i++) ArtistRef(names[i], sourceArtistId: i == 0 ? userUrn : null),
-    ];
+    return [for (var i = 0; i < names.length; i++) ArtistRef(names[i], sourceArtistId: i == 0 ? userUrn : null)];
   }
 
   // ---- Users / playlists ---------------------------------------------------

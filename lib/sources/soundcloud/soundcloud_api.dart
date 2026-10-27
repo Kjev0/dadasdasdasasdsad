@@ -297,7 +297,9 @@ class SoundCloudApi {
         continue;
       }
       if (status == 401) {
-        if (ticket.user) throw AuthRequiredException(SourceIds.soundcloud, 'The SoundCloud session expired. Please reconnect.');
+        if (ticket.user) {
+          throw AuthRequiredException(SourceIds.soundcloud, 'The SoundCloud session expired. Please reconnect.');
+        }
         throw ApiException(401, 'SoundCloud rejected the app token for streaming.');
       }
       if (status == 429) {

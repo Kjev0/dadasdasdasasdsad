@@ -58,6 +58,28 @@ void main() {
     );
   });
 
+  test('relatedTracks returns an empty list (not a 404 error) when the artist has no Deezer radio', () async {
+    // Verified live 2026-10-27: playable track 3753876682 "Bedroom Demo" by
+    // artist 97078462 ("Si Mon"); GET /artist/97078462/radio answers HTTP 200
+    // {"error":{"type":"DataException","message":"no data","code":800}}.
+    // Many long-tail artists have no radio mix.
+    final net = RecordingHttp((r) async {
+      if (r.url.path == '/track/3135556') return jsonResponse(fixture('deezer_track.json'));
+      return jsonResponse(fixture('deezer_error_not_found.json')); // /artist/27/radio -> code 800
+    });
+    final source = DeezerSource(
+      http: net.fermata,
+      limiter: TokenBucketRateLimiter(capacity: 50, period: const Duration(seconds: 5)),
+    );
+    addTearDown(source.dispose);
+
+    // BUG: relatedTracks() uses api.get() (code 800 -> ApiException(404))
+    // instead of api.getOrNull(), so "no related tracks" surfaces as an API
+    // error for a perfectly valid track.
+    final related = await source.relatedTracks('3135556');
+    expect(related, isEmpty);
+  });
+
   test('Deezer "0000-00-00" release dates must not become year -1', () {
     // Deezer uses MySQL-style zero dates for unknown release dates.
     expect(jsonYear('0000-00-00'), isNull, reason: 'jsonYear gave ${jsonYear('0000-00-00')}');

@@ -282,12 +282,8 @@ class SoundCloudSource extends MusicSourceBase with OAuthSourceMixin {
   /// SoundCloud has no "top tracks" endpoint: the uploader's tracks, newest
   /// first (`GET /users/{urn}/tracks`).
   @override
-  Future<Page<Track>> artistTopTracks(
-    String sourceArtistId, {
-    String? cursor,
-    int limit = 30,
-    CancelToken? cancel,
-  }) => userTracks(sourceArtistId, cursor: cursor, limit: limit, cancel: cancel);
+  Future<Page<Track>> artistTopTracks(String sourceArtistId, {String? cursor, int limit = 30, CancelToken? cancel}) =>
+      userTracks(sourceArtistId, cursor: cursor, limit: limit, cancel: cancel);
 
   /// The tracks a user uploaded, newest first.
   Future<Page<Track>> userTracks(String userUrnOrId, {String? cursor, int limit = 30, CancelToken? cancel}) async {
@@ -355,7 +351,10 @@ class SoundCloudSource extends MusicSourceBase with OAuthSourceMixin {
         meta = await api.resolve(SoundCloudLinks.normaliseShareUrl(input)!, cancel: cancel);
         if (meta == null) throw ApiException(404, 'SoundCloud could not find $input');
         if (jsonString(meta['kind']) != 'playlist') {
-          throw ApiException(400, 'This SoundCloud link is a ${jsonString(meta['kind']) ?? 'resource'}, not a playlist.');
+          throw ApiException(
+            400,
+            'This SoundCloud link is a ${jsonString(meta['kind']) ?? 'resource'}, not a playlist.',
+          );
         }
         urn = jsonString(meta['urn']);
       }
@@ -401,7 +400,9 @@ class SoundCloudSource extends MusicSourceBase with OAuthSourceMixin {
     if (json == null) return null;
     final secret = SoundCloudLinks.secretToken(url);
     return switch (jsonString(json['kind'])) {
-      'track' => SoundCloudResolved(track: SoundCloudMapper.track(json, now: _clock(), secretToken: secret)),
+      'track' => SoundCloudResolved(
+        track: SoundCloudMapper.track(json, now: _clock(), secretToken: secret),
+      ),
       'playlist' => SoundCloudResolved(playlist: SoundCloudMapper.playlist(json)),
       'user' => SoundCloudResolved(artist: SoundCloudMapper.artist(json)),
       _ => null,
