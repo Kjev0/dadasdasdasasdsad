@@ -523,6 +523,1657 @@ class AppLocalizationsDa extends AppLocalizations {
   String get playerSiloConfirm => 'Start ny kø';
 
   @override
+  String get settingsTitle => 'Indstillinger';
+
+  @override
+  String get settingsSearchHint => 'Søg i indstillinger';
+
+  @override
+  String settingsSearchNoResults(String query) {
+    return 'Ingen indstillinger matcher “$query”.';
+  }
+
+  @override
+  String get settingsRestoreAll => 'Gendan alle standarder';
+
+  @override
+  String get settingsRestoreAllTitle => 'Gendan alle indstillinger?';
+
+  @override
+  String get settingsRestoreAllBody =>
+      'Alle indstillinger sættes tilbage til standard. Dit bibliotek, dine playlister, forbundne konti og din downloadmappe bevares.';
+
+  @override
+  String get settingsRestoreSection => 'Gendan standarder for denne sektion';
+
+  @override
+  String settingsRestoreSectionTitle(String section) {
+    return 'Gendan standarder for “$section”?';
+  }
+
+  @override
+  String get settingsRestoreSectionBody =>
+      'Indstillingerne i denne sektion sættes tilbage til standard.';
+
+  @override
+  String get settingsRestoredToast => 'Standarder gendannet';
+
+  @override
+  String get settingsBack => 'Tilbage til indstillinger';
+
+  @override
+  String get settingsSectionUnavailable =>
+      'Denne sektion er ikke tilgængelig på denne enhed.';
+
+  @override
+  String get settingsOn => 'Til';
+
+  @override
+  String get settingsOff => 'Fra';
+
+  @override
+  String get settingsValueFull => 'Fuld';
+
+  @override
+  String get settingsValueReduced => 'Reduceret';
+
+  @override
+  String get settingsValueLow => 'Lav';
+
+  @override
+  String get settingsValueMedium => 'Mellem';
+
+  @override
+  String get settingsValueHigh => 'Høj';
+
+  @override
+  String get settingsValueNormal => 'Normal';
+
+  @override
+  String get settingsValueLossless => 'Tabsfri';
+
+  @override
+  String get settingsSaved => 'Gemt';
+
+  @override
+  String get settingsNotAvailable => 'Ikke tilgængelig';
+
+  @override
+  String get settingsOpenLinkFailed => 'Linket kunne ikke åbnes.';
+
+  @override
+  String settingsSavedTo(String location) {
+    return 'Gemt i $location';
+  }
+
+  @override
+  String get settingsThemeMode => 'Tema';
+
+  @override
+  String get settingsThemeDark => 'Mørkt';
+
+  @override
+  String get settingsThemeLight => 'Lyst';
+
+  @override
+  String get settingsThemeSystem => 'System';
+
+  @override
+  String get settingsAccent => 'Accentfarve';
+
+  @override
+  String get settingsAccentGold => 'Guld';
+
+  @override
+  String get settingsAccentCoral => 'Koral';
+
+  @override
+  String get settingsAccentMint => 'Mint';
+
+  @override
+  String get settingsAccentIce => 'Is';
+
+  @override
+  String get settingsAccentMono => 'Monokrom';
+
+  @override
+  String get settingsDensity => 'Tæthed';
+
+  @override
+  String get settingsDensityComfortable => 'Komfortabel';
+
+  @override
+  String get settingsDensityCompact => 'Kompakt';
+
+  @override
+  String get settingsArtworkBackdrop => 'Coverbaggrund';
+
+  @override
+  String get settingsArtworkBackdropHint =>
+      'Viser en blød, farvet udgave af coveret bag Afspiller nu.';
+
+  @override
+  String get settingsHighContrast => 'Høj kontrast';
+
+  @override
+  String get settingsHighContrastHint =>
+      'Tydeligere tekst, kanter og accentfarver.';
+
+  @override
+  String get settingsGlassIntro =>
+      'Et valgfrit glas-inspireret udseende: sidepanel, afspiller og ark bliver gennemsigtige og lader dine covers skinne igennem. Teksten forbliver altid læsbar.';
+
+  @override
+  String get settingsGlassToggle => 'Liquid Glass';
+
+  @override
+  String get settingsGlassToggleHint =>
+      'Slået fra som standard. Gennemsigtige flader med en blød sløring.';
+
+  @override
+  String get settingsGlassIntensity => 'Intensitet';
+
+  @override
+  String get settingsGlassIntensityHint =>
+      'Hvor meget af baggrunden der skinner igennem.';
+
+  @override
+  String get settingsGlassIntensityDisabled =>
+      'Slå Liquid Glass til for at justere intensiteten.';
+
+  @override
+  String get settingsGlassBlurOff =>
+      'Sløring er slået fra af den aktuelle ydelsestilstand, så glasset bruger en lettere gennemsigtig stil.';
+
+  @override
+  String get settingsGlassReadability =>
+      'Fermata øger automatisk glasfladernes dækkevne, når det er nødvendigt for at holde teksten læsbar.';
+
+  @override
+  String settingsSecondsShort(int seconds) {
+    return '$seconds s';
+  }
+
+  @override
+  String get settingsTransitionsGroup => 'Overgange';
+
+  @override
+  String get settingsCrossfade => 'Crossfade';
+
+  @override
+  String get settingsCrossfadeHint =>
+      'Glid fra slutningen af et nummer over i det næste.';
+
+  @override
+  String get settingsGapless => 'Afspilning uden pauser';
+
+  @override
+  String get settingsGaplessHint =>
+      'Ingen stilhed mellem numre, der hører sammen, som på livealbums.';
+
+  @override
+  String get settingsGaplessCrossfadeNote =>
+      'Bruges ikke, mens crossfade er slået til — crossfade binder allerede numrene sammen.';
+
+  @override
+  String get settingsPreviousThreshold =>
+      'Start forfra før der springes tilbage';
+
+  @override
+  String settingsPreviousThresholdHint(int seconds) {
+    return '“Forrige” starter nummeret forfra, når der er spillet mere end $seconds s.';
+  }
+
+  @override
+  String get settingsPreviousThresholdAlways =>
+      '“Forrige” går altid til det forrige nummer.';
+
+  @override
+  String get settingsVolumeGroup => 'Lydstyrke og hastighed';
+
+  @override
+  String get settingsNormalize => 'Lydstyrkeudligning';
+
+  @override
+  String get settingsNormalizeHint =>
+      'Afspiller numre med nogenlunde samme lydstyrke.';
+
+  @override
+  String get settingsNormalizationMode => 'Udligningsmetode';
+
+  @override
+  String get settingsNormalizationModeDisabled =>
+      'Slå lydstyrkeudligning til først.';
+
+  @override
+  String get settingsNormalizationTrack => 'ReplayGain (nummer)';
+
+  @override
+  String get settingsNormalizationTrackHint =>
+      'Bruger lydstyrkeinformationen, der er gemt i hver fil.';
+
+  @override
+  String get settingsNormalizationAlbum => 'ReplayGain (album)';
+
+  @override
+  String get settingsNormalizationAlbumHint =>
+      'Bevarer de tilsigtede forskelle mellem numrene på et album.';
+
+  @override
+  String get settingsNormalizationLoudness => 'Loudness (EBU R128)';
+
+  @override
+  String get settingsNormalizationLoudnessHint =>
+      'Måler lydstyrken under afspilning; virker også for streams uden tags.';
+
+  @override
+  String get settingsPreamp => 'Forforstærkning';
+
+  @override
+  String get settingsPreampHint => 'Ekstra forstærkning oven i udligningen.';
+
+  @override
+  String get settingsSpeed => 'Afspilningshastighed';
+
+  @override
+  String get settingsSpeedHint =>
+      'Gælder med det samme og huskes til næste gang.';
+
+  @override
+  String get settingsStartupQueueGroup => 'Kø';
+
+  @override
+  String get settingsRestoreQueue => 'Gendan køen ved opstart';
+
+  @override
+  String get settingsRestoreQueueHint =>
+      'Fortsæt hvor du slap, også positionen i nummeret.';
+
+  @override
+  String get settingsAutoplay => 'Begynd afspilning ved opstart';
+
+  @override
+  String get settingsAutoplayHint =>
+      'Genoptag den gendannede kø, så snart Fermata åbner.';
+
+  @override
+  String get settingsAutoplayDisabled => 'Kræver “Gendan køen ved opstart”.';
+
+  @override
+  String get settingsSmartQueue => 'Smart kø';
+
+  @override
+  String get settingsSmartQueueHint =>
+      'Tilføj lignende numre, når køen løber tør.';
+
+  @override
+  String get settingsSkipUnplayable =>
+      'Spring numre over, der ikke kan afspilles';
+
+  @override
+  String get settingsSkipUnplayableHint =>
+      'Gå automatisk videre, når et nummer ikke kan afspilles, og fortæl hvorfor.';
+
+  @override
+  String get settingsExtrasGroup => 'Sleep timer og sangtekster';
+
+  @override
+  String get settingsSleepFade => 'Fade ud ved sleep timer';
+
+  @override
+  String get settingsSleepFadeHint =>
+      'Skru blidt ned, før sleep timeren sætter på pause.';
+
+  @override
+  String get settingsLyrics => 'Sangtekster';
+
+  @override
+  String get settingsLyricsHint =>
+      'Slå sangtekster op på LRCLIB og læs tekster, der er gemt i dine filer.';
+
+  @override
+  String get settingsInterruptionsGroup => 'Hovedtelefoner og afbrydelser';
+
+  @override
+  String get settingsPauseOnDisconnect => 'Pause når hovedtelefoner frakobles';
+
+  @override
+  String get settingsPauseOnDisconnectHint =>
+      'Forhindrer at musikken pludselig spiller i højttaleren.';
+
+  @override
+  String get settingsResumeAfterInterruption => 'Fortsæt efter afbrydelser';
+
+  @override
+  String get settingsResumeAfterInterruptionHint =>
+      'Fortsæt efter et opkald eller en anden apps lyd.';
+
+  @override
+  String get settingsDuck => 'Skru ned ved korte lyde';
+
+  @override
+  String get settingsDuckHint =>
+      'Navigationsbeskeder og notifikationer afspilles over dæmpet musik i stedet for at sætte den på pause.';
+
+  @override
+  String get settingsQualityIntro =>
+      'Vælg hvor godt streams og downloads skal lyde. Højere kvalitet bruger mere data og plads.';
+
+  @override
+  String get settingStreamingQuality => 'Streamingkvalitet';
+
+  @override
+  String get settingsStreamingQualityHint =>
+      'På Wi-Fi og kablede forbindelser.';
+
+  @override
+  String get settingsMobileQuality => 'Kvalitet på mobildata';
+
+  @override
+  String get settingsMobileQualityHint =>
+      'På mobildata og andre forbindelser med datagrænse.';
+
+  @override
+  String get settingsDownloadQuality => 'Downloadkvalitet';
+
+  @override
+  String get settingsDownloadQualityHint =>
+      'For numre en kilde tillader dig at downloade.';
+
+  @override
+  String get settingsQualityProviders =>
+      'Hver udbyder bestemmer, hvilke kvaliteter den tilbyder. Fermata bruger den nærmeste tilgængelige kvalitet, som kan være lavere end dit valg — Deezer tilbyder for eksempel kun 30 sekunders smagsprøver.';
+
+  @override
+  String get settingsOutputGroup => 'Output';
+
+  @override
+  String get settingsOutputDevice => 'Outputenhed';
+
+  @override
+  String get settingsOutputDeviceHint => 'Hvor Fermata afspiller lyden.';
+
+  @override
+  String get settingsOutputDeviceSystem => 'Systemstandard';
+
+  @override
+  String settingsOutputDeviceDefault(String name) {
+    return '$name (standard)';
+  }
+
+  @override
+  String get settingsOutputDevicesFailed => 'Outputenhederne kunne ikke vises.';
+
+  @override
+  String get settingsOutputDeviceFailed =>
+      'Kunne ikke skifte til denne outputenhed.';
+
+  @override
+  String get settingsDownloadFolder => 'Downloadmappe';
+
+  @override
+  String get settingsDownloadFolderChange => 'Skift…';
+
+  @override
+  String get settingsDownloadFolderMoving => 'Flytter…';
+
+  @override
+  String get settingsDownloadFolderPick => 'Vælg en mappe til downloads';
+
+  @override
+  String get settingsDownloadFolderMoveTitle => 'Flyt downloads?';
+
+  @override
+  String settingsDownloadFolderMoveBody(String path) {
+    return 'Dine downloadede numre flyttes til $path. Det kan tage et stykke tid for store samlinger; du kan lytte videre imens.';
+  }
+
+  @override
+  String get settingsDownloadFolderMove => 'Flyt downloads';
+
+  @override
+  String get settingsDownloadFolderMoved => 'Downloads flyttet';
+
+  @override
+  String get settingsDownloadFolderFailed =>
+      'Downloads kunne ikke flyttes. Intet blev ændret.';
+
+  @override
+  String settingsDownloadFolderFailedDetail(String detail) {
+    return 'Downloads kunne ikke flyttes: $detail';
+  }
+
+  @override
+  String get settingWifiOnly => 'Download kun på Wi-Fi';
+
+  @override
+  String get settingsWifiOnlyHint =>
+      'Downloads venter på Wi-Fi eller en kablet forbindelse.';
+
+  @override
+  String get settingsWarnMobile => 'Advar før mobildata bruges';
+
+  @override
+  String get settingsWarnMobileHint =>
+      'Spørg før en download starter på en forbindelse med datagrænse.';
+
+  @override
+  String get settingsWarnMobileDisabled =>
+      'Ikke nødvendigt, mens downloads venter på Wi-Fi.';
+
+  @override
+  String get settingsMaxConcurrent => 'Samtidige downloads';
+
+  @override
+  String get settingsMaxConcurrentHint =>
+      'Hvor mange numre der downloades på samme tid.';
+
+  @override
+  String get settingsVerifyIntegrity => 'Kontrollér downloads';
+
+  @override
+  String get settingsVerifyIntegrityHint =>
+      'Kontrollér hver færdig fil, før den bruges, så en ødelagt download aldrig afspilles.';
+
+  @override
+  String get settingsNotifyComplete => 'Giv besked når downloads er færdige';
+
+  @override
+  String get settingsNotifyCompleteHint =>
+      'En systemnotifikation, når en række downloads er færdige.';
+
+  @override
+  String get settingsNotificationsUnsupported =>
+      'Systemnotifikationer er ikke tilgængelige på denne enhed; Fermata viser fremskridtet i appen i stedet.';
+
+  @override
+  String get settingsOfflineGroup => 'Hvad kan være offline';
+
+  @override
+  String get settingsOfflineIntro =>
+      'Hvert nummer hører til en af fire kategorier. Fermata følger hver udbyders vilkår og gemmer aldrig streams som filer.';
+
+  @override
+  String get settingsOfflineUserOwned =>
+      'Musikfiler, du har tilføjet fra dine egne mapper. Altid tilgængelige offline.';
+
+  @override
+  String get settingsOfflineDownloadable =>
+      'Udbyderen tillader at downloade nummeret (for eksempel Audius- eller Jamendo-numre, som kunstneren har gjort downloadbare). Du starter selv hver download.';
+
+  @override
+  String get settingsOfflineStreamOnly =>
+      'Kan afspilles, mens du er online, men udbyderen tillader ikke at gemme det — for eksempel SoundCloud.';
+
+  @override
+  String get settingsOfflineUnavailable =>
+      'Kan slet ikke gøres tilgængeligt offline, som smagsprøver eller numre, der kun afspilles i udbyderens egen app.';
+
+  @override
+  String get settingsAutoDownloadNote =>
+      'Automatiske downloads (for eksempel af en hel playliste) omfatter kun kilder, der tillader det: dine egne filer. Ingen af streamingudbyderne tillader i øjeblikket automatiske downloads.';
+
+  @override
+  String get settingsUsageGroup => 'Forbrug';
+
+  @override
+  String get settingsUsageFailed => 'Pladsforbruget kunne ikke beregnes.';
+
+  @override
+  String settingsUsageTotal(String size) {
+    return '$size bruges af Fermata';
+  }
+
+  @override
+  String settingsUsageFree(String size) {
+    return '$size ledigt på disken';
+  }
+
+  @override
+  String settingsUsageDownloads(int count) {
+    return 'Downloads ($count)';
+  }
+
+  @override
+  String get settingsUsageArtwork => 'Cover-cache';
+
+  @override
+  String get settingsUsageStreamCache => 'Stream-cache';
+
+  @override
+  String get settingsUsageDatabase => 'Biblioteksdatabase';
+
+  @override
+  String settingsUsageLimit(String used, String limit) {
+    return 'Downloads bruger $used af $limit';
+  }
+
+  @override
+  String get settingsRefresh => 'Opdater';
+
+  @override
+  String get settingsLimitsGroup => 'Grænser';
+
+  @override
+  String get settingsDownloadLimit => 'Pladsgrænse for downloads';
+
+  @override
+  String get settingsDownloadLimitHint =>
+      'Den største plads, downloads må bruge.';
+
+  @override
+  String get settingsUnlimited => 'Ubegrænset';
+
+  @override
+  String get settingsAutoCleanup => 'Ryd automatisk op';
+
+  @override
+  String get settingsAutoCleanupHint =>
+      'Når grænsen nås, fjernes de downloads, du har spillet mindst for nylig.';
+
+  @override
+  String get settingsAutoCleanupDisabled =>
+      'Angiv en pladsgrænse for at bruge automatisk oprydning.';
+
+  @override
+  String get settingsArtworkCache => 'Størrelse på cover-cache';
+
+  @override
+  String get settingsArtworkCacheHint =>
+      'Covers gemmes, så de vises med det samme og virker offline.';
+
+  @override
+  String get settingsMaintenanceGroup => 'Vedligeholdelse';
+
+  @override
+  String get settingsCleanUpNow => 'Ryd op nu';
+
+  @override
+  String get settingsCleanUpNowHint => 'Anvend pladsgrænsen med det samme.';
+
+  @override
+  String get settingsCleanUpNowAction => 'Ryd op';
+
+  @override
+  String get settingsNothingToClean =>
+      'Intet at rydde op — du er inden for grænsen.';
+
+  @override
+  String settingsFreed(String size) {
+    return '$size frigjort';
+  }
+
+  @override
+  String get settingsClearArtwork => 'Ryd cover-cache';
+
+  @override
+  String get settingsClearArtworkHint =>
+      'Covers hentes igen, når der er brug for dem.';
+
+  @override
+  String get settingsClearArtworkAction => 'Ryd';
+
+  @override
+  String get settingsVerifyDownloads => 'Kontrollér downloads';
+
+  @override
+  String get settingsVerifyDownloadsHint =>
+      'Kontrollér alle downloadede filer for skader.';
+
+  @override
+  String get settingsVerifyDownloadsAction => 'Kontrollér';
+
+  @override
+  String get settingsVerifyOk => 'Alle downloads er i orden.';
+
+  @override
+  String settingsVerifyBroken(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count beskadigede downloads fundet. Prøv dem igen på siden Downloads.',
+      one: '1 beskadiget download fundet. Prøv igen på siden Downloads.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String settingsMinutesShort(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String settingsHoursShort(int hours) {
+    return '$hours t';
+  }
+
+  @override
+  String get settingsModeBalanced => 'Balanceret';
+
+  @override
+  String get settingsModePerformance => 'Ydelse';
+
+  @override
+  String get settingsModeBatterySaver => 'Batterisparer';
+
+  @override
+  String get settingsModeDataSaver => 'Datasparer';
+
+  @override
+  String get settingsModeVisualQuality => 'Visuel kvalitet';
+
+  @override
+  String get settingsModeCustom => 'Tilpasset';
+
+  @override
+  String get settingsModeBalancedHint =>
+      'Standarden: fulde animationer, sløring og covers i mellemkvalitet.';
+
+  @override
+  String get settingsModePerformanceHint =>
+      'Reducerer animationer og slår sløring og forudhentning af covers fra.';
+
+  @override
+  String get settingsModeBatterySaverHint =>
+      'Slår animationer, sløring, forudindlæsning og baggrundssynkronisering fra og bruger mindre covers.';
+
+  @override
+  String get settingsModeDataSaverHint =>
+      'Sænker streamingkvaliteten, venter på Wi-Fi med downloads og stopper forudindlæsning.';
+
+  @override
+  String get settingsModeVisualQualityHint =>
+      'Fulde animationer, sløring og de skarpeste covers.';
+
+  @override
+  String get settingsModeCustomHint =>
+      'Din egen kombination af indstillingerne nedenfor.';
+
+  @override
+  String get settingsPerformanceIntro =>
+      'Vælg en tilstand for at ændre flere indstillinger på én gang. Ændrer du en enkelt indstilling nedenfor, skiftes der til Tilpasset.';
+
+  @override
+  String settingsActiveNow(String mode) {
+    return 'Aktiv nu: $mode';
+  }
+
+  @override
+  String get settingsActiveNowReducedMotion =>
+      'Dine system- eller tilgængelighedsindstillinger beder om mindre bevægelse, så animationer er reduceret.';
+
+  @override
+  String get settingsGranularGroup => 'Enkelte indstillinger';
+
+  @override
+  String get settingsGranularIntro =>
+      'Justerer du en af disse, skiftes tilstanden til Tilpasset.';
+
+  @override
+  String get settingAnimations => 'Animationer';
+
+  @override
+  String get settingsAnimationsHint => 'Overgange og bevægelse i hele appen.';
+
+  @override
+  String get settingBlur => 'Sløring';
+
+  @override
+  String get settingsBlurHint =>
+      'Baggrundssløring til glas og Afspiller nu. Fra bruger almindelige gennemsigtige flader.';
+
+  @override
+  String get settingArtworkQuality => 'Coverkvalitet';
+
+  @override
+  String get settingsArtworkQualityHint =>
+      'Lavere kvalitet afkoder mindre billeder og bruger mindre hukommelse.';
+
+  @override
+  String get settingPreloadNext => 'Forudindlæs næste nummer';
+
+  @override
+  String get settingsPreloadNextHint =>
+      'Gør det næste nummer klar i god tid for glidende overgange.';
+
+  @override
+  String get settingPrefetchArtwork => 'Forudhent covers';
+
+  @override
+  String get settingsPrefetchArtworkHint =>
+      'Henter covers til kommende numre på forhånd.';
+
+  @override
+  String get settingBackgroundSync => 'Baggrundssynkronisering';
+
+  @override
+  String get settingsBackgroundSyncHint =>
+      'Opdaterer forbundne tjenester, anbefalinger og tilladte downloads med jævne mellemrum.';
+
+  @override
+  String get settingsSyncInterval => 'Synkroniser hver';
+
+  @override
+  String get settingsSyncIntervalDisabled =>
+      'Baggrundssynkronisering er slået fra.';
+
+  @override
+  String get settingsSaversIntro =>
+      'Genveje til de tilsvarende ydelsestilstande. Hver viser præcis, hvad den ændrer.';
+
+  @override
+  String get settingsSaverTurnOn => 'Brug denne tilstand';
+
+  @override
+  String get settingsSaverTurnOff => 'Slå fra (tilbage til Balanceret)';
+
+  @override
+  String get settingsBatterySaverNote =>
+      'Reducerer det arbejde, Fermata udfører, mens du lytter. Selve afspilningen påvirkes ikke.';
+
+  @override
+  String get settingsDataSaverNote =>
+      'Sætter også streamingkvaliteten til Lav og downloads til kun Wi-Fi. Slår du den fra, bevares de to indstillinger; ændr dem under Lydkvalitet og Downloads.';
+
+  @override
+  String get settingsSaversAndroidNote =>
+      'Androids egen batterioptimering kan også stoppe musik i baggrunden. Du kan tillade Fermata at køre videre under Baggrundsafspilning.';
+
+  @override
+  String get settingsSaversCustomNote =>
+      'Vil du have noget midt imellem? Vælg Tilpasset under Ydelse og justér hver indstilling.';
+
+  @override
+  String get settingsServicesIntro =>
+      'Forbind de tjenester, du bruger. Hvert kort fortæller præcis, hvad Fermata kan og ikke kan med tjenesten.';
+
+  @override
+  String get settingsTokensNotPersistent =>
+      'Dit system har intet sikkert nøglelager (for eksempel GNOME Keyring eller KWallet), så logins gemmes kun, indtil Fermata lukkes, og du skal forbinde igen efter en genstart. Installér og lås en nøglering op for at forblive logget ind.';
+
+  @override
+  String get settingsNoPasswords =>
+      'Fermata beder aldrig om dine adgangskoder. Du logger ind på tjenestens egen hjemmeside, og Fermata gemmer kun den adgang, den har fået, i dit systems sikre lager.';
+
+  @override
+  String get settingsStatusNotRequired => 'Ingen konto nødvendig';
+
+  @override
+  String get settingsStatusCredentialsMissing => 'Ikke sat op';
+
+  @override
+  String get settingsStatusNotConnected => 'Ikke forbundet';
+
+  @override
+  String get settingsStatusConnecting => 'Forbinder…';
+
+  @override
+  String get settingsStatusConnected => 'Forbundet';
+
+  @override
+  String get settingsStatusExpired => 'Login udløbet';
+
+  @override
+  String get settingsStatusError => 'Fejl';
+
+  @override
+  String settingsStatusSemantics(String status) {
+    return 'Status: $status';
+  }
+
+  @override
+  String settingsAccount(String name) {
+    return 'Logget ind som $name';
+  }
+
+  @override
+  String settingsScopes(String scopes) {
+    return 'Givet adgang: $scopes';
+  }
+
+  @override
+  String settingsExpiredHint(String service) {
+    return 'Dit login til $service er udløbet. Forbind igen for at fortsætte.';
+  }
+
+  @override
+  String settingsErrorDetail(String detail) {
+    return 'Problem: $detail';
+  }
+
+  @override
+  String settingsCredentialsMissingHint(String service) {
+    return '$service kræver udviklernøgler (en app-registrering), før du kan bruge den. Indtast dem nedenfor — de er ikke din adgangskode.';
+  }
+
+  @override
+  String get settingsCanSearch => 'Søg i kataloget';
+
+  @override
+  String get settingsCanStream => 'Afspil hele numre i Fermata';
+
+  @override
+  String get settingsCanPreview => 'Afspil smagsprøver i Fermata';
+
+  @override
+  String settingsCanExternal(String service) {
+    return 'Åbn numre i $service for at afspille dem';
+  }
+
+  @override
+  String get settingsCanDownload =>
+      'Download enkelte numre, som kunstneren tillader';
+
+  @override
+  String get settingsCanLibrary => 'Læs dine playlister og likede numre';
+
+  @override
+  String get settingsCanImport => 'Importér playlister';
+
+  @override
+  String get settingsCanIsrc => 'Præcis matchning via ISRC';
+
+  @override
+  String get settingsCanDiscover => 'Anbefalinger, hitlister og nye udgivelser';
+
+  @override
+  String get settingsCantStream => 'Kan ikke afspille hele numre i Fermata';
+
+  @override
+  String get settingsCantDownload => 'Ingen downloads';
+
+  @override
+  String settingsSiloed(String service) {
+    return 'Numre fra $service afspilles i deres egen kø (${service}s vilkår)';
+  }
+
+  @override
+  String get settingsCantLibrary => 'Ingen adgang til din kontos bibliotek';
+
+  @override
+  String get settingsConnect => 'Forbind';
+
+  @override
+  String get settingsReconnect => 'Forbind igen';
+
+  @override
+  String get settingsDisconnect => 'Afbryd forbindelse';
+
+  @override
+  String get settingsConnectingHint =>
+      'Gør login færdigt i din browser. Fermata ser aldrig din adgangskode.';
+
+  @override
+  String settingsConnected(String service) {
+    return 'Forbundet til $service';
+  }
+
+  @override
+  String settingsConnectFailed(String service) {
+    return 'Kunne ikke forbinde til $service.';
+  }
+
+  @override
+  String settingsDisconnectTitle(String service) {
+    return 'Afbryd forbindelsen til $service?';
+  }
+
+  @override
+  String settingsDisconnectBody(String service) {
+    return 'Fermata glemmer sin adgang til din $service-konto. Importerede playlister bliver i dit bibliotek.';
+  }
+
+  @override
+  String get settingsTerms => 'Vilkår';
+
+  @override
+  String get settingsCredOverride => 'Brug dine egne udviklernøgler';
+
+  @override
+  String get settingsCredTitle => 'Udviklernøgler';
+
+  @override
+  String settingsCredIntro(String service) {
+    return 'Værdier fra den app, du har registreret hos $service. De identificerer Fermata over for $service; din egen konto logger stadig ind på ${service}s hjemmeside.';
+  }
+
+  @override
+  String settingsCredOrigin(String origin) {
+    return 'Bruges nu: $origin';
+  }
+
+  @override
+  String get settingsCredOriginNone => 'ingen';
+
+  @override
+  String get settingsCredOriginBuild => 'indbygget i denne version af Fermata';
+
+  @override
+  String settingsCredOriginFile(String path) {
+    return 'filen $path';
+  }
+
+  @override
+  String get settingsCredOriginUser => 'indtastet af dig';
+
+  @override
+  String get settingsCredRegister => 'Registrér en app';
+
+  @override
+  String get settingsCredRedirects =>
+      'Omdirigerings-URI\'er der skal registreres';
+
+  @override
+  String get settingsCredRedirectDesktop => 'Computer (Linux og Windows)';
+
+  @override
+  String get settingsCredRedirectAndroid => 'Android';
+
+  @override
+  String get settingsCredRedirectCustom => 'Din egen omdirigerings-URI';
+
+  @override
+  String get settingsCredClientId => 'Client ID';
+
+  @override
+  String get settingsCredClientSecret => 'Client secret';
+
+  @override
+  String get settingsCredApiKey => 'API-nøgle';
+
+  @override
+  String get settingsCredRedirectUri => 'Omdirigerings-URI';
+
+  @override
+  String get settingsCredOptional => 'valgfri';
+
+  @override
+  String get settingsCredShow => 'Vis';
+
+  @override
+  String get settingsCredHide => 'Skjul';
+
+  @override
+  String settingsCredRequired(String fields) {
+    return 'Udfyld venligst: $fields';
+  }
+
+  @override
+  String settingsCredSaved(String service) {
+    return 'Nøgler til $service gemt';
+  }
+
+  @override
+  String get settingsCredSaveFailed => 'Nøglerne kunne ikke gemmes.';
+
+  @override
+  String get settingsCredRemoved => 'Dine nøgler blev fjernet';
+
+  @override
+  String get settingsCredRemove => 'Fjern mine';
+
+  @override
+  String get settingsCredNoPasswords => 'Indtast aldrig din adgangskode her.';
+
+  @override
+  String get settingsCopy => 'Kopiér';
+
+  @override
+  String get settingsCopied => 'Kopieret';
+
+  @override
+  String get settingsProviderOrder => 'Rækkefølge for udbydere';
+
+  @override
+  String get settingsProviderOrderHint =>
+      'Bruges til at sortere søgeresultater, til at vælge en stream, når et nummer findes hos flere tjenester, og som mål ved import. Slå en tjeneste fra for at udelade den overalt.';
+
+  @override
+  String get settingsDragToReorder => 'Træk for at ændre rækkefølge';
+
+  @override
+  String get settingsMoveUp => 'Flyt op';
+
+  @override
+  String get settingsMoveDown => 'Flyt ned';
+
+  @override
+  String settingsSourceEnabled(String service) {
+    return 'Brug $service';
+  }
+
+  @override
+  String get settingsPreferSoundCloud => 'Foretræk SoundCloud i opdagelse';
+
+  @override
+  String get settingsPreferSoundCloudHint =>
+      'Byg mixes og anbefalinger fra SoundCloud først, når den er forbundet.';
+
+  @override
+  String get settingsImportIntro =>
+      'Hvordan Fermata finder dine numre hos andre tjenester, når du importerer en playliste. Dette er standarderne; du kan ændre dem for hver import.';
+
+  @override
+  String get settingsReviewMode => 'Gennemgang';
+
+  @override
+  String get settingsReviewAuto => 'Acceptér sikre match';
+
+  @override
+  String get settingsReviewAutoHint =>
+      'Match over grænsen accepteres; du gennemgår resten.';
+
+  @override
+  String get settingsReviewAll => 'Gennemgå alle match';
+
+  @override
+  String get settingsReviewAllHint => 'Intet accepteres, før du bekræfter det.';
+
+  @override
+  String get settingsAutoAcceptThreshold => 'Grænse for automatisk accept';
+
+  @override
+  String get settingsAutoAcceptThresholdHint =>
+      'Hvor sikker Fermata skal være, før den selv accepterer et match.';
+
+  @override
+  String get settingsAutoAcceptThresholdDisabled =>
+      'Bruges kun, når sikre match accepteres automatisk.';
+
+  @override
+  String get settingsSkipUnavailable => 'Spring utilgængelige numre over';
+
+  @override
+  String get settingsSkipUnavailableHint =>
+      'Udelad numre, der ikke kan afspilles hos nogen måltjeneste.';
+
+  @override
+  String get settingsPreferredProvider => 'Foretrukken tjeneste';
+
+  @override
+  String get settingsPreferredProviderHint =>
+      'Når flere tjenester har nummeret, foretræk denne.';
+
+  @override
+  String get settingsNoPreference =>
+      'Ingen præference (brug rækkefølgen for udbydere)';
+
+  @override
+  String get settingsAllowPreviewOnly => 'Tillad match med kun smagsprøver';
+
+  @override
+  String get settingsAllowPreviewOnlyHint =>
+      'Acceptér match, der kun afspiller en kort smagsprøve, som Deezer.';
+
+  @override
+  String get settingsImportVersionsNote =>
+      'Et remix, en liveversion, en akustisk eller anden version accepteres aldrig automatisk, når originalen var en anden version.';
+
+  @override
+  String get settingsImportPlaylist => 'Importér en playliste';
+
+  @override
+  String get settingsNotifyTrackChange => 'Når nummeret skifter';
+
+  @override
+  String get settingsNotifyTrackChangeHint =>
+      'En lille skrivebordsnotifikation med det nye nummer.';
+
+  @override
+  String get settingsNotifyDownloads => 'Downloads';
+
+  @override
+  String get settingsNotifyDownloadsHint =>
+      'Når downloads bliver færdige eller fejler.';
+
+  @override
+  String get settingsMediaNotificationNote =>
+      'Notifikationen med afspilningsknapper er en del af baggrundsafspilning og vises altid, mens der spiller musik.';
+
+  @override
+  String get settingsPermissionGroup => 'Tilladelse';
+
+  @override
+  String get settingsNotificationPermission => 'Notifikationer';
+
+  @override
+  String get settingsNotificationPermissionMissing =>
+      'Ikke tilladt. Android skal have din tilladelse, før Fermata kan vise afspilningsknapper og downloadbeskeder.';
+
+  @override
+  String get settingsPermissionAllowed => 'Tilladt';
+
+  @override
+  String get settingsAllow => 'Tillad';
+
+  @override
+  String get settingsOpenSystemSettings => 'Systemindstillinger';
+
+  @override
+  String get settingsBackgroundIntro =>
+      'Fermata afspiller i en forgrundstjeneste med en mediennotifikation, så musikken fortsætter, når du forlader appen eller låser skærmen.';
+
+  @override
+  String get settingsBackgroundDesktop =>
+      'Når du lukker vinduet, fortsætter musikken. Fermata bliver i systembakken — eller minimeret, når der ikke er nogen bakke — og dine medietaster virker stadig. Vælg Afslut i bakkemenuen for at stoppe helt.';
+
+  @override
+  String get settingsRestartRequired =>
+      'Genstart Fermata for at anvende den ændrede baggrundsindstilling.';
+
+  @override
+  String get settingsStopServiceOnPause =>
+      'Lad Android stoppe afspilningen ved pause';
+
+  @override
+  String get settingsStopServiceOnPauseHint =>
+      'Mens der er pause, kan notifikationen swipes væk, og Android kan lukke Fermata for at spare batteri. Gælder efter genstart af Fermata.';
+
+  @override
+  String get settingsResumeOnHeadset => 'Fortsæt når hovedtelefoner tilsluttes';
+
+  @override
+  String get settingsResumeOnHeadsetHint =>
+      'Fortsæt afspilningen, når hovedtelefoner eller en Bluetooth-enhed tilsluttes igen kort efter, de blev frakoblet.';
+
+  @override
+  String get settingsBatteryGroup => 'Batterioptimering';
+
+  @override
+  String get settingsBatteryOptimized => 'Batterioptimering er slået til';
+
+  @override
+  String get settingsBatteryOptimizedHint =>
+      'Android kan stoppe musik i baggrunden på nogle enheder. Det er valgfrit at tillade baggrundsaktivitet, og det ændrer det kun for Fermata.';
+
+  @override
+  String get settingsBatteryUnrestricted => 'Baggrundsaktivitet er tilladt';
+
+  @override
+  String get settingsBatteryUnrestrictedHint =>
+      'Android begrænser ikke Fermata i baggrunden.';
+
+  @override
+  String get settingsAllowBackground => 'Tillad baggrundsaktivitet';
+
+  @override
+  String get settingsOemNote =>
+      'Nogle producenter tilføjer deres egne batterigrænser oven i Androids. Hvis musikken stadig stopper i baggrunden, så tillad også Fermata i telefonens batteriindstillinger — dontkillmyapp.com forklarer hvordan for hvert mærke.';
+
+  @override
+  String get settingsCloseBehavior => 'Når vinduet lukkes';
+
+  @override
+  String get settingsCloseToTray => 'Fortsæt i systembakken';
+
+  @override
+  String get settingsCloseToTrayHint => 'Vinduet skjules; musikken fortsætter.';
+
+  @override
+  String get settingsCloseMinimize => 'Fortsæt minimeret';
+
+  @override
+  String get settingsCloseMinimizeHint =>
+      'Der er ingen systembakke, så vinduet minimeres; musikken fortsætter.';
+
+  @override
+  String get settingsCloseAsk => 'Spørg hver gang';
+
+  @override
+  String get settingsCloseAskHint =>
+      'Vælg mellem at fortsætte musikken og at afslutte.';
+
+  @override
+  String get settingsCloseQuit => 'Afslut Fermata';
+
+  @override
+  String get settingsCloseQuitHint =>
+      'Afspilningen stopper, og Fermata lukker.';
+
+  @override
+  String get settingsShowTrayIcon => 'Vis ikon i systembakken';
+
+  @override
+  String get settingsShowTrayIconHint =>
+      'Hurtige knapper og det aktuelle nummer i systembakken.';
+
+  @override
+  String get settingsRememberWindow => 'Husk vinduets størrelse og placering';
+
+  @override
+  String get settingsRememberWindowHint => 'Åbner, hvor du forlod det sidst.';
+
+  @override
+  String get settingsQuitNote =>
+      'For at stoppe helt, vælg Afslut i bakkemenuen — eller vælg “Spørg hver gang” ovenfor for at få en Afslut-knap, når du lukker vinduet.';
+
+  @override
+  String get settingsLaunchAtLogin => 'Start ved login';
+
+  @override
+  String get settingsLaunchAtLoginHint =>
+      'Start Fermata, når du logger ind på computeren.';
+
+  @override
+  String get settingsLaunchAtLoginUnsupported =>
+      'Ikke tilgængelig på dette system.';
+
+  @override
+  String get settingsLaunchAtLoginFailed =>
+      'Login-indstillingen kunne ikke ændres.';
+
+  @override
+  String get settingsStartMinimized => 'Start minimeret';
+
+  @override
+  String get settingsStartMinimizedHint =>
+      'Start i systembakken (eller minimeret) i stedet for at vise vinduet.';
+
+  @override
+  String get settingsShortcutsIntro =>
+      'Klik på en genvej for at optage en ny. Konflikter vises med rødt.';
+
+  @override
+  String get settingsShortcutsInApp => 'I Fermata';
+
+  @override
+  String get settingsShortcutsGlobal => 'Globale genveje';
+
+  @override
+  String get settingsShortcutsGlobalHint =>
+      'Virker overalt, også når Fermata er i baggrunden.';
+
+  @override
+  String get settingsGlobalHotkeys => 'Brug globale genveje';
+
+  @override
+  String get settingsGlobalHotkeysHint =>
+      'Fermata registrerer disse taster hos dit skrivebord.';
+
+  @override
+  String get settingsShortcutNone => 'Ikke angivet';
+
+  @override
+  String settingsShortcutConflict(String actions) {
+    return 'Bruges også af: $actions';
+  }
+
+  @override
+  String settingsShortcutChangeSemantics(String action, String binding) {
+    return '$action: $binding. Skift genvej';
+  }
+
+  @override
+  String get settingsShortcutMore => 'Flere valgmuligheder';
+
+  @override
+  String get settingsShortcutChange => 'Optag ny genvej';
+
+  @override
+  String get settingsShortcutReset => 'Nulstil til standard';
+
+  @override
+  String get settingsShortcutRemove => 'Fjern genvej';
+
+  @override
+  String settingsShortcutRecordTitle(String action) {
+    return 'Genvej til “$action”';
+  }
+
+  @override
+  String get settingsShortcutRecordHint =>
+      'Tryk på den tastekombination, du vil bruge. Tryk Esc for at annullere.';
+
+  @override
+  String get settingsShortcutWaiting => 'Venter på taster…';
+
+  @override
+  String get settingsShortcutNeedsModifier =>
+      'Globale genveje skal bruge Ctrl, Alt, Shift eller Super, ellers ville de blokere for skrivning i andre apps.';
+
+  @override
+  String get settingsFileInvalid =>
+      'Filen er ikke en Fermata-fil, eller den er beskadiget.';
+
+  @override
+  String get settingsRecordHistory => 'Lyttehistorik';
+
+  @override
+  String get settingsRecordHistoryHint =>
+      'Husk hvad du afspiller, kun på denne enhed. Bruges til Historik, Senest afspillet og dine mixes.';
+
+  @override
+  String get settingsPersonalized => 'Personlige anbefalinger';
+
+  @override
+  String get settingsPersonalizedHint =>
+      'Mixes og forslag beregnes på denne enhed ud fra din historik og dine favoritter. Fra viser kun populær musik, nye udgivelser og genrer.';
+
+  @override
+  String get settingsSaveSearches => 'Søgehistorik';
+
+  @override
+  String get settingsSaveSearchesHint =>
+      'Vis dine seneste søgninger under Søg.';
+
+  @override
+  String get settingsNoTrackingTitle => 'Ingen analyse eller sporing';
+
+  @override
+  String get settingsNoTracking =>
+      'Fermata har ingen analyse, ingen reklamer, ingen nedbrudsrapportering og ingen egen konto. Intet om, hvad du lytter til, forlader enheden, medmindre en tjeneste, du har forbundet, har brug for det for at afspille musikken.';
+
+  @override
+  String get settingsNetworkIntro => 'Fermata forbinder kun til:';
+
+  @override
+  String get settingsNetworkProviders =>
+      'De musiktjenester, du bruger — for at søge, streame, læse dine playlister og importere. Forespørgsler går direkte fra enheden til tjenesten.';
+
+  @override
+  String get settingsNetworkLyricsOn =>
+      'LRCLIB, for at slå sangtekster op til nummeret, der spiller (titel, kunstner, album og varighed sendes).';
+
+  @override
+  String get settingsNetworkLyricsOff =>
+      'LRCLIB kontaktes ikke, fordi sangtekster er slået fra.';
+
+  @override
+  String get settingsNetworkUpdatesOn =>
+      'GitHub, én gang om dagen, for at se om der findes en ny version af Fermata. Intet om dig sendes.';
+
+  @override
+  String get settingsNetworkUpdatesOff =>
+      'GitHub kun når du trykker “Søg nu” under Opdateringer.';
+
+  @override
+  String get settingsNetworkArtwork =>
+      'Tjenesternes billedservere, for at hente covers (gemmes i cover-cachen).';
+
+  @override
+  String get settingsNetworkSignIn =>
+      'En tjenestes egen login-side i din browser, når du forbinder den.';
+
+  @override
+  String get settingsYourDataGroup => 'Dine data';
+
+  @override
+  String get settingsDeleteHistory => 'Slet lyttehistorik';
+
+  @override
+  String get settingsDeleteHistoryHint =>
+      'Fjerner alle afspilninger fra Historik og statistik.';
+
+  @override
+  String get settingsDeleteHistoryTitle => 'Slet lyttehistorik?';
+
+  @override
+  String get settingsDeleteHistoryBody =>
+      'Historik, “Senest afspillet” og lyttestatistik slettes. Dine mixes starter forfra.';
+
+  @override
+  String get settingsDeleteHistoryDone => 'Lyttehistorik slettet';
+
+  @override
+  String get settingsClearSearches => 'Ryd søgehistorik';
+
+  @override
+  String get settingsClearSearchesHint => 'Fjerner dine seneste søgninger.';
+
+  @override
+  String get settingsClearSearchesTitle => 'Ryd søgehistorik?';
+
+  @override
+  String get settingsClearSearchesBody => 'Dine seneste søgninger fjernes.';
+
+  @override
+  String get settingsClearSearchesDone => 'Søgehistorik ryddet';
+
+  @override
+  String get settingsClearAction => 'Ryd';
+
+  @override
+  String get settingsExportSettings => 'Eksportér indstillinger';
+
+  @override
+  String get settingsExportSettingsHint =>
+      'Gem dine indstillinger som en fil. Den indeholder ingen adgangskoder eller logins.';
+
+  @override
+  String get settingsImportSettings => 'Importér indstillinger';
+
+  @override
+  String get settingsImportSettingsHint =>
+      'Erstat dine indstillinger med en eksporteret fil.';
+
+  @override
+  String get settingsImportSettingsDone => 'Indstillinger importeret';
+
+  @override
+  String get settingsExportAction => 'Eksportér';
+
+  @override
+  String get settingsImportAction => 'Importér';
+
+  @override
+  String get settingsBackupLibrary => 'Sikkerhedskopiér bibliotek';
+
+  @override
+  String get settingsBackupLibraryHint =>
+      'Playlister, favoritter, historik og nummerlinks som én fil. Musikfiler er ikke med.';
+
+  @override
+  String get settingsRestoreLibrary => 'Gendan bibliotek';
+
+  @override
+  String get settingsRestoreLibraryHint =>
+      'Hent en sikkerhedskopi af biblioteket tilbage.';
+
+  @override
+  String get settingsRestoreLibraryTitle =>
+      'Gendan sikkerhedskopi af biblioteket?';
+
+  @override
+  String get settingsRestoreLibraryBody =>
+      'Flet tilføjer sikkerhedskopien til dit nuværende bibliotek. Erstat fjerner først dine nuværende playlister, favoritter og historik.';
+
+  @override
+  String get settingsRestoreMerge => 'Flet';
+
+  @override
+  String get settingsRestoreReplace => 'Erstat';
+
+  @override
+  String get settingsRestoreLibraryDone => 'Bibliotek gendannet';
+
+  @override
+  String get settingsDeleteAll => 'Slet alle data';
+
+  @override
+  String get settingsDeleteAllHint =>
+      'Playlister, favoritter, historik, søgninger og logins. Dine musikfiler bliver på disken.';
+
+  @override
+  String get settingsDeleteAllTitle => 'Slet alle dine data?';
+
+  @override
+  String get settingsDeleteAllBody =>
+      'Dette sletter dine playlister, favoritter, lytte- og søgehistorik, nummerlinks og gemte metadata og logger dig ud af alle tjenester. Musikfiler på din disk slettes aldrig, og dine indstillinger bevares. Det kan ikke fortrydes.';
+
+  @override
+  String get settingsDeleteAllWord => 'SLET';
+
+  @override
+  String get settingsDeleteAllAction => 'Slet alt';
+
+  @override
+  String get settingsDeleteAllDone => 'Alle dine data blev slettet';
+
+  @override
+  String get settingsLanguageSystem => 'Systemets sprog';
+
+  @override
+  String get settingsLanguageSystemHint =>
+      'Følger din enhed. Sprog, Fermata endnu ikke har, falder tilbage til engelsk.';
+
+  @override
+  String get settingsMotion => 'Bevægelse';
+
+  @override
+  String get settingsMotionHint =>
+      '“System” følger enhedens indstilling for reduceret bevægelse.';
+
+  @override
+  String get settingsMotionSystem => 'System';
+
+  @override
+  String get settingsMotionReduce => 'Reducér';
+
+  @override
+  String get settingsMotionFull => 'Fuld';
+
+  @override
+  String get settingsTextScale => 'Tekststørrelse';
+
+  @override
+  String get settingsTextScaleHint => 'Oven i systemets tekststørrelse.';
+
+  @override
+  String get settingsTextScalePreviewTitle => 'Natkørsel';
+
+  @override
+  String get settingsTextScalePreviewBody =>
+      'Sådan kommer titler og beskrivelser til at se ud.';
+
+  @override
+  String get settingsLargerTargets => 'Større trykområder';
+
+  @override
+  String get settingsLargerTargetsHint =>
+      'Større knapper og rækker, der er nemmere at ramme.';
+
+  @override
+  String get settingsAccessibilityNote =>
+      'Fermata virker med skærmlæsere (TalkBack, Orca, Oplæser) og kan bruges helt med tastaturet på computeren.';
+
+  @override
+  String get settingsCurrentVersion => 'Installeret version';
+
+  @override
+  String get settingsAutoUpdateCheck => 'Søg automatisk efter opdateringer';
+
+  @override
+  String get settingsAutoUpdateCheckHint =>
+      'Slået fra som standard. Én gang om dagen spørger Fermata GitHub om den nyeste version; intet om dig sendes. Fermata installerer aldrig noget af sig selv.';
+
+  @override
+  String get settingsCheckNow => 'Søg nu';
+
+  @override
+  String get settingsCheckNowHint =>
+      'Spørger GitHub én gang om den nyeste version.';
+
+  @override
+  String get settingsCheckNowAction => 'Søg';
+
+  @override
+  String settingsUpToDate(String version) {
+    return 'Du har den nyeste version ($version).';
+  }
+
+  @override
+  String settingsUpdateAvailable(String version) {
+    return 'Version $version er tilgængelig.';
+  }
+
+  @override
+  String get settingsNoReleases => 'Der er ikke udgivet nogen version endnu.';
+
+  @override
+  String get settingsUpdateFailed =>
+      'Kunne ikke søge efter opdateringer. Tjek din forbindelse, og prøv igen.';
+
+  @override
+  String get settingsUpdateHowLinux =>
+      'For at opdatere skal du hente den nyere version og køre dens setup.sh på samme måde, som du installerede Fermata. Dit bibliotek, dine indstillinger og logins bevares.';
+
+  @override
+  String get settingsUpdateHowWindows =>
+      'For at opdatere skal du hente og køre den nyere setup.exe. Den erstatter den installerede version og bevarer dit bibliotek, dine indstillinger og logins.';
+
+  @override
+  String get settingsUpdateHowAndroid =>
+      'For at opdatere skal du installere den nyere app.apk oven på denne. Dine data bevares.';
+
+  @override
+  String get settingsReleaseNotes => 'Udgivelsesnoter';
+
+  @override
+  String get settingsTagline =>
+      'En rolig musikafspiller, der sætter dine egne filer først — sammen med de tjenester, du bruger.';
+
+  @override
+  String get settingsVersion => 'Version';
+
+  @override
+  String get settingsPlatform => 'Platform';
+
+  @override
+  String get settingsLogFile => 'Logfil';
+
+  @override
+  String get settingsExportDiagnostics => 'Eksportér diagnosticering';
+
+  @override
+  String get settingsExportDiagnosticsHint =>
+      'Gemmer de seneste logs og et resumé af din opsætning i en fil, du kan vedhæfte en fejlrapport. Indeholder ingen adgangskoder, logins eller nøgler.';
+
+  @override
+  String get settingsLicenses => 'Open source-licenser';
+
+  @override
+  String get settingsLicensesHint =>
+      'Licenserne for den software, Fermata er bygget med.';
+
+  @override
+  String get settingsLicensesAction => 'Vis';
+
+  @override
+  String get settingsAttributions => 'Kildeangivelser';
+
+  @override
+  String get settingsAttributionSoundCloud =>
+      'SoundCloud: numre og covers leveres af SoundCloud og deres skabere. Hvert SoundCloud-nummer linker til nummeret og uploaderen på soundcloud.com.';
+
+  @override
+  String get settingsAttributionDeezer =>
+      'Deezer: katalogdata og 30 sekunders smagsprøver leveres af Deezer.';
+
+  @override
+  String get settingsAttributionAudius =>
+      'Audius: numre streames fra Audius-netværket og tilhører deres kunstnere.';
+
+  @override
+  String get settingsAttributionJamendo =>
+      'Jamendo: musik leveres af Jamendo under hver kunstners Creative Commons-licens.';
+
+  @override
+  String get settingsAttributionLrclib =>
+      'Sangtekster: leveres af LRCLIB (lrclib.net), en gratis fællesskabsdatabase med sangtekster.';
+
+  @override
+  String get settingsAttributionSpotifyYouTube =>
+      'Indhold fra Spotify og YouTube Music vises, som tjenesterne leverer det, og åbnes i deres egne apps.';
+
+  @override
+  String get settingsCredits => 'Tak til';
+
+  @override
+  String get settingsCreditsBody =>
+      'Lavet med Flutter. Skrifttype: Manrope (SIL Open Font License). Afspilning med libmpv/media_kit på computer og ExoPlayer/just_audio på Android. Tak til alle, der bygger den open source-software, der står under licenser.';
+
+  @override
   String get navHome => 'Hjem';
 
   @override

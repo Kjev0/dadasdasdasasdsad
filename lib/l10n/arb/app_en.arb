@@ -313,6 +313,758 @@
   "playerSiloTitle": "Start a new queue?",
   "playerSiloMessage": "SoundCloud tracks play in their own queue (SoundCloud's terms). Start a new queue?",
   "playerSiloConfirm": "Start new queue",
+  "settingsTitle": "Settings",
+  "settingsSearchHint": "Search settings",
+  "settingsSearchNoResults": "No settings match “{query}”.",
+  "@settingsSearchNoResults": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRestoreAll": "Restore all defaults",
+  "settingsRestoreAllTitle": "Restore all settings?",
+  "settingsRestoreAllBody": "Every setting goes back to its default. Your library, playlists, connected accounts and download folder are kept.",
+  "settingsRestoreSection": "Restore defaults for this section",
+  "settingsRestoreSectionTitle": "Restore “{section}” defaults?",
+  "@settingsRestoreSectionTitle": {
+    "placeholders": {
+      "section": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRestoreSectionBody": "The settings in this section go back to their defaults.",
+  "settingsRestoredToast": "Defaults restored",
+  "settingsBack": "Back to settings",
+  "settingsSectionUnavailable": "This section isn't available on this device.",
+  "settingsOn": "On",
+  "settingsOff": "Off",
+  "settingsValueFull": "Full",
+  "settingsValueReduced": "Reduced",
+  "settingsValueLow": "Low",
+  "settingsValueMedium": "Medium",
+  "settingsValueHigh": "High",
+  "settingsValueNormal": "Normal",
+  "settingsValueLossless": "Lossless",
+  "settingsSaved": "Saved",
+  "settingsNotAvailable": "Not available",
+  "settingsOpenLinkFailed": "Couldn't open the link.",
+  "settingsSavedTo": "Saved to {location}",
+  "@settingsSavedTo": {
+    "placeholders": {
+      "location": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsThemeMode": "Theme",
+  "settingsThemeDark": "Dark",
+  "settingsThemeLight": "Light",
+  "settingsThemeSystem": "System",
+  "settingsAccent": "Accent colour",
+  "settingsAccentGold": "Gold",
+  "settingsAccentCoral": "Coral",
+  "settingsAccentMint": "Mint",
+  "settingsAccentIce": "Ice",
+  "settingsAccentMono": "Monochrome",
+  "settingsDensity": "Density",
+  "settingsDensityComfortable": "Comfortable",
+  "settingsDensityCompact": "Compact",
+  "settingsArtworkBackdrop": "Artwork backdrop",
+  "settingsArtworkBackdropHint": "Shows a soft, tinted version of the cover behind Now Playing.",
+  "settingsHighContrast": "High contrast",
+  "settingsHighContrastHint": "Stronger text, borders and accent colours.",
+  "settingsGlassIntro": "An optional glass-inspired look: the sidebar, player and sheets become translucent and let your artwork shine through. Text always stays readable.",
+  "settingsGlassToggle": "Liquid Glass",
+  "settingsGlassToggleHint": "Off by default. Translucent surfaces with a soft blur.",
+  "settingsGlassIntensity": "Intensity",
+  "settingsGlassIntensityHint": "How much of the background shows through.",
+  "settingsGlassIntensityDisabled": "Turn on Liquid Glass to adjust the intensity.",
+  "settingsGlassBlurOff": "Blur is turned off by the current performance mode, so glass will use a lighter translucent style.",
+  "settingsGlassReadability": "Fermata raises the opacity of glass surfaces automatically whenever that is needed to keep text readable.",
+  "settingsSecondsShort": "{seconds} s",
+  "@settingsSecondsShort": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsTransitionsGroup": "Transitions",
+  "settingsCrossfade": "Crossfade",
+  "settingsCrossfadeHint": "Blend the end of a track into the next one.",
+  "settingsGapless": "Gapless playback",
+  "settingsGaplessHint": "No silence between tracks that belong together, like live albums.",
+  "settingsGaplessCrossfadeNote": "Not used while crossfade is on — crossfade already joins the tracks.",
+  "settingsPreviousThreshold": "Restart before going back",
+  "settingsPreviousThresholdHint": "“Previous” restarts the track when more than {seconds} s have played.",
+  "@settingsPreviousThresholdHint": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsPreviousThresholdAlways": "“Previous” always goes to the previous track.",
+  "settingsVolumeGroup": "Volume & speed",
+  "settingsNormalize": "Volume normalization",
+  "settingsNormalizeHint": "Plays tracks at a similar loudness.",
+  "settingsNormalizationMode": "Normalization method",
+  "settingsNormalizationModeDisabled": "Turn on volume normalization first.",
+  "settingsNormalizationTrack": "ReplayGain (track)",
+  "settingsNormalizationTrackHint": "Uses the loudness information stored in each file.",
+  "settingsNormalizationAlbum": "ReplayGain (album)",
+  "settingsNormalizationAlbumHint": "Keeps the intended differences between tracks of one album.",
+  "settingsNormalizationLoudness": "Loudness (EBU R128)",
+  "settingsNormalizationLoudnessHint": "Measures loudness while playing; works for streams without tags.",
+  "settingsPreamp": "Pre-amplification",
+  "settingsPreampHint": "Extra gain applied on top of normalization.",
+  "settingsSpeed": "Playback speed",
+  "settingsSpeedHint": "Applies now and is remembered for next time.",
+  "settingsStartupQueueGroup": "Queue",
+  "settingsRestoreQueue": "Restore queue on startup",
+  "settingsRestoreQueueHint": "Continue where you left off, including the position in the track.",
+  "settingsAutoplay": "Start playing on startup",
+  "settingsAutoplayHint": "Resume the restored queue as soon as Fermata opens.",
+  "settingsAutoplayDisabled": "Needs “Restore queue on startup”.",
+  "settingsSmartQueue": "Smart queue",
+  "settingsSmartQueueHint": "When the queue runs out, add similar tracks.",
+  "settingsSkipUnplayable": "Skip unplayable tracks",
+  "settingsSkipUnplayableHint": "Move on automatically when a track can't be played, and tell you why.",
+  "settingsExtrasGroup": "Sleep timer & lyrics",
+  "settingsSleepFade": "Fade out at sleep timer",
+  "settingsSleepFadeHint": "Lower the volume gently before the sleep timer pauses.",
+  "settingsLyrics": "Lyrics",
+  "settingsLyricsHint": "Look up lyrics on LRCLIB and read lyrics stored in your files.",
+  "settingsInterruptionsGroup": "Headphones & interruptions",
+  "settingsPauseOnDisconnect": "Pause when headphones disconnect",
+  "settingsPauseOnDisconnectHint": "Stops the music from suddenly playing through the speaker.",
+  "settingsResumeAfterInterruption": "Resume after interruptions",
+  "settingsResumeAfterInterruptionHint": "Continue after a call or another app's sound has finished.",
+  "settingsDuck": "Lower volume for short sounds",
+  "settingsDuckHint": "Navigation prompts and notifications play over quieter music instead of pausing it.",
+  "settingsQualityIntro": "Choose how good streams and downloads should sound. Higher quality uses more data and storage.",
+  "settingStreamingQuality": "Streaming quality",
+  "settingsStreamingQualityHint": "On Wi-Fi and wired connections.",
+  "settingsMobileQuality": "Mobile data quality",
+  "settingsMobileQualityHint": "On mobile data and other metered connections.",
+  "settingsDownloadQuality": "Download quality",
+  "settingsDownloadQualityHint": "For tracks a source allows you to download.",
+  "settingsQualityProviders": "Each provider decides which qualities it offers. Fermata uses the closest available quality, which can be lower than your choice — Deezer, for example, only offers 30-second previews.",
+  "settingsOutputGroup": "Output",
+  "settingsOutputDevice": "Output device",
+  "settingsOutputDeviceHint": "Where Fermata plays its sound.",
+  "settingsOutputDeviceSystem": "System default",
+  "settingsOutputDeviceDefault": "{name} (default)",
+  "@settingsOutputDeviceDefault": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsOutputDevicesFailed": "Couldn't list the output devices.",
+  "settingsOutputDeviceFailed": "Couldn't switch to this output device.",
+  "settingsDownloadFolder": "Download folder",
+  "settingsDownloadFolderChange": "Change…",
+  "settingsDownloadFolderMoving": "Moving…",
+  "settingsDownloadFolderPick": "Choose a folder for downloads",
+  "settingsDownloadFolderMoveTitle": "Move downloads?",
+  "settingsDownloadFolderMoveBody": "Your downloaded tracks will be moved to {path}. This can take a while for large collections; you can keep listening meanwhile.",
+  "@settingsDownloadFolderMoveBody": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsDownloadFolderMove": "Move downloads",
+  "settingsDownloadFolderMoved": "Downloads moved",
+  "settingsDownloadFolderFailed": "Couldn't move the downloads. Nothing was changed.",
+  "settingsDownloadFolderFailedDetail": "Couldn't move the downloads: {detail}",
+  "@settingsDownloadFolderFailedDetail": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "settingWifiOnly": "Download on Wi-Fi only",
+  "settingsWifiOnlyHint": "Downloads wait for Wi-Fi or a wired connection.",
+  "settingsWarnMobile": "Warn before using mobile data",
+  "settingsWarnMobileHint": "Ask before a download starts on a metered connection.",
+  "settingsWarnMobileDisabled": "Not needed while downloads wait for Wi-Fi.",
+  "settingsMaxConcurrent": "Simultaneous downloads",
+  "settingsMaxConcurrentHint": "How many tracks download at the same time.",
+  "settingsVerifyIntegrity": "Verify downloads",
+  "settingsVerifyIntegrityHint": "Check every finished file before it's used, so a broken download never plays.",
+  "settingsNotifyComplete": "Notify when downloads finish",
+  "settingsNotifyCompleteHint": "A system notification when a batch of downloads is done.",
+  "settingsNotificationsUnsupported": "System notifications aren't available on this device; Fermata shows the progress in the app instead.",
+  "settingsOfflineGroup": "What can be offline",
+  "settingsOfflineIntro": "Every track belongs to one of four categories. Fermata follows each provider's terms and never stores streams as files.",
+  "settingsOfflineUserOwned": "Music files you added from your own folders. Always available offline.",
+  "settingsOfflineDownloadable": "The provider allows downloading this track (for example Audius or Jamendo tracks the artist made downloadable). You start each download yourself.",
+  "settingsOfflineStreamOnly": "Can be played while you're online, but the provider doesn't allow storing it — SoundCloud, for example.",
+  "settingsOfflineUnavailable": "Can't be made available offline at all, such as previews or tracks that only play in the provider's own app.",
+  "settingsAutoDownloadNote": "Automatic downloads (for example for a whole playlist) only include sources that permit them: your own files. None of the streaming providers currently allow automatic downloads.",
+  "settingsUsageGroup": "Usage",
+  "settingsUsageFailed": "Couldn't calculate the storage usage.",
+  "settingsUsageTotal": "{size} used by Fermata",
+  "@settingsUsageTotal": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsUsageFree": "{size} free on this disk",
+  "@settingsUsageFree": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsUsageDownloads": "Downloads ({count})",
+  "@settingsUsageDownloads": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsUsageArtwork": "Artwork cache",
+  "settingsUsageStreamCache": "Stream cache",
+  "settingsUsageDatabase": "Library database",
+  "settingsUsageLimit": "Downloads use {used} of {limit}",
+  "@settingsUsageLimit": {
+    "placeholders": {
+      "used": {
+        "type": "String"
+      },
+      "limit": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRefresh": "Refresh",
+  "settingsLimitsGroup": "Limits",
+  "settingsDownloadLimit": "Download storage limit",
+  "settingsDownloadLimitHint": "The most space downloads may use.",
+  "settingsUnlimited": "Unlimited",
+  "settingsAutoCleanup": "Clean up automatically",
+  "settingsAutoCleanupHint": "When the limit is reached, remove the downloads you played least recently.",
+  "settingsAutoCleanupDisabled": "Set a storage limit to use automatic clean-up.",
+  "settingsArtworkCache": "Artwork cache size",
+  "settingsArtworkCacheHint": "Covers are kept so they load instantly and work offline.",
+  "settingsMaintenanceGroup": "Maintenance",
+  "settingsCleanUpNow": "Clean up now",
+  "settingsCleanUpNowHint": "Apply the storage limit right away.",
+  "settingsCleanUpNowAction": "Clean up",
+  "settingsNothingToClean": "Nothing to clean up — you're within the limit.",
+  "settingsFreed": "Freed {size}",
+  "@settingsFreed": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsClearArtwork": "Clear artwork cache",
+  "settingsClearArtworkHint": "Covers will be downloaded again when needed.",
+  "settingsClearArtworkAction": "Clear",
+  "settingsVerifyDownloads": "Verify downloads",
+  "settingsVerifyDownloadsHint": "Check every downloaded file for damage.",
+  "settingsVerifyDownloadsAction": "Verify",
+  "settingsVerifyOk": "All downloads are intact.",
+  "settingsVerifyBroken": "{count, plural, =1{1 damaged download found. Retry it on the Downloads page.} other{{count} damaged downloads found. Retry them on the Downloads page.}}",
+  "@settingsVerifyBroken": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsMinutesShort": "{minutes} min",
+  "@settingsMinutesShort": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsHoursShort": "{hours} h",
+  "@settingsHoursShort": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsModeBalanced": "Balanced",
+  "settingsModePerformance": "Performance",
+  "settingsModeBatterySaver": "Battery saver",
+  "settingsModeDataSaver": "Data saver",
+  "settingsModeVisualQuality": "Visual quality",
+  "settingsModeCustom": "Custom",
+  "settingsModeBalancedHint": "The default: full animations, blur and medium artwork.",
+  "settingsModePerformanceHint": "Reduces animations and turns off blur and artwork prefetching.",
+  "settingsModeBatterySaverHint": "Turns off animations, blur, preloading and background sync, and uses smaller artwork.",
+  "settingsModeDataSaverHint": "Lowers streaming quality, waits for Wi-Fi to download and stops preloading.",
+  "settingsModeVisualQualityHint": "Full animations, blur and the sharpest artwork.",
+  "settingsModeCustomHint": "Your own combination of the settings below.",
+  "settingsPerformanceIntro": "Pick a mode to change several settings at once. Changing any single setting below switches to Custom.",
+  "settingsActiveNow": "Active now: {mode}",
+  "@settingsActiveNow": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsActiveNowReducedMotion": "Your system or accessibility settings ask for reduced motion, so animations are reduced.",
+  "settingsGranularGroup": "Individual settings",
+  "settingsGranularIntro": "Adjusting any of these switches the mode to Custom.",
+  "settingAnimations": "Animations",
+  "settingsAnimationsHint": "Transitions and motion throughout the app.",
+  "settingBlur": "Blur",
+  "settingsBlurHint": "Background blur for glass and Now Playing. Off uses plain translucent surfaces.",
+  "settingArtworkQuality": "Artwork quality",
+  "settingsArtworkQualityHint": "Lower quality decodes smaller images and uses less memory.",
+  "settingPreloadNext": "Preload next track",
+  "settingsPreloadNextHint": "Prepares the next track early for seamless transitions.",
+  "settingPrefetchArtwork": "Prefetch artwork",
+  "settingsPrefetchArtworkHint": "Downloads covers of upcoming tracks ahead of time.",
+  "settingBackgroundSync": "Background sync",
+  "settingsBackgroundSyncHint": "Refreshes connected services, recommendations and permitted downloads periodically.",
+  "settingsSyncInterval": "Sync every",
+  "settingsSyncIntervalDisabled": "Background sync is off.",
+  "settingsSaversIntro": "Shortcuts into the matching performance modes. Each one lists exactly what it changes.",
+  "settingsSaverTurnOn": "Use this mode",
+  "settingsSaverTurnOff": "Turn off (back to Balanced)",
+  "settingsBatterySaverNote": "Reduces the work Fermata does while you listen. Playback itself is not affected.",
+  "settingsDataSaverNote": "Also sets streaming quality to Low and downloads to Wi-Fi only. Turning it off keeps those two settings; change them under Audio quality and Downloads.",
+  "settingsSaversAndroidNote": "Android's own battery optimization can also stop music in the background. You can allow Fermata to keep running under Background playback.",
+  "settingsSaversCustomNote": "Want something in between? Pick Custom under Performance and adjust each setting.",
+  "settingsServicesIntro": "Connect the services you use. Each card says exactly what Fermata can and can't do with that service.",
+  "settingsTokensNotPersistent": "Your system has no secure key storage (for example GNOME Keyring or KWallet), so sign-ins are only kept until Fermata closes and you'll need to reconnect after a restart. Install and unlock a keyring to stay signed in.",
+  "settingsNoPasswords": "Fermata never asks for your passwords. You sign in on the service's own website, and Fermata only keeps the access it was granted, in your system's secure storage.",
+  "settingsStatusNotRequired": "No account needed",
+  "settingsStatusCredentialsMissing": "Not set up",
+  "settingsStatusNotConnected": "Not connected",
+  "settingsStatusConnecting": "Connecting…",
+  "settingsStatusConnected": "Connected",
+  "settingsStatusExpired": "Sign-in expired",
+  "settingsStatusError": "Error",
+  "settingsStatusSemantics": "Status: {status}",
+  "@settingsStatusSemantics": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsAccount": "Signed in as {name}",
+  "@settingsAccount": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsScopes": "Access granted: {scopes}",
+  "@settingsScopes": {
+    "placeholders": {
+      "scopes": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsExpiredHint": "Your {service} sign-in has expired. Reconnect to continue.",
+  "@settingsExpiredHint": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsErrorDetail": "Problem: {detail}",
+  "@settingsErrorDetail": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCredentialsMissingHint": "{service} needs developer credentials (an app registration) before you can use it. Enter them below — they are not your account password.",
+  "@settingsCredentialsMissingHint": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCanSearch": "Search its catalog",
+  "settingsCanStream": "Play full tracks in Fermata",
+  "settingsCanPreview": "Play previews in Fermata",
+  "settingsCanExternal": "Open tracks in {service} for playback",
+  "@settingsCanExternal": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCanDownload": "Download single tracks the artist allows",
+  "settingsCanLibrary": "Read your playlists and liked tracks",
+  "settingsCanImport": "Import playlists",
+  "settingsCanIsrc": "Precise matching by ISRC",
+  "settingsCanDiscover": "Recommendations, charts and new releases",
+  "settingsCantStream": "Can't play full tracks inside Fermata",
+  "settingsCantDownload": "No downloads",
+  "settingsSiloed": "{service} tracks play in their own queue ({service}'s terms)",
+  "@settingsSiloed": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCantLibrary": "No access to your account's library",
+  "settingsConnect": "Connect",
+  "settingsReconnect": "Reconnect",
+  "settingsDisconnect": "Disconnect",
+  "settingsConnectingHint": "Finish signing in in your browser. Fermata never sees your password.",
+  "settingsConnected": "Connected to {service}",
+  "@settingsConnected": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsConnectFailed": "Couldn't connect to {service}.",
+  "@settingsConnectFailed": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsDisconnectTitle": "Disconnect {service}?",
+  "@settingsDisconnectTitle": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsDisconnectBody": "Fermata forgets its access to your {service} account. Imported playlists stay in your library.",
+  "@settingsDisconnectBody": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsTerms": "Terms",
+  "settingsCredOverride": "Use your own developer credentials",
+  "settingsCredTitle": "Developer credentials",
+  "settingsCredIntro": "Values from the app you registered with {service}. They identify Fermata to {service}; your own account still signs in on {service}'s website.",
+  "@settingsCredIntro": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCredOrigin": "Currently used: {origin}",
+  "@settingsCredOrigin": {
+    "placeholders": {
+      "origin": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCredOriginNone": "none",
+  "settingsCredOriginBuild": "built into this version of Fermata",
+  "settingsCredOriginFile": "the file {path}",
+  "@settingsCredOriginFile": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCredOriginUser": "entered by you",
+  "settingsCredRegister": "Register an app",
+  "settingsCredRedirects": "Redirect URIs to register",
+  "settingsCredRedirectDesktop": "Desktop (Linux and Windows)",
+  "settingsCredRedirectAndroid": "Android",
+  "settingsCredRedirectCustom": "Your custom redirect URI",
+  "settingsCredClientId": "Client ID",
+  "settingsCredClientSecret": "Client secret",
+  "settingsCredApiKey": "API key",
+  "settingsCredRedirectUri": "Redirect URI",
+  "settingsCredOptional": "optional",
+  "settingsCredShow": "Show",
+  "settingsCredHide": "Hide",
+  "settingsCredRequired": "Please fill in: {fields}",
+  "@settingsCredRequired": {
+    "placeholders": {
+      "fields": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCredSaved": "Credentials for {service} saved",
+  "@settingsCredSaved": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCredSaveFailed": "Couldn't save the credentials.",
+  "settingsCredRemoved": "Your credentials were removed",
+  "settingsCredRemove": "Remove mine",
+  "settingsCredNoPasswords": "Never enter your account password here.",
+  "settingsCopy": "Copy",
+  "settingsCopied": "Copied",
+  "settingsProviderOrder": "Provider order",
+  "settingsProviderOrderHint": "Used to order search results, to pick a stream when a track exists on several services, and as match targets for imports. Turn a service off to leave it out everywhere.",
+  "settingsDragToReorder": "Drag to reorder",
+  "settingsMoveUp": "Move up",
+  "settingsMoveDown": "Move down",
+  "settingsSourceEnabled": "Use {service}",
+  "@settingsSourceEnabled": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsPreferSoundCloud": "Prefer SoundCloud in discovery",
+  "settingsPreferSoundCloudHint": "Build mixes and recommendations from SoundCloud first when it's connected.",
+  "settingsImportIntro": "How Fermata finds your tracks on other services when you import a playlist. These are the defaults; you can change them for each import.",
+  "settingsReviewMode": "Review",
+  "settingsReviewAuto": "Accept confident matches",
+  "settingsReviewAutoHint": "Matches above the threshold are accepted; you review the rest.",
+  "settingsReviewAll": "Review every match",
+  "settingsReviewAllHint": "Nothing is accepted until you confirm it.",
+  "settingsAutoAcceptThreshold": "Auto-accept threshold",
+  "settingsAutoAcceptThresholdHint": "How sure Fermata must be before it accepts a match by itself.",
+  "settingsAutoAcceptThresholdDisabled": "Only used when confident matches are accepted automatically.",
+  "settingsSkipUnavailable": "Skip unavailable tracks",
+  "settingsSkipUnavailableHint": "Leave out tracks that can't be played on any target service.",
+  "settingsPreferredProvider": "Preferred service",
+  "settingsPreferredProviderHint": "When several services have the track, prefer this one.",
+  "settingsNoPreference": "No preference (use provider order)",
+  "settingsAllowPreviewOnly": "Allow preview-only matches",
+  "settingsAllowPreviewOnlyHint": "Accept matches that only play a short preview, such as Deezer.",
+  "settingsImportVersionsNote": "A remix, live, acoustic or other version is never accepted automatically when the original was a different version.",
+  "settingsImportPlaylist": "Import a playlist",
+  "settingsNotifyTrackChange": "When the track changes",
+  "settingsNotifyTrackChangeHint": "A small desktop notification with the new track.",
+  "settingsNotifyDownloads": "Downloads",
+  "settingsNotifyDownloadsHint": "When downloads finish or fail.",
+  "settingsMediaNotificationNote": "The playback controls notification is part of background playback and is always shown while music plays.",
+  "settingsPermissionGroup": "Permission",
+  "settingsNotificationPermission": "Notifications",
+  "settingsNotificationPermissionMissing": "Not allowed. Android needs your permission before Fermata can show playback controls and download messages.",
+  "settingsPermissionAllowed": "Allowed",
+  "settingsAllow": "Allow",
+  "settingsOpenSystemSettings": "System settings",
+  "settingsBackgroundIntro": "Fermata plays in a foreground service with a media notification, so music keeps going when you leave the app or lock the screen.",
+  "settingsBackgroundDesktop": "Closing the window keeps the music playing. Fermata stays in the system tray — or minimized when there is no tray — and your media keys keep working. Choose Quit in the tray menu to stop completely.",
+  "settingsRestartRequired": "Restart Fermata to apply the changed background setting.",
+  "settingsStopServiceOnPause": "Let Android stop playback when paused",
+  "settingsStopServiceOnPauseHint": "While paused, the notification can be swiped away and Android may close Fermata to save battery. Applies after restarting Fermata.",
+  "settingsResumeOnHeadset": "Resume when headphones connect",
+  "settingsResumeOnHeadsetHint": "Continue playing when headphones or a Bluetooth device reconnect shortly after they were disconnected.",
+  "settingsBatteryGroup": "Battery optimization",
+  "settingsBatteryOptimized": "Battery optimization is on",
+  "settingsBatteryOptimizedHint": "Android may stop music in the background on some devices. Allowing background activity is optional and only changes this for Fermata.",
+  "settingsBatteryUnrestricted": "Background activity is allowed",
+  "settingsBatteryUnrestrictedHint": "Android won't restrict Fermata in the background.",
+  "settingsAllowBackground": "Allow background activity",
+  "settingsOemNote": "Some manufacturers add their own battery limits on top of Android's. If music still stops in the background, allow Fermata in your phone's battery settings as well — dontkillmyapp.com explains how for each brand.",
+  "settingsCloseBehavior": "When closing the window",
+  "settingsCloseToTray": "Keep playing in the tray",
+  "settingsCloseToTrayHint": "The window hides; music keeps playing.",
+  "settingsCloseMinimize": "Keep playing minimized",
+  "settingsCloseMinimizeHint": "No tray is available, so the window is minimized; music keeps playing.",
+  "settingsCloseAsk": "Ask every time",
+  "settingsCloseAskHint": "Choose between keeping the music playing and quitting.",
+  "settingsCloseQuit": "Quit Fermata",
+  "settingsCloseQuitHint": "Playback stops and Fermata closes.",
+  "settingsShowTrayIcon": "Show tray icon",
+  "settingsShowTrayIconHint": "Quick controls and the current track in the system tray.",
+  "settingsRememberWindow": "Remember window size and position",
+  "settingsRememberWindowHint": "Opens where you left it last time.",
+  "settingsQuitNote": "To stop completely, choose Quit in the tray menu — or pick “Ask every time” above to get a Quit button when you close the window.",
+  "settingsLaunchAtLogin": "Launch at login",
+  "settingsLaunchAtLoginHint": "Start Fermata when you sign in to your computer.",
+  "settingsLaunchAtLoginUnsupported": "Not available on this system.",
+  "settingsLaunchAtLoginFailed": "Couldn't change the login setting.",
+  "settingsStartMinimized": "Start minimized",
+  "settingsStartMinimizedHint": "Start in the tray (or minimized) instead of showing the window.",
+  "settingsShortcutsIntro": "Click a shortcut to record a new one. Conflicts are shown in red.",
+  "settingsShortcutsInApp": "In Fermata",
+  "settingsShortcutsGlobal": "Global shortcuts",
+  "settingsShortcutsGlobalHint": "Work everywhere, even when Fermata is in the background.",
+  "settingsGlobalHotkeys": "Use global shortcuts",
+  "settingsGlobalHotkeysHint": "Fermata registers these keys with your desktop.",
+  "settingsShortcutNone": "Not set",
+  "settingsShortcutConflict": "Also used by: {actions}",
+  "@settingsShortcutConflict": {
+    "placeholders": {
+      "actions": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsShortcutChangeSemantics": "{action}: {binding}. Change shortcut",
+  "@settingsShortcutChangeSemantics": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      },
+      "binding": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsShortcutMore": "More options",
+  "settingsShortcutChange": "Record new shortcut",
+  "settingsShortcutReset": "Reset to default",
+  "settingsShortcutRemove": "Remove shortcut",
+  "settingsShortcutRecordTitle": "Shortcut for “{action}”",
+  "@settingsShortcutRecordTitle": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsShortcutRecordHint": "Press the key combination you want to use. Press Esc to cancel.",
+  "settingsShortcutWaiting": "Waiting for keys…",
+  "settingsShortcutNeedsModifier": "Global shortcuts need Ctrl, Alt, Shift or Super, otherwise they would block typing in other apps.",
+  "settingsFileInvalid": "This file isn't a Fermata file, or it is damaged.",
+  "settingsRecordHistory": "Listening history",
+  "settingsRecordHistoryHint": "Remember what you play, on this device only. Used for History, Recently played and your mixes.",
+  "settingsPersonalized": "Personalized recommendations",
+  "settingsPersonalizedHint": "Mixes and suggestions are calculated on this device from your history and favorites. Off shows only trending music, new releases and genres.",
+  "settingsSaveSearches": "Search history",
+  "settingsSaveSearchesHint": "Show your recent searches in Search.",
+  "settingsNoTrackingTitle": "No analytics or tracking",
+  "settingsNoTracking": "Fermata has no analytics, no ads, no crash reporting and no account of its own. Nothing about what you listen to leaves this device unless a service you connected needs it to play the music.",
+  "settingsNetworkIntro": "Fermata only connects to:",
+  "settingsNetworkProviders": "The music services you use — to search, stream, read your playlists and import. Requests go directly from this device to the service.",
+  "settingsNetworkLyricsOn": "LRCLIB, to look up lyrics for the track that is playing (title, artist, album and duration are sent).",
+  "settingsNetworkLyricsOff": "LRCLIB is not contacted because lyrics are turned off.",
+  "settingsNetworkUpdatesOn": "GitHub, once a day, to see whether a new version of Fermata exists. Nothing about you is sent.",
+  "settingsNetworkUpdatesOff": "GitHub only when you press “Check now” under Updates.",
+  "settingsNetworkArtwork": "The services' image servers, to download cover art (kept in the artwork cache).",
+  "settingsNetworkSignIn": "A service's own sign-in page in your browser when you connect it.",
+  "settingsYourDataGroup": "Your data",
+  "settingsDeleteHistory": "Delete listening history",
+  "settingsDeleteHistoryHint": "Removes every play from History and statistics.",
+  "settingsDeleteHistoryTitle": "Delete listening history?",
+  "settingsDeleteHistoryBody": "History, “Recently played” and listening statistics are deleted. Your mixes will start fresh.",
+  "settingsDeleteHistoryDone": "Listening history deleted",
+  "settingsClearSearches": "Clear search history",
+  "settingsClearSearchesHint": "Removes your recent searches.",
+  "settingsClearSearchesTitle": "Clear search history?",
+  "settingsClearSearchesBody": "Your recent searches are removed.",
+  "settingsClearSearchesDone": "Search history cleared",
+  "settingsClearAction": "Clear",
+  "settingsExportSettings": "Export settings",
+  "settingsExportSettingsHint": "Save your settings as a file. It contains no passwords or sign-ins.",
+  "settingsImportSettings": "Import settings",
+  "settingsImportSettingsHint": "Replace your settings with an exported file.",
+  "settingsImportSettingsDone": "Settings imported",
+  "settingsExportAction": "Export",
+  "settingsImportAction": "Import",
+  "settingsBackupLibrary": "Back up library",
+  "settingsBackupLibraryHint": "Playlists, favorites, history and track links as one file. Music files are not included.",
+  "settingsRestoreLibrary": "Restore library",
+  "settingsRestoreLibraryHint": "Bring back a library backup.",
+  "settingsRestoreLibraryTitle": "Restore library backup?",
+  "settingsRestoreLibraryBody": "Merge adds the backup to your current library. Replace removes your current playlists, favorites and history first.",
+  "settingsRestoreMerge": "Merge",
+  "settingsRestoreReplace": "Replace",
+  "settingsRestoreLibraryDone": "Library restored",
+  "settingsDeleteAll": "Delete all data",
+  "settingsDeleteAllHint": "Playlists, favorites, history, searches and sign-ins. Your music files stay on disk.",
+  "settingsDeleteAllTitle": "Delete all your data?",
+  "settingsDeleteAllBody": "This deletes your playlists, favorites, listening and search history, track links and cached metadata, and signs you out of every service. Music files on your disk are never deleted, and your settings are kept. This can't be undone.",
+  "settingsDeleteAllWord": "DELETE",
+  "settingsDeleteAllAction": "Delete everything",
+  "settingsDeleteAllDone": "All your data was deleted",
+  "settingsLanguageSystem": "System language",
+  "settingsLanguageSystemHint": "Follows your device. Languages Fermata doesn't have yet fall back to English.",
+  "settingsMotion": "Motion",
+  "settingsMotionHint": "“System” follows your device's reduce-motion setting.",
+  "settingsMotionSystem": "System",
+  "settingsMotionReduce": "Reduce",
+  "settingsMotionFull": "Full",
+  "settingsTextScale": "Text size",
+  "settingsTextScaleHint": "On top of your system's text size.",
+  "settingsTextScalePreviewTitle": "Night Drive",
+  "settingsTextScalePreviewBody": "This is how titles and descriptions will look.",
+  "settingsLargerTargets": "Larger touch targets",
+  "settingsLargerTargetsHint": "Bigger buttons and rows that are easier to hit.",
+  "settingsAccessibilityNote": "Fermata works with screen readers (TalkBack, Orca, Narrator) and can be used entirely with the keyboard on desktop.",
+  "settingsCurrentVersion": "Installed version",
+  "settingsAutoUpdateCheck": "Check for updates automatically",
+  "settingsAutoUpdateCheckHint": "Off by default. Once a day, Fermata asks GitHub for the latest release; nothing about you is sent. Fermata never installs anything by itself.",
+  "settingsCheckNow": "Check now",
+  "settingsCheckNowHint": "Asks GitHub once for the latest release.",
+  "settingsCheckNowAction": "Check",
+  "settingsUpToDate": "You're up to date ({version}).",
+  "@settingsUpToDate": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsUpdateAvailable": "Version {version} is available.",
+  "@settingsUpdateAvailable": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsNoReleases": "No release has been published yet.",
+  "settingsUpdateFailed": "Couldn't check for updates. Check your connection and try again.",
+  "settingsUpdateHowLinux": "To update, download the newer release and run its setup.sh the same way you installed Fermata. Your library, settings and sign-ins are kept.",
+  "settingsUpdateHowWindows": "To update, download and run the newer setup.exe. It replaces the installed version and keeps your library, settings and sign-ins.",
+  "settingsUpdateHowAndroid": "To update, install the newer app.apk over this one. Your data is kept.",
+  "settingsReleaseNotes": "Release notes",
+  "settingsTagline": "A calm, local-first music player for your files and the services you use.",
+  "settingsVersion": "Version",
+  "settingsPlatform": "Platform",
+  "settingsLogFile": "Log file",
+  "settingsExportDiagnostics": "Export diagnostics",
+  "settingsExportDiagnosticsHint": "Saves recent logs and a summary of your setup to a file you can attach to a bug report. Contains no passwords, sign-ins or keys.",
+  "settingsLicenses": "Open-source licenses",
+  "settingsLicensesHint": "The licenses of the software Fermata is built with.",
+  "settingsLicensesAction": "View",
+  "settingsAttributions": "Attributions",
+  "settingsAttributionSoundCloud": "SoundCloud: tracks and artwork are provided by SoundCloud and its creators. Each SoundCloud track links to the track and its uploader on soundcloud.com.",
+  "settingsAttributionDeezer": "Deezer: catalog data and 30-second previews are provided by Deezer.",
+  "settingsAttributionAudius": "Audius: tracks are streamed from the Audius network and belong to their artists.",
+  "settingsAttributionJamendo": "Jamendo: music is provided by Jamendo under each artist's Creative Commons license.",
+  "settingsAttributionLrclib": "Lyrics: provided by LRCLIB (lrclib.net), a free community lyrics database.",
+  "settingsAttributionSpotifyYouTube": "Spotify and YouTube Music content is shown as supplied by those services and opens in their own apps.",
+  "settingsCredits": "Credits",
+  "settingsCreditsBody": "Made with Flutter. Typeface: Manrope (SIL Open Font License). Playback by libmpv/media_kit on desktop and ExoPlayer/just_audio on Android. Thanks to everyone who builds the open-source software listed under licenses.",
   "navHome": "Home",
   "navSearch": "Search",
   "navExplore": "Explore",

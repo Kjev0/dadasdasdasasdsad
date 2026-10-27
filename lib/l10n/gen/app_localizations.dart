@@ -974,6 +974,2802 @@ abstract class AppLocalizations {
   /// **'Start new queue'**
   String get playerSiloConfirm;
 
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// No description provided for @settingsSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search settings'**
+  String get settingsSearchHint;
+
+  /// No description provided for @settingsSearchNoResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No settings match “{query}”.'**
+  String settingsSearchNoResults(String query);
+
+  /// No description provided for @settingsRestoreAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore all defaults'**
+  String get settingsRestoreAll;
+
+  /// No description provided for @settingsRestoreAllTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore all settings?'**
+  String get settingsRestoreAllTitle;
+
+  /// No description provided for @settingsRestoreAllBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Every setting goes back to its default. Your library, playlists, connected accounts and download folder are kept.'**
+  String get settingsRestoreAllBody;
+
+  /// No description provided for @settingsRestoreSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore defaults for this section'**
+  String get settingsRestoreSection;
+
+  /// No description provided for @settingsRestoreSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore “{section}” defaults?'**
+  String settingsRestoreSectionTitle(String section);
+
+  /// No description provided for @settingsRestoreSectionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The settings in this section go back to their defaults.'**
+  String get settingsRestoreSectionBody;
+
+  /// No description provided for @settingsRestoredToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Defaults restored'**
+  String get settingsRestoredToast;
+
+  /// No description provided for @settingsBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to settings'**
+  String get settingsBack;
+
+  /// No description provided for @settingsSectionUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This section isn\'t available on this device.'**
+  String get settingsSectionUnavailable;
+
+  /// No description provided for @settingsOn.
+  ///
+  /// In en, this message translates to:
+  /// **'On'**
+  String get settingsOn;
+
+  /// No description provided for @settingsOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get settingsOff;
+
+  /// No description provided for @settingsValueFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Full'**
+  String get settingsValueFull;
+
+  /// No description provided for @settingsValueReduced.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduced'**
+  String get settingsValueReduced;
+
+  /// No description provided for @settingsValueLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get settingsValueLow;
+
+  /// No description provided for @settingsValueMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get settingsValueMedium;
+
+  /// No description provided for @settingsValueHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get settingsValueHigh;
+
+  /// No description provided for @settingsValueNormal.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get settingsValueNormal;
+
+  /// No description provided for @settingsValueLossless.
+  ///
+  /// In en, this message translates to:
+  /// **'Lossless'**
+  String get settingsValueLossless;
+
+  /// No description provided for @settingsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get settingsSaved;
+
+  /// No description provided for @settingsNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Not available'**
+  String get settingsNotAvailable;
+
+  /// No description provided for @settingsOpenLinkFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open the link.'**
+  String get settingsOpenLinkFailed;
+
+  /// No description provided for @settingsSavedTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved to {location}'**
+  String settingsSavedTo(String location);
+
+  /// No description provided for @settingsThemeMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get settingsThemeMode;
+
+  /// No description provided for @settingsThemeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get settingsThemeDark;
+
+  /// No description provided for @settingsThemeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get settingsThemeLight;
+
+  /// No description provided for @settingsThemeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get settingsThemeSystem;
+
+  /// No description provided for @settingsAccent.
+  ///
+  /// In en, this message translates to:
+  /// **'Accent colour'**
+  String get settingsAccent;
+
+  /// No description provided for @settingsAccentGold.
+  ///
+  /// In en, this message translates to:
+  /// **'Gold'**
+  String get settingsAccentGold;
+
+  /// No description provided for @settingsAccentCoral.
+  ///
+  /// In en, this message translates to:
+  /// **'Coral'**
+  String get settingsAccentCoral;
+
+  /// No description provided for @settingsAccentMint.
+  ///
+  /// In en, this message translates to:
+  /// **'Mint'**
+  String get settingsAccentMint;
+
+  /// No description provided for @settingsAccentIce.
+  ///
+  /// In en, this message translates to:
+  /// **'Ice'**
+  String get settingsAccentIce;
+
+  /// No description provided for @settingsAccentMono.
+  ///
+  /// In en, this message translates to:
+  /// **'Monochrome'**
+  String get settingsAccentMono;
+
+  /// No description provided for @settingsDensity.
+  ///
+  /// In en, this message translates to:
+  /// **'Density'**
+  String get settingsDensity;
+
+  /// No description provided for @settingsDensityComfortable.
+  ///
+  /// In en, this message translates to:
+  /// **'Comfortable'**
+  String get settingsDensityComfortable;
+
+  /// No description provided for @settingsDensityCompact.
+  ///
+  /// In en, this message translates to:
+  /// **'Compact'**
+  String get settingsDensityCompact;
+
+  /// No description provided for @settingsArtworkBackdrop.
+  ///
+  /// In en, this message translates to:
+  /// **'Artwork backdrop'**
+  String get settingsArtworkBackdrop;
+
+  /// No description provided for @settingsArtworkBackdropHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Shows a soft, tinted version of the cover behind Now Playing.'**
+  String get settingsArtworkBackdropHint;
+
+  /// No description provided for @settingsHighContrast.
+  ///
+  /// In en, this message translates to:
+  /// **'High contrast'**
+  String get settingsHighContrast;
+
+  /// No description provided for @settingsHighContrastHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Stronger text, borders and accent colours.'**
+  String get settingsHighContrastHint;
+
+  /// No description provided for @settingsGlassIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'An optional glass-inspired look: the sidebar, player and sheets become translucent and let your artwork shine through. Text always stays readable.'**
+  String get settingsGlassIntro;
+
+  /// No description provided for @settingsGlassToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Liquid Glass'**
+  String get settingsGlassToggle;
+
+  /// No description provided for @settingsGlassToggleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Off by default. Translucent surfaces with a soft blur.'**
+  String get settingsGlassToggleHint;
+
+  /// No description provided for @settingsGlassIntensity.
+  ///
+  /// In en, this message translates to:
+  /// **'Intensity'**
+  String get settingsGlassIntensity;
+
+  /// No description provided for @settingsGlassIntensityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'How much of the background shows through.'**
+  String get settingsGlassIntensityHint;
+
+  /// No description provided for @settingsGlassIntensityDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on Liquid Glass to adjust the intensity.'**
+  String get settingsGlassIntensityDisabled;
+
+  /// No description provided for @settingsGlassBlurOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Blur is turned off by the current performance mode, so glass will use a lighter translucent style.'**
+  String get settingsGlassBlurOff;
+
+  /// No description provided for @settingsGlassReadability.
+  ///
+  /// In en, this message translates to:
+  /// **'Fermata raises the opacity of glass surfaces automatically whenever that is needed to keep text readable.'**
+  String get settingsGlassReadability;
+
+  /// No description provided for @settingsSecondsShort.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds} s'**
+  String settingsSecondsShort(int seconds);
+
+  /// No description provided for @settingsTransitionsGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Transitions'**
+  String get settingsTransitionsGroup;
+
+  /// No description provided for @settingsCrossfade.
+  ///
+  /// In en, this message translates to:
+  /// **'Crossfade'**
+  String get settingsCrossfade;
+
+  /// No description provided for @settingsCrossfadeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Blend the end of a track into the next one.'**
+  String get settingsCrossfadeHint;
+
+  /// No description provided for @settingsGapless.
+  ///
+  /// In en, this message translates to:
+  /// **'Gapless playback'**
+  String get settingsGapless;
+
+  /// No description provided for @settingsGaplessHint.
+  ///
+  /// In en, this message translates to:
+  /// **'No silence between tracks that belong together, like live albums.'**
+  String get settingsGaplessHint;
+
+  /// No description provided for @settingsGaplessCrossfadeNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Not used while crossfade is on — crossfade already joins the tracks.'**
+  String get settingsGaplessCrossfadeNote;
+
+  /// No description provided for @settingsPreviousThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart before going back'**
+  String get settingsPreviousThreshold;
+
+  /// No description provided for @settingsPreviousThresholdHint.
+  ///
+  /// In en, this message translates to:
+  /// **'“Previous” restarts the track when more than {seconds} s have played.'**
+  String settingsPreviousThresholdHint(int seconds);
+
+  /// No description provided for @settingsPreviousThresholdAlways.
+  ///
+  /// In en, this message translates to:
+  /// **'“Previous” always goes to the previous track.'**
+  String get settingsPreviousThresholdAlways;
+
+  /// No description provided for @settingsVolumeGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Volume & speed'**
+  String get settingsVolumeGroup;
+
+  /// No description provided for @settingsNormalize.
+  ///
+  /// In en, this message translates to:
+  /// **'Volume normalization'**
+  String get settingsNormalize;
+
+  /// No description provided for @settingsNormalizeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Plays tracks at a similar loudness.'**
+  String get settingsNormalizeHint;
+
+  /// No description provided for @settingsNormalizationMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Normalization method'**
+  String get settingsNormalizationMode;
+
+  /// No description provided for @settingsNormalizationModeDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on volume normalization first.'**
+  String get settingsNormalizationModeDisabled;
+
+  /// No description provided for @settingsNormalizationTrack.
+  ///
+  /// In en, this message translates to:
+  /// **'ReplayGain (track)'**
+  String get settingsNormalizationTrack;
+
+  /// No description provided for @settingsNormalizationTrackHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Uses the loudness information stored in each file.'**
+  String get settingsNormalizationTrackHint;
+
+  /// No description provided for @settingsNormalizationAlbum.
+  ///
+  /// In en, this message translates to:
+  /// **'ReplayGain (album)'**
+  String get settingsNormalizationAlbum;
+
+  /// No description provided for @settingsNormalizationAlbumHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Keeps the intended differences between tracks of one album.'**
+  String get settingsNormalizationAlbumHint;
+
+  /// No description provided for @settingsNormalizationLoudness.
+  ///
+  /// In en, this message translates to:
+  /// **'Loudness (EBU R128)'**
+  String get settingsNormalizationLoudness;
+
+  /// No description provided for @settingsNormalizationLoudnessHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Measures loudness while playing; works for streams without tags.'**
+  String get settingsNormalizationLoudnessHint;
+
+  /// No description provided for @settingsPreamp.
+  ///
+  /// In en, this message translates to:
+  /// **'Pre-amplification'**
+  String get settingsPreamp;
+
+  /// No description provided for @settingsPreampHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Extra gain applied on top of normalization.'**
+  String get settingsPreampHint;
+
+  /// No description provided for @settingsSpeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Playback speed'**
+  String get settingsSpeed;
+
+  /// No description provided for @settingsSpeedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Applies now and is remembered for next time.'**
+  String get settingsSpeedHint;
+
+  /// No description provided for @settingsStartupQueueGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Queue'**
+  String get settingsStartupQueueGroup;
+
+  /// No description provided for @settingsRestoreQueue.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore queue on startup'**
+  String get settingsRestoreQueue;
+
+  /// No description provided for @settingsRestoreQueueHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue where you left off, including the position in the track.'**
+  String get settingsRestoreQueueHint;
+
+  /// No description provided for @settingsAutoplay.
+  ///
+  /// In en, this message translates to:
+  /// **'Start playing on startup'**
+  String get settingsAutoplay;
+
+  /// No description provided for @settingsAutoplayHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume the restored queue as soon as Fermata opens.'**
+  String get settingsAutoplayHint;
+
+  /// No description provided for @settingsAutoplayDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs “Restore queue on startup”.'**
+  String get settingsAutoplayDisabled;
+
+  /// No description provided for @settingsSmartQueue.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart queue'**
+  String get settingsSmartQueue;
+
+  /// No description provided for @settingsSmartQueueHint.
+  ///
+  /// In en, this message translates to:
+  /// **'When the queue runs out, add similar tracks.'**
+  String get settingsSmartQueueHint;
+
+  /// No description provided for @settingsSkipUnplayable.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip unplayable tracks'**
+  String get settingsSkipUnplayable;
+
+  /// No description provided for @settingsSkipUnplayableHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Move on automatically when a track can\'t be played, and tell you why.'**
+  String get settingsSkipUnplayableHint;
+
+  /// No description provided for @settingsExtrasGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep timer & lyrics'**
+  String get settingsExtrasGroup;
+
+  /// No description provided for @settingsSleepFade.
+  ///
+  /// In en, this message translates to:
+  /// **'Fade out at sleep timer'**
+  String get settingsSleepFade;
+
+  /// No description provided for @settingsSleepFadeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Lower the volume gently before the sleep timer pauses.'**
+  String get settingsSleepFadeHint;
+
+  /// No description provided for @settingsLyrics.
+  ///
+  /// In en, this message translates to:
+  /// **'Lyrics'**
+  String get settingsLyrics;
+
+  /// No description provided for @settingsLyricsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Look up lyrics on LRCLIB and read lyrics stored in your files.'**
+  String get settingsLyricsHint;
+
+  /// No description provided for @settingsInterruptionsGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Headphones & interruptions'**
+  String get settingsInterruptionsGroup;
+
+  /// No description provided for @settingsPauseOnDisconnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause when headphones disconnect'**
+  String get settingsPauseOnDisconnect;
+
+  /// No description provided for @settingsPauseOnDisconnectHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Stops the music from suddenly playing through the speaker.'**
+  String get settingsPauseOnDisconnectHint;
+
+  /// No description provided for @settingsResumeAfterInterruption.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume after interruptions'**
+  String get settingsResumeAfterInterruption;
+
+  /// No description provided for @settingsResumeAfterInterruptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue after a call or another app\'s sound has finished.'**
+  String get settingsResumeAfterInterruptionHint;
+
+  /// No description provided for @settingsDuck.
+  ///
+  /// In en, this message translates to:
+  /// **'Lower volume for short sounds'**
+  String get settingsDuck;
+
+  /// No description provided for @settingsDuckHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Navigation prompts and notifications play over quieter music instead of pausing it.'**
+  String get settingsDuckHint;
+
+  /// No description provided for @settingsQualityIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how good streams and downloads should sound. Higher quality uses more data and storage.'**
+  String get settingsQualityIntro;
+
+  /// No description provided for @settingStreamingQuality.
+  ///
+  /// In en, this message translates to:
+  /// **'Streaming quality'**
+  String get settingStreamingQuality;
+
+  /// No description provided for @settingsStreamingQualityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'On Wi-Fi and wired connections.'**
+  String get settingsStreamingQualityHint;
+
+  /// No description provided for @settingsMobileQuality.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile data quality'**
+  String get settingsMobileQuality;
+
+  /// No description provided for @settingsMobileQualityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'On mobile data and other metered connections.'**
+  String get settingsMobileQualityHint;
+
+  /// No description provided for @settingsDownloadQuality.
+  ///
+  /// In en, this message translates to:
+  /// **'Download quality'**
+  String get settingsDownloadQuality;
+
+  /// No description provided for @settingsDownloadQualityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'For tracks a source allows you to download.'**
+  String get settingsDownloadQualityHint;
+
+  /// No description provided for @settingsQualityProviders.
+  ///
+  /// In en, this message translates to:
+  /// **'Each provider decides which qualities it offers. Fermata uses the closest available quality, which can be lower than your choice — Deezer, for example, only offers 30-second previews.'**
+  String get settingsQualityProviders;
+
+  /// No description provided for @settingsOutputGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Output'**
+  String get settingsOutputGroup;
+
+  /// No description provided for @settingsOutputDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Output device'**
+  String get settingsOutputDevice;
+
+  /// No description provided for @settingsOutputDeviceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Where Fermata plays its sound.'**
+  String get settingsOutputDeviceHint;
+
+  /// No description provided for @settingsOutputDeviceSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System default'**
+  String get settingsOutputDeviceSystem;
+
+  /// No description provided for @settingsOutputDeviceDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} (default)'**
+  String settingsOutputDeviceDefault(String name);
+
+  /// No description provided for @settingsOutputDevicesFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t list the output devices.'**
+  String get settingsOutputDevicesFailed;
+
+  /// No description provided for @settingsOutputDeviceFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t switch to this output device.'**
+  String get settingsOutputDeviceFailed;
+
+  /// No description provided for @settingsDownloadFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Download folder'**
+  String get settingsDownloadFolder;
+
+  /// No description provided for @settingsDownloadFolderChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Change…'**
+  String get settingsDownloadFolderChange;
+
+  /// No description provided for @settingsDownloadFolderMoving.
+  ///
+  /// In en, this message translates to:
+  /// **'Moving…'**
+  String get settingsDownloadFolderMoving;
+
+  /// No description provided for @settingsDownloadFolderPick.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a folder for downloads'**
+  String get settingsDownloadFolderPick;
+
+  /// No description provided for @settingsDownloadFolderMoveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Move downloads?'**
+  String get settingsDownloadFolderMoveTitle;
+
+  /// No description provided for @settingsDownloadFolderMoveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your downloaded tracks will be moved to {path}. This can take a while for large collections; you can keep listening meanwhile.'**
+  String settingsDownloadFolderMoveBody(String path);
+
+  /// No description provided for @settingsDownloadFolderMove.
+  ///
+  /// In en, this message translates to:
+  /// **'Move downloads'**
+  String get settingsDownloadFolderMove;
+
+  /// No description provided for @settingsDownloadFolderMoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloads moved'**
+  String get settingsDownloadFolderMoved;
+
+  /// No description provided for @settingsDownloadFolderFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t move the downloads. Nothing was changed.'**
+  String get settingsDownloadFolderFailed;
+
+  /// No description provided for @settingsDownloadFolderFailedDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t move the downloads: {detail}'**
+  String settingsDownloadFolderFailedDetail(String detail);
+
+  /// No description provided for @settingWifiOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Download on Wi-Fi only'**
+  String get settingWifiOnly;
+
+  /// No description provided for @settingsWifiOnlyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloads wait for Wi-Fi or a wired connection.'**
+  String get settingsWifiOnlyHint;
+
+  /// No description provided for @settingsWarnMobile.
+  ///
+  /// In en, this message translates to:
+  /// **'Warn before using mobile data'**
+  String get settingsWarnMobile;
+
+  /// No description provided for @settingsWarnMobileHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask before a download starts on a metered connection.'**
+  String get settingsWarnMobileHint;
+
+  /// No description provided for @settingsWarnMobileDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Not needed while downloads wait for Wi-Fi.'**
+  String get settingsWarnMobileDisabled;
+
+  /// No description provided for @settingsMaxConcurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'Simultaneous downloads'**
+  String get settingsMaxConcurrent;
+
+  /// No description provided for @settingsMaxConcurrentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'How many tracks download at the same time.'**
+  String get settingsMaxConcurrentHint;
+
+  /// No description provided for @settingsVerifyIntegrity.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify downloads'**
+  String get settingsVerifyIntegrity;
+
+  /// No description provided for @settingsVerifyIntegrityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Check every finished file before it\'s used, so a broken download never plays.'**
+  String get settingsVerifyIntegrityHint;
+
+  /// No description provided for @settingsNotifyComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Notify when downloads finish'**
+  String get settingsNotifyComplete;
+
+  /// No description provided for @settingsNotifyCompleteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A system notification when a batch of downloads is done.'**
+  String get settingsNotifyCompleteHint;
+
+  /// No description provided for @settingsNotificationsUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'System notifications aren\'t available on this device; Fermata shows the progress in the app instead.'**
+  String get settingsNotificationsUnsupported;
+
+  /// No description provided for @settingsOfflineGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'What can be offline'**
+  String get settingsOfflineGroup;
+
+  /// No description provided for @settingsOfflineIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Every track belongs to one of four categories. Fermata follows each provider\'s terms and never stores streams as files.'**
+  String get settingsOfflineIntro;
+
+  /// No description provided for @settingsOfflineUserOwned.
+  ///
+  /// In en, this message translates to:
+  /// **'Music files you added from your own folders. Always available offline.'**
+  String get settingsOfflineUserOwned;
+
+  /// No description provided for @settingsOfflineDownloadable.
+  ///
+  /// In en, this message translates to:
+  /// **'The provider allows downloading this track (for example Audius or Jamendo tracks the artist made downloadable). You start each download yourself.'**
+  String get settingsOfflineDownloadable;
+
+  /// No description provided for @settingsOfflineStreamOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Can be played while you\'re online, but the provider doesn\'t allow storing it — SoundCloud, for example.'**
+  String get settingsOfflineStreamOnly;
+
+  /// No description provided for @settingsOfflineUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t be made available offline at all, such as previews or tracks that only play in the provider\'s own app.'**
+  String get settingsOfflineUnavailable;
+
+  /// No description provided for @settingsAutoDownloadNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic downloads (for example for a whole playlist) only include sources that permit them: your own files. None of the streaming providers currently allow automatic downloads.'**
+  String get settingsAutoDownloadNote;
+
+  /// No description provided for @settingsUsageGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage'**
+  String get settingsUsageGroup;
+
+  /// No description provided for @settingsUsageFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t calculate the storage usage.'**
+  String get settingsUsageFailed;
+
+  /// No description provided for @settingsUsageTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'{size} used by Fermata'**
+  String settingsUsageTotal(String size);
+
+  /// No description provided for @settingsUsageFree.
+  ///
+  /// In en, this message translates to:
+  /// **'{size} free on this disk'**
+  String settingsUsageFree(String size);
+
+  /// No description provided for @settingsUsageDownloads.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloads ({count})'**
+  String settingsUsageDownloads(int count);
+
+  /// No description provided for @settingsUsageArtwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Artwork cache'**
+  String get settingsUsageArtwork;
+
+  /// No description provided for @settingsUsageStreamCache.
+  ///
+  /// In en, this message translates to:
+  /// **'Stream cache'**
+  String get settingsUsageStreamCache;
+
+  /// No description provided for @settingsUsageDatabase.
+  ///
+  /// In en, this message translates to:
+  /// **'Library database'**
+  String get settingsUsageDatabase;
+
+  /// No description provided for @settingsUsageLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloads use {used} of {limit}'**
+  String settingsUsageLimit(String used, String limit);
+
+  /// No description provided for @settingsRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get settingsRefresh;
+
+  /// No description provided for @settingsLimitsGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Limits'**
+  String get settingsLimitsGroup;
+
+  /// No description provided for @settingsDownloadLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Download storage limit'**
+  String get settingsDownloadLimit;
+
+  /// No description provided for @settingsDownloadLimitHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The most space downloads may use.'**
+  String get settingsDownloadLimitHint;
+
+  /// No description provided for @settingsUnlimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited'**
+  String get settingsUnlimited;
+
+  /// No description provided for @settingsAutoCleanup.
+  ///
+  /// In en, this message translates to:
+  /// **'Clean up automatically'**
+  String get settingsAutoCleanup;
+
+  /// No description provided for @settingsAutoCleanupHint.
+  ///
+  /// In en, this message translates to:
+  /// **'When the limit is reached, remove the downloads you played least recently.'**
+  String get settingsAutoCleanupHint;
+
+  /// No description provided for @settingsAutoCleanupDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a storage limit to use automatic clean-up.'**
+  String get settingsAutoCleanupDisabled;
+
+  /// No description provided for @settingsArtworkCache.
+  ///
+  /// In en, this message translates to:
+  /// **'Artwork cache size'**
+  String get settingsArtworkCache;
+
+  /// No description provided for @settingsArtworkCacheHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Covers are kept so they load instantly and work offline.'**
+  String get settingsArtworkCacheHint;
+
+  /// No description provided for @settingsMaintenanceGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintenance'**
+  String get settingsMaintenanceGroup;
+
+  /// No description provided for @settingsCleanUpNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Clean up now'**
+  String get settingsCleanUpNow;
+
+  /// No description provided for @settingsCleanUpNowHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply the storage limit right away.'**
+  String get settingsCleanUpNowHint;
+
+  /// No description provided for @settingsCleanUpNowAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Clean up'**
+  String get settingsCleanUpNowAction;
+
+  /// No description provided for @settingsNothingToClean.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to clean up — you\'re within the limit.'**
+  String get settingsNothingToClean;
+
+  /// No description provided for @settingsFreed.
+  ///
+  /// In en, this message translates to:
+  /// **'Freed {size}'**
+  String settingsFreed(String size);
+
+  /// No description provided for @settingsClearArtwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear artwork cache'**
+  String get settingsClearArtwork;
+
+  /// No description provided for @settingsClearArtworkHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Covers will be downloaded again when needed.'**
+  String get settingsClearArtworkHint;
+
+  /// No description provided for @settingsClearArtworkAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get settingsClearArtworkAction;
+
+  /// No description provided for @settingsVerifyDownloads.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify downloads'**
+  String get settingsVerifyDownloads;
+
+  /// No description provided for @settingsVerifyDownloadsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Check every downloaded file for damage.'**
+  String get settingsVerifyDownloadsHint;
+
+  /// No description provided for @settingsVerifyDownloadsAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify'**
+  String get settingsVerifyDownloadsAction;
+
+  /// No description provided for @settingsVerifyOk.
+  ///
+  /// In en, this message translates to:
+  /// **'All downloads are intact.'**
+  String get settingsVerifyOk;
+
+  /// No description provided for @settingsVerifyBroken.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 damaged download found. Retry it on the Downloads page.} other{{count} damaged downloads found. Retry them on the Downloads page.}}'**
+  String settingsVerifyBroken(int count);
+
+  /// No description provided for @settingsMinutesShort.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String settingsMinutesShort(int minutes);
+
+  /// No description provided for @settingsHoursShort.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} h'**
+  String settingsHoursShort(int hours);
+
+  /// No description provided for @settingsModeBalanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced'**
+  String get settingsModeBalanced;
+
+  /// No description provided for @settingsModePerformance.
+  ///
+  /// In en, this message translates to:
+  /// **'Performance'**
+  String get settingsModePerformance;
+
+  /// No description provided for @settingsModeBatterySaver.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery saver'**
+  String get settingsModeBatterySaver;
+
+  /// No description provided for @settingsModeDataSaver.
+  ///
+  /// In en, this message translates to:
+  /// **'Data saver'**
+  String get settingsModeDataSaver;
+
+  /// No description provided for @settingsModeVisualQuality.
+  ///
+  /// In en, this message translates to:
+  /// **'Visual quality'**
+  String get settingsModeVisualQuality;
+
+  /// No description provided for @settingsModeCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get settingsModeCustom;
+
+  /// No description provided for @settingsModeBalancedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The default: full animations, blur and medium artwork.'**
+  String get settingsModeBalancedHint;
+
+  /// No description provided for @settingsModePerformanceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduces animations and turns off blur and artwork prefetching.'**
+  String get settingsModePerformanceHint;
+
+  /// No description provided for @settingsModeBatterySaverHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Turns off animations, blur, preloading and background sync, and uses smaller artwork.'**
+  String get settingsModeBatterySaverHint;
+
+  /// No description provided for @settingsModeDataSaverHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Lowers streaming quality, waits for Wi-Fi to download and stops preloading.'**
+  String get settingsModeDataSaverHint;
+
+  /// No description provided for @settingsModeVisualQualityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Full animations, blur and the sharpest artwork.'**
+  String get settingsModeVisualQualityHint;
+
+  /// No description provided for @settingsModeCustomHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your own combination of the settings below.'**
+  String get settingsModeCustomHint;
+
+  /// No description provided for @settingsPerformanceIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a mode to change several settings at once. Changing any single setting below switches to Custom.'**
+  String get settingsPerformanceIntro;
+
+  /// No description provided for @settingsActiveNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Active now: {mode}'**
+  String settingsActiveNow(String mode);
+
+  /// No description provided for @settingsActiveNowReducedMotion.
+  ///
+  /// In en, this message translates to:
+  /// **'Your system or accessibility settings ask for reduced motion, so animations are reduced.'**
+  String get settingsActiveNowReducedMotion;
+
+  /// No description provided for @settingsGranularGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Individual settings'**
+  String get settingsGranularGroup;
+
+  /// No description provided for @settingsGranularIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjusting any of these switches the mode to Custom.'**
+  String get settingsGranularIntro;
+
+  /// No description provided for @settingAnimations.
+  ///
+  /// In en, this message translates to:
+  /// **'Animations'**
+  String get settingAnimations;
+
+  /// No description provided for @settingsAnimationsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Transitions and motion throughout the app.'**
+  String get settingsAnimationsHint;
+
+  /// No description provided for @settingBlur.
+  ///
+  /// In en, this message translates to:
+  /// **'Blur'**
+  String get settingBlur;
+
+  /// No description provided for @settingsBlurHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Background blur for glass and Now Playing. Off uses plain translucent surfaces.'**
+  String get settingsBlurHint;
+
+  /// No description provided for @settingArtworkQuality.
+  ///
+  /// In en, this message translates to:
+  /// **'Artwork quality'**
+  String get settingArtworkQuality;
+
+  /// No description provided for @settingsArtworkQualityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Lower quality decodes smaller images and uses less memory.'**
+  String get settingsArtworkQualityHint;
+
+  /// No description provided for @settingPreloadNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Preload next track'**
+  String get settingPreloadNext;
+
+  /// No description provided for @settingsPreloadNextHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Prepares the next track early for seamless transitions.'**
+  String get settingsPreloadNextHint;
+
+  /// No description provided for @settingPrefetchArtwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Prefetch artwork'**
+  String get settingPrefetchArtwork;
+
+  /// No description provided for @settingsPrefetchArtworkHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloads covers of upcoming tracks ahead of time.'**
+  String get settingsPrefetchArtworkHint;
+
+  /// No description provided for @settingBackgroundSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Background sync'**
+  String get settingBackgroundSync;
+
+  /// No description provided for @settingsBackgroundSyncHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Refreshes connected services, recommendations and permitted downloads periodically.'**
+  String get settingsBackgroundSyncHint;
+
+  /// No description provided for @settingsSyncInterval.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync every'**
+  String get settingsSyncInterval;
+
+  /// No description provided for @settingsSyncIntervalDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Background sync is off.'**
+  String get settingsSyncIntervalDisabled;
+
+  /// No description provided for @settingsSaversIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Shortcuts into the matching performance modes. Each one lists exactly what it changes.'**
+  String get settingsSaversIntro;
+
+  /// No description provided for @settingsSaverTurnOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this mode'**
+  String get settingsSaverTurnOn;
+
+  /// No description provided for @settingsSaverTurnOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off (back to Balanced)'**
+  String get settingsSaverTurnOff;
+
+  /// No description provided for @settingsBatterySaverNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduces the work Fermata does while you listen. Playback itself is not affected.'**
+  String get settingsBatterySaverNote;
+
+  /// No description provided for @settingsDataSaverNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Also sets streaming quality to Low and downloads to Wi-Fi only. Turning it off keeps those two settings; change them under Audio quality and Downloads.'**
+  String get settingsDataSaverNote;
+
+  /// No description provided for @settingsSaversAndroidNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Android\'s own battery optimization can also stop music in the background. You can allow Fermata to keep running under Background playback.'**
+  String get settingsSaversAndroidNote;
+
+  /// No description provided for @settingsSaversCustomNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Want something in between? Pick Custom under Performance and adjust each setting.'**
+  String get settingsSaversCustomNote;
+
+  /// No description provided for @settingsServicesIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect the services you use. Each card says exactly what Fermata can and can\'t do with that service.'**
+  String get settingsServicesIntro;
+
+  /// No description provided for @settingsTokensNotPersistent.
+  ///
+  /// In en, this message translates to:
+  /// **'Your system has no secure key storage (for example GNOME Keyring or KWallet), so sign-ins are only kept until Fermata closes and you\'ll need to reconnect after a restart. Install and unlock a keyring to stay signed in.'**
+  String get settingsTokensNotPersistent;
+
+  /// No description provided for @settingsNoPasswords.
+  ///
+  /// In en, this message translates to:
+  /// **'Fermata never asks for your passwords. You sign in on the service\'s own website, and Fermata only keeps the access it was granted, in your system\'s secure storage.'**
+  String get settingsNoPasswords;
+
+  /// No description provided for @settingsStatusNotRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'No account needed'**
+  String get settingsStatusNotRequired;
+
+  /// No description provided for @settingsStatusCredentialsMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set up'**
+  String get settingsStatusCredentialsMissing;
+
+  /// No description provided for @settingsStatusNotConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected'**
+  String get settingsStatusNotConnected;
+
+  /// No description provided for @settingsStatusConnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting…'**
+  String get settingsStatusConnecting;
+
+  /// No description provided for @settingsStatusConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get settingsStatusConnected;
+
+  /// No description provided for @settingsStatusExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in expired'**
+  String get settingsStatusExpired;
+
+  /// No description provided for @settingsStatusError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get settingsStatusError;
+
+  /// No description provided for @settingsStatusSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Status: {status}'**
+  String settingsStatusSemantics(String status);
+
+  /// No description provided for @settingsAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in as {name}'**
+  String settingsAccount(String name);
+
+  /// No description provided for @settingsScopes.
+  ///
+  /// In en, this message translates to:
+  /// **'Access granted: {scopes}'**
+  String settingsScopes(String scopes);
+
+  /// No description provided for @settingsExpiredHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {service} sign-in has expired. Reconnect to continue.'**
+  String settingsExpiredHint(String service);
+
+  /// No description provided for @settingsErrorDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Problem: {detail}'**
+  String settingsErrorDetail(String detail);
+
+  /// No description provided for @settingsCredentialsMissingHint.
+  ///
+  /// In en, this message translates to:
+  /// **'{service} needs developer credentials (an app registration) before you can use it. Enter them below — they are not your account password.'**
+  String settingsCredentialsMissingHint(String service);
+
+  /// No description provided for @settingsCanSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search its catalog'**
+  String get settingsCanSearch;
+
+  /// No description provided for @settingsCanStream.
+  ///
+  /// In en, this message translates to:
+  /// **'Play full tracks in Fermata'**
+  String get settingsCanStream;
+
+  /// No description provided for @settingsCanPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Play previews in Fermata'**
+  String get settingsCanPreview;
+
+  /// No description provided for @settingsCanExternal.
+  ///
+  /// In en, this message translates to:
+  /// **'Open tracks in {service} for playback'**
+  String settingsCanExternal(String service);
+
+  /// No description provided for @settingsCanDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'Download single tracks the artist allows'**
+  String get settingsCanDownload;
+
+  /// No description provided for @settingsCanLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Read your playlists and liked tracks'**
+  String get settingsCanLibrary;
+
+  /// No description provided for @settingsCanImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Import playlists'**
+  String get settingsCanImport;
+
+  /// No description provided for @settingsCanIsrc.
+  ///
+  /// In en, this message translates to:
+  /// **'Precise matching by ISRC'**
+  String get settingsCanIsrc;
+
+  /// No description provided for @settingsCanDiscover.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommendations, charts and new releases'**
+  String get settingsCanDiscover;
+
+  /// No description provided for @settingsCantStream.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t play full tracks inside Fermata'**
+  String get settingsCantStream;
+
+  /// No description provided for @settingsCantDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'No downloads'**
+  String get settingsCantDownload;
+
+  /// No description provided for @settingsSiloed.
+  ///
+  /// In en, this message translates to:
+  /// **'{service} tracks play in their own queue ({service}\'s terms)'**
+  String settingsSiloed(String service);
+
+  /// No description provided for @settingsCantLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'No access to your account\'s library'**
+  String get settingsCantLibrary;
+
+  /// No description provided for @settingsConnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get settingsConnect;
+
+  /// No description provided for @settingsReconnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnect'**
+  String get settingsReconnect;
+
+  /// No description provided for @settingsDisconnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect'**
+  String get settingsDisconnect;
+
+  /// No description provided for @settingsConnectingHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish signing in in your browser. Fermata never sees your password.'**
+  String get settingsConnectingHint;
+
+  /// No description provided for @settingsConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected to {service}'**
+  String settingsConnected(String service);
+
+  /// No description provided for @settingsConnectFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t connect to {service}.'**
+  String settingsConnectFailed(String service);
+
+  /// No description provided for @settingsDisconnectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect {service}?'**
+  String settingsDisconnectTitle(String service);
+
+  /// No description provided for @settingsDisconnectBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Fermata forgets its access to your {service} account. Imported playlists stay in your library.'**
+  String settingsDisconnectBody(String service);
+
+  /// No description provided for @settingsTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms'**
+  String get settingsTerms;
+
+  /// No description provided for @settingsCredOverride.
+  ///
+  /// In en, this message translates to:
+  /// **'Use your own developer credentials'**
+  String get settingsCredOverride;
+
+  /// No description provided for @settingsCredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Developer credentials'**
+  String get settingsCredTitle;
+
+  /// No description provided for @settingsCredIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Values from the app you registered with {service}. They identify Fermata to {service}; your own account still signs in on {service}\'s website.'**
+  String settingsCredIntro(String service);
+
+  /// No description provided for @settingsCredOrigin.
+  ///
+  /// In en, this message translates to:
+  /// **'Currently used: {origin}'**
+  String settingsCredOrigin(String origin);
+
+  /// No description provided for @settingsCredOriginNone.
+  ///
+  /// In en, this message translates to:
+  /// **'none'**
+  String get settingsCredOriginNone;
+
+  /// No description provided for @settingsCredOriginBuild.
+  ///
+  /// In en, this message translates to:
+  /// **'built into this version of Fermata'**
+  String get settingsCredOriginBuild;
+
+  /// No description provided for @settingsCredOriginFile.
+  ///
+  /// In en, this message translates to:
+  /// **'the file {path}'**
+  String settingsCredOriginFile(String path);
+
+  /// No description provided for @settingsCredOriginUser.
+  ///
+  /// In en, this message translates to:
+  /// **'entered by you'**
+  String get settingsCredOriginUser;
+
+  /// No description provided for @settingsCredRegister.
+  ///
+  /// In en, this message translates to:
+  /// **'Register an app'**
+  String get settingsCredRegister;
+
+  /// No description provided for @settingsCredRedirects.
+  ///
+  /// In en, this message translates to:
+  /// **'Redirect URIs to register'**
+  String get settingsCredRedirects;
+
+  /// No description provided for @settingsCredRedirectDesktop.
+  ///
+  /// In en, this message translates to:
+  /// **'Desktop (Linux and Windows)'**
+  String get settingsCredRedirectDesktop;
+
+  /// No description provided for @settingsCredRedirectAndroid.
+  ///
+  /// In en, this message translates to:
+  /// **'Android'**
+  String get settingsCredRedirectAndroid;
+
+  /// No description provided for @settingsCredRedirectCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Your custom redirect URI'**
+  String get settingsCredRedirectCustom;
+
+  /// No description provided for @settingsCredClientId.
+  ///
+  /// In en, this message translates to:
+  /// **'Client ID'**
+  String get settingsCredClientId;
+
+  /// No description provided for @settingsCredClientSecret.
+  ///
+  /// In en, this message translates to:
+  /// **'Client secret'**
+  String get settingsCredClientSecret;
+
+  /// No description provided for @settingsCredApiKey.
+  ///
+  /// In en, this message translates to:
+  /// **'API key'**
+  String get settingsCredApiKey;
+
+  /// No description provided for @settingsCredRedirectUri.
+  ///
+  /// In en, this message translates to:
+  /// **'Redirect URI'**
+  String get settingsCredRedirectUri;
+
+  /// No description provided for @settingsCredOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'optional'**
+  String get settingsCredOptional;
+
+  /// No description provided for @settingsCredShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Show'**
+  String get settingsCredShow;
+
+  /// No description provided for @settingsCredHide.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get settingsCredHide;
+
+  /// No description provided for @settingsCredRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill in: {fields}'**
+  String settingsCredRequired(String fields);
+
+  /// No description provided for @settingsCredSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Credentials for {service} saved'**
+  String settingsCredSaved(String service);
+
+  /// No description provided for @settingsCredSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save the credentials.'**
+  String get settingsCredSaveFailed;
+
+  /// No description provided for @settingsCredRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Your credentials were removed'**
+  String get settingsCredRemoved;
+
+  /// No description provided for @settingsCredRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove mine'**
+  String get settingsCredRemove;
+
+  /// No description provided for @settingsCredNoPasswords.
+  ///
+  /// In en, this message translates to:
+  /// **'Never enter your account password here.'**
+  String get settingsCredNoPasswords;
+
+  /// No description provided for @settingsCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get settingsCopy;
+
+  /// No description provided for @settingsCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied'**
+  String get settingsCopied;
+
+  /// No description provided for @settingsProviderOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider order'**
+  String get settingsProviderOrder;
+
+  /// No description provided for @settingsProviderOrderHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Used to order search results, to pick a stream when a track exists on several services, and as match targets for imports. Turn a service off to leave it out everywhere.'**
+  String get settingsProviderOrderHint;
+
+  /// No description provided for @settingsDragToReorder.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to reorder'**
+  String get settingsDragToReorder;
+
+  /// No description provided for @settingsMoveUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Move up'**
+  String get settingsMoveUp;
+
+  /// No description provided for @settingsMoveDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Move down'**
+  String get settingsMoveDown;
+
+  /// No description provided for @settingsSourceEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Use {service}'**
+  String settingsSourceEnabled(String service);
+
+  /// No description provided for @settingsPreferSoundCloud.
+  ///
+  /// In en, this message translates to:
+  /// **'Prefer SoundCloud in discovery'**
+  String get settingsPreferSoundCloud;
+
+  /// No description provided for @settingsPreferSoundCloudHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Build mixes and recommendations from SoundCloud first when it\'s connected.'**
+  String get settingsPreferSoundCloudHint;
+
+  /// No description provided for @settingsImportIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'How Fermata finds your tracks on other services when you import a playlist. These are the defaults; you can change them for each import.'**
+  String get settingsImportIntro;
+
+  /// No description provided for @settingsReviewMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get settingsReviewMode;
+
+  /// No description provided for @settingsReviewAuto.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept confident matches'**
+  String get settingsReviewAuto;
+
+  /// No description provided for @settingsReviewAutoHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Matches above the threshold are accepted; you review the rest.'**
+  String get settingsReviewAutoHint;
+
+  /// No description provided for @settingsReviewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Review every match'**
+  String get settingsReviewAll;
+
+  /// No description provided for @settingsReviewAllHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is accepted until you confirm it.'**
+  String get settingsReviewAllHint;
+
+  /// No description provided for @settingsAutoAcceptThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-accept threshold'**
+  String get settingsAutoAcceptThreshold;
+
+  /// No description provided for @settingsAutoAcceptThresholdHint.
+  ///
+  /// In en, this message translates to:
+  /// **'How sure Fermata must be before it accepts a match by itself.'**
+  String get settingsAutoAcceptThresholdHint;
+
+  /// No description provided for @settingsAutoAcceptThresholdDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Only used when confident matches are accepted automatically.'**
+  String get settingsAutoAcceptThresholdDisabled;
+
+  /// No description provided for @settingsSkipUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip unavailable tracks'**
+  String get settingsSkipUnavailable;
+
+  /// No description provided for @settingsSkipUnavailableHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave out tracks that can\'t be played on any target service.'**
+  String get settingsSkipUnavailableHint;
+
+  /// No description provided for @settingsPreferredProvider.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferred service'**
+  String get settingsPreferredProvider;
+
+  /// No description provided for @settingsPreferredProviderHint.
+  ///
+  /// In en, this message translates to:
+  /// **'When several services have the track, prefer this one.'**
+  String get settingsPreferredProviderHint;
+
+  /// No description provided for @settingsNoPreference.
+  ///
+  /// In en, this message translates to:
+  /// **'No preference (use provider order)'**
+  String get settingsNoPreference;
+
+  /// No description provided for @settingsAllowPreviewOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow preview-only matches'**
+  String get settingsAllowPreviewOnly;
+
+  /// No description provided for @settingsAllowPreviewOnlyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept matches that only play a short preview, such as Deezer.'**
+  String get settingsAllowPreviewOnlyHint;
+
+  /// No description provided for @settingsImportVersionsNote.
+  ///
+  /// In en, this message translates to:
+  /// **'A remix, live, acoustic or other version is never accepted automatically when the original was a different version.'**
+  String get settingsImportVersionsNote;
+
+  /// No description provided for @settingsImportPlaylist.
+  ///
+  /// In en, this message translates to:
+  /// **'Import a playlist'**
+  String get settingsImportPlaylist;
+
+  /// No description provided for @settingsNotifyTrackChange.
+  ///
+  /// In en, this message translates to:
+  /// **'When the track changes'**
+  String get settingsNotifyTrackChange;
+
+  /// No description provided for @settingsNotifyTrackChangeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A small desktop notification with the new track.'**
+  String get settingsNotifyTrackChangeHint;
+
+  /// No description provided for @settingsNotifyDownloads.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloads'**
+  String get settingsNotifyDownloads;
+
+  /// No description provided for @settingsNotifyDownloadsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'When downloads finish or fail.'**
+  String get settingsNotifyDownloadsHint;
+
+  /// No description provided for @settingsMediaNotificationNote.
+  ///
+  /// In en, this message translates to:
+  /// **'The playback controls notification is part of background playback and is always shown while music plays.'**
+  String get settingsMediaNotificationNote;
+
+  /// No description provided for @settingsPermissionGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission'**
+  String get settingsPermissionGroup;
+
+  /// No description provided for @settingsNotificationPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get settingsNotificationPermission;
+
+  /// No description provided for @settingsNotificationPermissionMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Not allowed. Android needs your permission before Fermata can show playback controls and download messages.'**
+  String get settingsNotificationPermissionMissing;
+
+  /// No description provided for @settingsPermissionAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed'**
+  String get settingsPermissionAllowed;
+
+  /// No description provided for @settingsAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow'**
+  String get settingsAllow;
+
+  /// No description provided for @settingsOpenSystemSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'System settings'**
+  String get settingsOpenSystemSettings;
+
+  /// No description provided for @settingsBackgroundIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Fermata plays in a foreground service with a media notification, so music keeps going when you leave the app or lock the screen.'**
+  String get settingsBackgroundIntro;
+
+  /// No description provided for @settingsBackgroundDesktop.
+  ///
+  /// In en, this message translates to:
+  /// **'Closing the window keeps the music playing. Fermata stays in the system tray — or minimized when there is no tray — and your media keys keep working. Choose Quit in the tray menu to stop completely.'**
+  String get settingsBackgroundDesktop;
+
+  /// No description provided for @settingsRestartRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart Fermata to apply the changed background setting.'**
+  String get settingsRestartRequired;
+
+  /// No description provided for @settingsStopServiceOnPause.
+  ///
+  /// In en, this message translates to:
+  /// **'Let Android stop playback when paused'**
+  String get settingsStopServiceOnPause;
+
+  /// No description provided for @settingsStopServiceOnPauseHint.
+  ///
+  /// In en, this message translates to:
+  /// **'While paused, the notification can be swiped away and Android may close Fermata to save battery. Applies after restarting Fermata.'**
+  String get settingsStopServiceOnPauseHint;
+
+  /// No description provided for @settingsResumeOnHeadset.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume when headphones connect'**
+  String get settingsResumeOnHeadset;
+
+  /// No description provided for @settingsResumeOnHeadsetHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue playing when headphones or a Bluetooth device reconnect shortly after they were disconnected.'**
+  String get settingsResumeOnHeadsetHint;
+
+  /// No description provided for @settingsBatteryGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery optimization'**
+  String get settingsBatteryGroup;
+
+  /// No description provided for @settingsBatteryOptimized.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery optimization is on'**
+  String get settingsBatteryOptimized;
+
+  /// No description provided for @settingsBatteryOptimizedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Android may stop music in the background on some devices. Allowing background activity is optional and only changes this for Fermata.'**
+  String get settingsBatteryOptimizedHint;
+
+  /// No description provided for @settingsBatteryUnrestricted.
+  ///
+  /// In en, this message translates to:
+  /// **'Background activity is allowed'**
+  String get settingsBatteryUnrestricted;
+
+  /// No description provided for @settingsBatteryUnrestrictedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Android won\'t restrict Fermata in the background.'**
+  String get settingsBatteryUnrestrictedHint;
+
+  /// No description provided for @settingsAllowBackground.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow background activity'**
+  String get settingsAllowBackground;
+
+  /// No description provided for @settingsOemNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Some manufacturers add their own battery limits on top of Android\'s. If music still stops in the background, allow Fermata in your phone\'s battery settings as well — dontkillmyapp.com explains how for each brand.'**
+  String get settingsOemNote;
+
+  /// No description provided for @settingsCloseBehavior.
+  ///
+  /// In en, this message translates to:
+  /// **'When closing the window'**
+  String get settingsCloseBehavior;
+
+  /// No description provided for @settingsCloseToTray.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep playing in the tray'**
+  String get settingsCloseToTray;
+
+  /// No description provided for @settingsCloseToTrayHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The window hides; music keeps playing.'**
+  String get settingsCloseToTrayHint;
+
+  /// No description provided for @settingsCloseMinimize.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep playing minimized'**
+  String get settingsCloseMinimize;
+
+  /// No description provided for @settingsCloseMinimizeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'No tray is available, so the window is minimized; music keeps playing.'**
+  String get settingsCloseMinimizeHint;
+
+  /// No description provided for @settingsCloseAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask every time'**
+  String get settingsCloseAsk;
+
+  /// No description provided for @settingsCloseAskHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose between keeping the music playing and quitting.'**
+  String get settingsCloseAskHint;
+
+  /// No description provided for @settingsCloseQuit.
+  ///
+  /// In en, this message translates to:
+  /// **'Quit Fermata'**
+  String get settingsCloseQuit;
+
+  /// No description provided for @settingsCloseQuitHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Playback stops and Fermata closes.'**
+  String get settingsCloseQuitHint;
+
+  /// No description provided for @settingsShowTrayIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Show tray icon'**
+  String get settingsShowTrayIcon;
+
+  /// No description provided for @settingsShowTrayIconHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick controls and the current track in the system tray.'**
+  String get settingsShowTrayIconHint;
+
+  /// No description provided for @settingsRememberWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'Remember window size and position'**
+  String get settingsRememberWindow;
+
+  /// No description provided for @settingsRememberWindowHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens where you left it last time.'**
+  String get settingsRememberWindowHint;
+
+  /// No description provided for @settingsQuitNote.
+  ///
+  /// In en, this message translates to:
+  /// **'To stop completely, choose Quit in the tray menu — or pick “Ask every time” above to get a Quit button when you close the window.'**
+  String get settingsQuitNote;
+
+  /// No description provided for @settingsLaunchAtLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Launch at login'**
+  String get settingsLaunchAtLogin;
+
+  /// No description provided for @settingsLaunchAtLoginHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Fermata when you sign in to your computer.'**
+  String get settingsLaunchAtLoginHint;
+
+  /// No description provided for @settingsLaunchAtLoginUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Not available on this system.'**
+  String get settingsLaunchAtLoginUnsupported;
+
+  /// No description provided for @settingsLaunchAtLoginFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t change the login setting.'**
+  String get settingsLaunchAtLoginFailed;
+
+  /// No description provided for @settingsStartMinimized.
+  ///
+  /// In en, this message translates to:
+  /// **'Start minimized'**
+  String get settingsStartMinimized;
+
+  /// No description provided for @settingsStartMinimizedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Start in the tray (or minimized) instead of showing the window.'**
+  String get settingsStartMinimizedHint;
+
+  /// No description provided for @settingsShortcutsIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Click a shortcut to record a new one. Conflicts are shown in red.'**
+  String get settingsShortcutsIntro;
+
+  /// No description provided for @settingsShortcutsInApp.
+  ///
+  /// In en, this message translates to:
+  /// **'In Fermata'**
+  String get settingsShortcutsInApp;
+
+  /// No description provided for @settingsShortcutsGlobal.
+  ///
+  /// In en, this message translates to:
+  /// **'Global shortcuts'**
+  String get settingsShortcutsGlobal;
+
+  /// No description provided for @settingsShortcutsGlobalHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Work everywhere, even when Fermata is in the background.'**
+  String get settingsShortcutsGlobalHint;
+
+  /// No description provided for @settingsGlobalHotkeys.
+  ///
+  /// In en, this message translates to:
+  /// **'Use global shortcuts'**
+  String get settingsGlobalHotkeys;
+
+  /// No description provided for @settingsGlobalHotkeysHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Fermata registers these keys with your desktop.'**
+  String get settingsGlobalHotkeysHint;
+
+  /// No description provided for @settingsShortcutNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get settingsShortcutNone;
+
+  /// No description provided for @settingsShortcutConflict.
+  ///
+  /// In en, this message translates to:
+  /// **'Also used by: {actions}'**
+  String settingsShortcutConflict(String actions);
+
+  /// No description provided for @settingsShortcutChangeSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'{action}: {binding}. Change shortcut'**
+  String settingsShortcutChangeSemantics(String action, String binding);
+
+  /// No description provided for @settingsShortcutMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get settingsShortcutMore;
+
+  /// No description provided for @settingsShortcutChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Record new shortcut'**
+  String get settingsShortcutChange;
+
+  /// No description provided for @settingsShortcutReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset to default'**
+  String get settingsShortcutReset;
+
+  /// No description provided for @settingsShortcutRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove shortcut'**
+  String get settingsShortcutRemove;
+
+  /// No description provided for @settingsShortcutRecordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shortcut for “{action}”'**
+  String settingsShortcutRecordTitle(String action);
+
+  /// No description provided for @settingsShortcutRecordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Press the key combination you want to use. Press Esc to cancel.'**
+  String get settingsShortcutRecordHint;
+
+  /// No description provided for @settingsShortcutWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for keys…'**
+  String get settingsShortcutWaiting;
+
+  /// No description provided for @settingsShortcutNeedsModifier.
+  ///
+  /// In en, this message translates to:
+  /// **'Global shortcuts need Ctrl, Alt, Shift or Super, otherwise they would block typing in other apps.'**
+  String get settingsShortcutNeedsModifier;
+
+  /// No description provided for @settingsFileInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'This file isn\'t a Fermata file, or it is damaged.'**
+  String get settingsFileInvalid;
+
+  /// No description provided for @settingsRecordHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening history'**
+  String get settingsRecordHistory;
+
+  /// No description provided for @settingsRecordHistoryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Remember what you play, on this device only. Used for History, Recently played and your mixes.'**
+  String get settingsRecordHistoryHint;
+
+  /// No description provided for @settingsPersonalized.
+  ///
+  /// In en, this message translates to:
+  /// **'Personalized recommendations'**
+  String get settingsPersonalized;
+
+  /// No description provided for @settingsPersonalizedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Mixes and suggestions are calculated on this device from your history and favorites. Off shows only trending music, new releases and genres.'**
+  String get settingsPersonalizedHint;
+
+  /// No description provided for @settingsSaveSearches.
+  ///
+  /// In en, this message translates to:
+  /// **'Search history'**
+  String get settingsSaveSearches;
+
+  /// No description provided for @settingsSaveSearchesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Show your recent searches in Search.'**
+  String get settingsSaveSearchesHint;
+
+  /// No description provided for @settingsNoTrackingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No analytics or tracking'**
+  String get settingsNoTrackingTitle;
+
+  /// No description provided for @settingsNoTracking.
+  ///
+  /// In en, this message translates to:
+  /// **'Fermata has no analytics, no ads, no crash reporting and no account of its own. Nothing about what you listen to leaves this device unless a service you connected needs it to play the music.'**
+  String get settingsNoTracking;
+
+  /// No description provided for @settingsNetworkIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Fermata only connects to:'**
+  String get settingsNetworkIntro;
+
+  /// No description provided for @settingsNetworkProviders.
+  ///
+  /// In en, this message translates to:
+  /// **'The music services you use — to search, stream, read your playlists and import. Requests go directly from this device to the service.'**
+  String get settingsNetworkProviders;
+
+  /// No description provided for @settingsNetworkLyricsOn.
+  ///
+  /// In en, this message translates to:
+  /// **'LRCLIB, to look up lyrics for the track that is playing (title, artist, album and duration are sent).'**
+  String get settingsNetworkLyricsOn;
+
+  /// No description provided for @settingsNetworkLyricsOff.
+  ///
+  /// In en, this message translates to:
+  /// **'LRCLIB is not contacted because lyrics are turned off.'**
+  String get settingsNetworkLyricsOff;
+
+  /// No description provided for @settingsNetworkUpdatesOn.
+  ///
+  /// In en, this message translates to:
+  /// **'GitHub, once a day, to see whether a new version of Fermata exists. Nothing about you is sent.'**
+  String get settingsNetworkUpdatesOn;
+
+  /// No description provided for @settingsNetworkUpdatesOff.
+  ///
+  /// In en, this message translates to:
+  /// **'GitHub only when you press “Check now” under Updates.'**
+  String get settingsNetworkUpdatesOff;
+
+  /// No description provided for @settingsNetworkArtwork.
+  ///
+  /// In en, this message translates to:
+  /// **'The services\' image servers, to download cover art (kept in the artwork cache).'**
+  String get settingsNetworkArtwork;
+
+  /// No description provided for @settingsNetworkSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'A service\'s own sign-in page in your browser when you connect it.'**
+  String get settingsNetworkSignIn;
+
+  /// No description provided for @settingsYourDataGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data'**
+  String get settingsYourDataGroup;
+
+  /// No description provided for @settingsDeleteHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete listening history'**
+  String get settingsDeleteHistory;
+
+  /// No description provided for @settingsDeleteHistoryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Removes every play from History and statistics.'**
+  String get settingsDeleteHistoryHint;
+
+  /// No description provided for @settingsDeleteHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete listening history?'**
+  String get settingsDeleteHistoryTitle;
+
+  /// No description provided for @settingsDeleteHistoryBody.
+  ///
+  /// In en, this message translates to:
+  /// **'History, “Recently played” and listening statistics are deleted. Your mixes will start fresh.'**
+  String get settingsDeleteHistoryBody;
+
+  /// No description provided for @settingsDeleteHistoryDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening history deleted'**
+  String get settingsDeleteHistoryDone;
+
+  /// No description provided for @settingsClearSearches.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search history'**
+  String get settingsClearSearches;
+
+  /// No description provided for @settingsClearSearchesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Removes your recent searches.'**
+  String get settingsClearSearchesHint;
+
+  /// No description provided for @settingsClearSearchesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search history?'**
+  String get settingsClearSearchesTitle;
+
+  /// No description provided for @settingsClearSearchesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your recent searches are removed.'**
+  String get settingsClearSearchesBody;
+
+  /// No description provided for @settingsClearSearchesDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Search history cleared'**
+  String get settingsClearSearchesDone;
+
+  /// No description provided for @settingsClearAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get settingsClearAction;
+
+  /// No description provided for @settingsExportSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Export settings'**
+  String get settingsExportSettings;
+
+  /// No description provided for @settingsExportSettingsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Save your settings as a file. It contains no passwords or sign-ins.'**
+  String get settingsExportSettingsHint;
+
+  /// No description provided for @settingsImportSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Import settings'**
+  String get settingsImportSettings;
+
+  /// No description provided for @settingsImportSettingsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace your settings with an exported file.'**
+  String get settingsImportSettingsHint;
+
+  /// No description provided for @settingsImportSettingsDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings imported'**
+  String get settingsImportSettingsDone;
+
+  /// No description provided for @settingsExportAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get settingsExportAction;
+
+  /// No description provided for @settingsImportAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get settingsImportAction;
+
+  /// No description provided for @settingsBackupLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Back up library'**
+  String get settingsBackupLibrary;
+
+  /// No description provided for @settingsBackupLibraryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Playlists, favorites, history and track links as one file. Music files are not included.'**
+  String get settingsBackupLibraryHint;
+
+  /// No description provided for @settingsRestoreLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore library'**
+  String get settingsRestoreLibrary;
+
+  /// No description provided for @settingsRestoreLibraryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Bring back a library backup.'**
+  String get settingsRestoreLibraryHint;
+
+  /// No description provided for @settingsRestoreLibraryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore library backup?'**
+  String get settingsRestoreLibraryTitle;
+
+  /// No description provided for @settingsRestoreLibraryBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Merge adds the backup to your current library. Replace removes your current playlists, favorites and history first.'**
+  String get settingsRestoreLibraryBody;
+
+  /// No description provided for @settingsRestoreMerge.
+  ///
+  /// In en, this message translates to:
+  /// **'Merge'**
+  String get settingsRestoreMerge;
+
+  /// No description provided for @settingsRestoreReplace.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace'**
+  String get settingsRestoreReplace;
+
+  /// No description provided for @settingsRestoreLibraryDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Library restored'**
+  String get settingsRestoreLibraryDone;
+
+  /// No description provided for @settingsDeleteAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all data'**
+  String get settingsDeleteAll;
+
+  /// No description provided for @settingsDeleteAllHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Playlists, favorites, history, searches and sign-ins. Your music files stay on disk.'**
+  String get settingsDeleteAllHint;
+
+  /// No description provided for @settingsDeleteAllTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all your data?'**
+  String get settingsDeleteAllTitle;
+
+  /// No description provided for @settingsDeleteAllBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This deletes your playlists, favorites, listening and search history, track links and cached metadata, and signs you out of every service. Music files on your disk are never deleted, and your settings are kept. This can\'t be undone.'**
+  String get settingsDeleteAllBody;
+
+  /// No description provided for @settingsDeleteAllWord.
+  ///
+  /// In en, this message translates to:
+  /// **'DELETE'**
+  String get settingsDeleteAllWord;
+
+  /// No description provided for @settingsDeleteAllAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete everything'**
+  String get settingsDeleteAllAction;
+
+  /// No description provided for @settingsDeleteAllDone.
+  ///
+  /// In en, this message translates to:
+  /// **'All your data was deleted'**
+  String get settingsDeleteAllDone;
+
+  /// No description provided for @settingsLanguageSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System language'**
+  String get settingsLanguageSystem;
+
+  /// No description provided for @settingsLanguageSystemHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Follows your device. Languages Fermata doesn\'t have yet fall back to English.'**
+  String get settingsLanguageSystemHint;
+
+  /// No description provided for @settingsMotion.
+  ///
+  /// In en, this message translates to:
+  /// **'Motion'**
+  String get settingsMotion;
+
+  /// No description provided for @settingsMotionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'“System” follows your device\'s reduce-motion setting.'**
+  String get settingsMotionHint;
+
+  /// No description provided for @settingsMotionSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get settingsMotionSystem;
+
+  /// No description provided for @settingsMotionReduce.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce'**
+  String get settingsMotionReduce;
+
+  /// No description provided for @settingsMotionFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Full'**
+  String get settingsMotionFull;
+
+  /// No description provided for @settingsTextScale.
+  ///
+  /// In en, this message translates to:
+  /// **'Text size'**
+  String get settingsTextScale;
+
+  /// No description provided for @settingsTextScaleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'On top of your system\'s text size.'**
+  String get settingsTextScaleHint;
+
+  /// No description provided for @settingsTextScalePreviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Night Drive'**
+  String get settingsTextScalePreviewTitle;
+
+  /// No description provided for @settingsTextScalePreviewBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This is how titles and descriptions will look.'**
+  String get settingsTextScalePreviewBody;
+
+  /// No description provided for @settingsLargerTargets.
+  ///
+  /// In en, this message translates to:
+  /// **'Larger touch targets'**
+  String get settingsLargerTargets;
+
+  /// No description provided for @settingsLargerTargetsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Bigger buttons and rows that are easier to hit.'**
+  String get settingsLargerTargetsHint;
+
+  /// No description provided for @settingsAccessibilityNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Fermata works with screen readers (TalkBack, Orca, Narrator) and can be used entirely with the keyboard on desktop.'**
+  String get settingsAccessibilityNote;
+
+  /// No description provided for @settingsCurrentVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Installed version'**
+  String get settingsCurrentVersion;
+
+  /// No description provided for @settingsAutoUpdateCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Check for updates automatically'**
+  String get settingsAutoUpdateCheck;
+
+  /// No description provided for @settingsAutoUpdateCheckHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Off by default. Once a day, Fermata asks GitHub for the latest release; nothing about you is sent. Fermata never installs anything by itself.'**
+  String get settingsAutoUpdateCheckHint;
+
+  /// No description provided for @settingsCheckNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Check now'**
+  String get settingsCheckNow;
+
+  /// No description provided for @settingsCheckNowHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Asks GitHub once for the latest release.'**
+  String get settingsCheckNowHint;
+
+  /// No description provided for @settingsCheckNowAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Check'**
+  String get settingsCheckNowAction;
+
+  /// No description provided for @settingsUpToDate.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re up to date ({version}).'**
+  String settingsUpToDate(String version);
+
+  /// No description provided for @settingsUpdateAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version} is available.'**
+  String settingsUpdateAvailable(String version);
+
+  /// No description provided for @settingsNoReleases.
+  ///
+  /// In en, this message translates to:
+  /// **'No release has been published yet.'**
+  String get settingsNoReleases;
+
+  /// No description provided for @settingsUpdateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t check for updates. Check your connection and try again.'**
+  String get settingsUpdateFailed;
+
+  /// No description provided for @settingsUpdateHowLinux.
+  ///
+  /// In en, this message translates to:
+  /// **'To update, download the newer release and run its setup.sh the same way you installed Fermata. Your library, settings and sign-ins are kept.'**
+  String get settingsUpdateHowLinux;
+
+  /// No description provided for @settingsUpdateHowWindows.
+  ///
+  /// In en, this message translates to:
+  /// **'To update, download and run the newer setup.exe. It replaces the installed version and keeps your library, settings and sign-ins.'**
+  String get settingsUpdateHowWindows;
+
+  /// No description provided for @settingsUpdateHowAndroid.
+  ///
+  /// In en, this message translates to:
+  /// **'To update, install the newer app.apk over this one. Your data is kept.'**
+  String get settingsUpdateHowAndroid;
+
+  /// No description provided for @settingsReleaseNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Release notes'**
+  String get settingsReleaseNotes;
+
+  /// No description provided for @settingsTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'A calm, local-first music player for your files and the services you use.'**
+  String get settingsTagline;
+
+  /// No description provided for @settingsVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get settingsVersion;
+
+  /// No description provided for @settingsPlatform.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform'**
+  String get settingsPlatform;
+
+  /// No description provided for @settingsLogFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Log file'**
+  String get settingsLogFile;
+
+  /// No description provided for @settingsExportDiagnostics.
+  ///
+  /// In en, this message translates to:
+  /// **'Export diagnostics'**
+  String get settingsExportDiagnostics;
+
+  /// No description provided for @settingsExportDiagnosticsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Saves recent logs and a summary of your setup to a file you can attach to a bug report. Contains no passwords, sign-ins or keys.'**
+  String get settingsExportDiagnosticsHint;
+
+  /// No description provided for @settingsLicenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Open-source licenses'**
+  String get settingsLicenses;
+
+  /// No description provided for @settingsLicensesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The licenses of the software Fermata is built with.'**
+  String get settingsLicensesHint;
+
+  /// No description provided for @settingsLicensesAction.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get settingsLicensesAction;
+
+  /// No description provided for @settingsAttributions.
+  ///
+  /// In en, this message translates to:
+  /// **'Attributions'**
+  String get settingsAttributions;
+
+  /// No description provided for @settingsAttributionSoundCloud.
+  ///
+  /// In en, this message translates to:
+  /// **'SoundCloud: tracks and artwork are provided by SoundCloud and its creators. Each SoundCloud track links to the track and its uploader on soundcloud.com.'**
+  String get settingsAttributionSoundCloud;
+
+  /// No description provided for @settingsAttributionDeezer.
+  ///
+  /// In en, this message translates to:
+  /// **'Deezer: catalog data and 30-second previews are provided by Deezer.'**
+  String get settingsAttributionDeezer;
+
+  /// No description provided for @settingsAttributionAudius.
+  ///
+  /// In en, this message translates to:
+  /// **'Audius: tracks are streamed from the Audius network and belong to their artists.'**
+  String get settingsAttributionAudius;
+
+  /// No description provided for @settingsAttributionJamendo.
+  ///
+  /// In en, this message translates to:
+  /// **'Jamendo: music is provided by Jamendo under each artist\'s Creative Commons license.'**
+  String get settingsAttributionJamendo;
+
+  /// No description provided for @settingsAttributionLrclib.
+  ///
+  /// In en, this message translates to:
+  /// **'Lyrics: provided by LRCLIB (lrclib.net), a free community lyrics database.'**
+  String get settingsAttributionLrclib;
+
+  /// No description provided for @settingsAttributionSpotifyYouTube.
+  ///
+  /// In en, this message translates to:
+  /// **'Spotify and YouTube Music content is shown as supplied by those services and opens in their own apps.'**
+  String get settingsAttributionSpotifyYouTube;
+
+  /// No description provided for @settingsCredits.
+  ///
+  /// In en, this message translates to:
+  /// **'Credits'**
+  String get settingsCredits;
+
+  /// No description provided for @settingsCreditsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Made with Flutter. Typeface: Manrope (SIL Open Font License). Playback by libmpv/media_kit on desktop and ExoPlayer/just_audio on Android. Thanks to everyone who builds the open-source software listed under licenses.'**
+  String get settingsCreditsBody;
+
   /// No description provided for @navHome.
   ///
   /// In en, this message translates to:
