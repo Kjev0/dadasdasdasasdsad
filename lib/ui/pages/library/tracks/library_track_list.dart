@@ -4,14 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/models/track.dart';
 import '../../../design/context_ext.dart';
 import '../../../widgets/tracks/track_list_view.dart';
-import '../../../widgets/tracks/track_menu.dart';
 import '../../../widgets/tracks/track_tile.dart';
+import '../shared/track_helpers.dart';
 import 'track_details.dart';
 
 /// Virtualized track list like `TrackListView`, plus a per-row details
 /// button (format details, tag editor for local files) and an optional
-/// [header] / [footer]. Long-press enters selection mode with the shared
-/// bulk-action bar.
+/// [header] / [footer]. Tapping a row plays the list within the row's
+/// playback silo (SoundCloud never mixes with other services). Long-press
+/// enters selection mode with the shared bulk-action bar.
 class LibraryTrackList extends ConsumerStatefulWidget {
   const LibraryTrackList({
     super.key,
@@ -40,6 +41,7 @@ class LibraryTrackList extends ConsumerStatefulWidget {
 
 class _LibraryTrackListState extends ConsumerState<LibraryTrackList> {
   final _selection = TrackSelectionController();
+  SiloPartition? _silos;
 
   @override
   void dispose() {
@@ -52,6 +54,7 @@ class _LibraryTrackListState extends ConsumerState<LibraryTrackList> {
     final l10n = context.l10n;
     final rowHeight = context.rowExtent;
     final tracks = widget.tracks;
+    final silos = (_silos != null && identical(_silos!.tracks, tracks)) ? _silos! : (_silos = SiloPartition(tracks));
     return ListenableBuilder(
       listenable: _selection,
       builder: (context, _) => CustomScrollView(
@@ -82,7 +85,7 @@ class _LibraryTrackListState extends ConsumerState<LibraryTrackList> {
                     track: t,
                     showAlbum: true,
                     showSource: widget.showSource,
-                    playContext: TrackPlayContext(tracks: tracks, index: i, origin: widget.origin, originLabel: widget.originLabel),
+                    playContext: silos.contextFor(i, origin: widget.origin, originLabel: widget.originLabel),
                     selectionMode: _selection.active,
                     selected: _selection.isSelected(t.id),
                     onSelectedChanged: (v) => _selection.set(t.id, v),

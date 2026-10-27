@@ -136,60 +136,77 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     final platform = ref.watch(platformInfoProvider);
     final hits = searchSettings(l10n, platform, _query);
     final searching = _query.trim().isNotEmpty;
-    return ListView(
-      padding: EdgeInsets.fromLTRB(wide ? 16 : 16, 24, wide ? 12 : 16, 24),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Semantics(header: true, child: Text(l10n.settingsTitle, style: context.type.headline)),
+          padding: EdgeInsets.fromLTRB(16, 24, wide ? 12 : 16, 0),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Semantics(header: true, child: Text(l10n.settingsTitle, style: context.type.headline)),
+            ),
+            const SizedBox(height: 16),
+            SearchField(
+              key: const ValueKey('settings.search'),
+              controller: _search,
+              hint: l10n.settingsSearchHint,
+              textInputAction: TextInputAction.search,
+              onChanged: (v) => setState(() => _query = v),
+              onCleared: () => setState(() => _query = ''),
+            ),
+            const SizedBox(height: 12),
+          ]),
         ),
-        const SizedBox(height: 16),
-        SearchField(
-          key: const ValueKey('settings.search'),
-          controller: _search,
-          hint: l10n.settingsSearchHint,
-          textInputAction: TextInputAction.search,
-          onChanged: (v) => setState(() => _query = v),
-          onCleared: () => setState(() => _query = ''),
-        ),
-        const SizedBox(height: 12),
-        if (searching && hits.isEmpty)
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(l10n.settingsSearchNoResults(_query.trim()), style: context.type.bodySmall),
+        Expanded(
+          child: ListView(
+            key: const ValueKey('settings.sectionList'),
+            padding: EdgeInsets.fromLTRB(16, 0, wide ? 12 : 16, 8),
+            children: [
+              if (searching && hits.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(l10n.settingsSearchNoResults(_query.trim()), style: context.type.bodySmall),
+                ),
+              if (searching)
+                for (final hit in hits)
+                  ListTile(
+                    key: ValueKey('settings.hit.${hit.section.id}.${hit.label}'),
+                    leading: Icon(hit.section.icon, color: c.textSecondary),
+                    title: Text(hit.label, style: context.type.body),
+                    subtitle:
+                        hit.label == hit.section.title(l10n) ? null : Text(hit.section.title(l10n), style: context.type.bodySmall),
+                    shape: RoundedRectangleBorder(borderRadius: context.radii.smAll),
+                    onTap: () => _open(hit.section.id, wide: wide),
+                  )
+              else
+                for (final s in settingsCatalog)
+                  if (s.visibleOn(platform))
+                    ListTile(
+                      key: ValueKey('settings.section.${s.id}'),
+                      leading: Icon(s.icon, color: s.id == selected ? c.accentText : c.textSecondary),
+                      title: Text(s.title(l10n), style: context.type.body),
+                      selected: s.id == selected,
+                      selectedTileColor: c.surfaceHigh,
+                      trailing: wide ? null : Icon(Icons.chevron_right_rounded, color: c.textTertiary),
+                      shape: RoundedRectangleBorder(borderRadius: context.radii.smAll),
+                      onTap: () => _open(s.id, wide: wide),
+                    ),
+            ],
           ),
-        if (searching)
-          for (final hit in hits)
-            ListTile(
-              key: ValueKey('settings.hit.${hit.section.id}.${hit.label}'),
-              leading: Icon(hit.section.icon, color: c.textSecondary),
-              title: Text(hit.label, style: context.type.body),
-              subtitle: hit.label == hit.section.title(l10n) ? null : Text(hit.section.title(l10n), style: context.type.bodySmall),
-              shape: RoundedRectangleBorder(borderRadius: context.radii.smAll),
-              onTap: () => _open(hit.section.id, wide: wide),
-            )
-        else
-          for (final s in settingsCatalog)
-            if (s.visibleOn(platform))
-              ListTile(
-                key: ValueKey('settings.section.${s.id}'),
-                leading: Icon(s.icon, color: s.id == selected ? c.accentText : c.textSecondary),
-                title: Text(s.title(l10n), style: context.type.body),
-                selected: s.id == selected,
-                selectedTileColor: c.surfaceHigh,
-                trailing: wide ? null : Icon(Icons.chevron_right_rounded, color: c.textTertiary),
-                shape: RoundedRectangleBorder(borderRadius: context.radii.smAll),
-                onTap: () => _open(s.id, wide: wide),
-              ),
-        const SizedBox(height: 16),
-        Align(
-          alignment: AlignmentDirectional.centerStart,
-          child: FermataButton(
-            key: const ValueKey('settings.restoreAll'),
-            label: l10n.settingsRestoreAll,
-            icon: Icons.restart_alt_rounded,
-            variant: FermataButtonVariant.ghost,
-            onPressed: _restoreAll,
+        ),
+        Divider(height: 1, thickness: 1, color: c.outlineSubtle),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: FermataButton(
+              key: const ValueKey('settings.restoreAll'),
+              label: l10n.settingsRestoreAll,
+              icon: Icons.restart_alt_rounded,
+              variant: FermataButtonVariant.ghost,
+              onPressed: _restoreAll,
+            ),
           ),
         ),
       ],

@@ -235,6 +235,2105 @@ class AppLocalizationsDa extends AppLocalizations {
   String get desktopUnknownArtist => 'Ukendt kunstner';
 
   @override
+  String get importTitle => 'Importér en playliste';
+
+  @override
+  String get importBack => 'Tilbage';
+
+  @override
+  String get importStepSource => 'Kilde';
+
+  @override
+  String get importStepPlaylist => 'Playliste';
+
+  @override
+  String get importStepOptions => 'Matchning';
+
+  @override
+  String importStepOf(int step, int total, String name) {
+    return 'Trin $step af $total: $name';
+  }
+
+  @override
+  String get importChooseSource => 'Hvor er playlisten?';
+
+  @override
+  String get importChooseSourceHint =>
+      'Fermata finder hvert nummer hos de tjenester, du vælger bagefter, og beholder et link til originalen.';
+
+  @override
+  String get importM3uTitle => 'En playlistefil (M3U)';
+
+  @override
+  String get importM3uHint =>
+      'Numre fra en .m3u- eller .m3u8-fil på denne enhed.';
+
+  @override
+  String get importM3uUnreadable => 'Playlistefilen kan ikke læses.';
+
+  @override
+  String get importM3uEmpty =>
+      'Der blev ikke fundet nogen numre i playlistefilen.';
+
+  @override
+  String importSourceNotSetUp(String service) {
+    return '$service er ikke sat op endnu.';
+  }
+
+  @override
+  String get importSourceLinkOnly =>
+      'Offentlige playlister via link. Forbind for at se dine egne playlister.';
+
+  @override
+  String get importSourceConnectFirst => 'Forbind din konto for at importere.';
+
+  @override
+  String importSourceSignedIn(String name) {
+    return 'Logget ind som $name';
+  }
+
+  @override
+  String get importSetUp => 'Sæt op';
+
+  @override
+  String importChooseWhat(String service) {
+    return 'Hvad vil du importere fra $service?';
+  }
+
+  @override
+  String get importPasteLink => 'Indsæt et link til en playliste';
+
+  @override
+  String importPasteLinkHint(String service) {
+    return 'Et link eller id til en playliste hos $service';
+  }
+
+  @override
+  String get importContinue => 'Fortsæt';
+
+  @override
+  String get importLikedTracks => 'Likede numre';
+
+  @override
+  String importLikedTracksHint(String service) {
+    return 'Alle numre, du har liket hos $service.';
+  }
+
+  @override
+  String importLikedName(String service) {
+    return 'Liket hos $service';
+  }
+
+  @override
+  String get importYourPlaylists => 'Dine playlister';
+
+  @override
+  String get importNoPlaylists => 'Du har ingen playlister der endnu.';
+
+  @override
+  String importTrackCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count numre',
+      one: '1 nummer',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String importConnectForLibrary(String service) {
+    return 'Forbind din $service-konto i Indstillinger for at importere dine egne playlister og likede numre.';
+  }
+
+  @override
+  String get importOptionsTitle => 'Hvor skal Fermata lede?';
+
+  @override
+  String importSummaryPlaylist(String name, String service) {
+    return '“$name” fra $service';
+  }
+
+  @override
+  String importSummaryLink(String service) {
+    return 'Et playlistelink fra $service';
+  }
+
+  @override
+  String importSummaryLiked(String service) {
+    return 'Dine likede numre hos $service';
+  }
+
+  @override
+  String importSummaryM3u(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count numre',
+      one: '1 nummer',
+    );
+    return '“$name” ($_temp0)';
+  }
+
+  @override
+  String get importTargets => 'Find match hos';
+
+  @override
+  String get importTargetsHint =>
+      'I denne rækkefølge. Den første tjeneste med et godt match bruges til afspilning.';
+
+  @override
+  String get importNoTargets =>
+      'Ingen af dine tjenester kan afspille matchene. Forbind først en tjeneste som SoundCloud eller Audius.';
+
+  @override
+  String get importTargetNotReady => 'Ikke forbundet eller ikke sat op';
+
+  @override
+  String get importMatchingGroup => 'Matchning';
+
+  @override
+  String get importStart => 'Start import';
+
+  @override
+  String importFetchingLiked(int count) {
+    return 'Hentede $count likede numre…';
+  }
+
+  @override
+  String get importNothingToImport => 'Der er ingen numre at importere.';
+
+  @override
+  String get importStartFailed => 'Importen kunne ikke startes.';
+
+  @override
+  String get importReviewTitle => 'Gennemgå match';
+
+  @override
+  String get importReviewHint =>
+      'Tjek de match, Fermata ikke var sikker på. Intet gemmes, før du trykker Gem.';
+
+  @override
+  String get importUntitled => 'Importeret playliste';
+
+  @override
+  String get importImporting => 'Importerer…';
+
+  @override
+  String get importPhaseFetching => 'Henter playlisten…';
+
+  @override
+  String get importPhaseMatchingStart => 'Finder match…';
+
+  @override
+  String importPhaseMatching(int processed, int total) {
+    return '$processed af $total numre matchet';
+  }
+
+  @override
+  String get importPhaseSaving => 'Gemmer…';
+
+  @override
+  String get importCancelImport => 'Annullér import';
+
+  @override
+  String get importCancelTitle => 'Annullér denne import?';
+
+  @override
+  String get importCancelBody => 'Dine valg forkastes. Intet er gemt endnu.';
+
+  @override
+  String get importCanceled => 'Importen blev annulleret.';
+
+  @override
+  String get importFailed => 'Importen mislykkedes';
+
+  @override
+  String get importStartNew => 'Start en ny import';
+
+  @override
+  String get importSessionMissing => 'Denne import er ikke tilgængelig længere';
+
+  @override
+  String get importSessionMissingHint =>
+      'Igangværende importer gemmes, indtil Fermata lukkes.';
+
+  @override
+  String importFilterAll(int count) {
+    return 'Alle · $count';
+  }
+
+  @override
+  String get importFilterEmpty => 'Ingen numre med denne status.';
+
+  @override
+  String get importDecisionAuto => 'Automatisk accepteret';
+
+  @override
+  String get importDecisionAccepted => 'Accepteret';
+
+  @override
+  String get importDecisionReview => 'Skal gennemgås';
+
+  @override
+  String get importDecisionNotFound => 'Ikke fundet';
+
+  @override
+  String get importDecisionRejected => 'Afvist';
+
+  @override
+  String get importDecisionSkipped => 'Sprunget over';
+
+  @override
+  String importAcceptAllHigh(int count) {
+    return 'Acceptér alle sikre ($count)';
+  }
+
+  @override
+  String get importSavePlaylist => 'Gem playliste';
+
+  @override
+  String get importSaveTitle => 'Navngiv playlisten';
+
+  @override
+  String get importSavePendingTitle => 'Nogle numre skal stadig gennemgås';
+
+  @override
+  String importSavePendingBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count numre er ikke gennemgået. De gemmes uden match.',
+      one: '1 nummer er ikke gennemgået. Det gemmes uden match.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get importSaveAnyway => 'Gem alligevel';
+
+  @override
+  String get importSaved => 'Playliste gemt';
+
+  @override
+  String get importSaveFailed => 'Playlisten kunne ikke gemmes.';
+
+  @override
+  String get importDoneTitle => 'Playliste gemt';
+
+  @override
+  String get importDoneAll => 'Alle numre har et match.';
+
+  @override
+  String importDoneMissing(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count numre har intet match.',
+      one: '1 nummer har intet match.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get importOpenPlaylist => 'Åbn playliste';
+
+  @override
+  String get importShowMissing => 'Vis manglende numre';
+
+  @override
+  String importMissingTitle(int count) {
+    return 'Numre uden match ($count)';
+  }
+
+  @override
+  String importReportHeader(String name, int count) {
+    return 'Numre uden match i “$name” ($count):';
+  }
+
+  @override
+  String get importOriginal => 'Original';
+
+  @override
+  String get importMatch => 'Match';
+
+  @override
+  String get importNoMatch => 'Intet match fundet';
+
+  @override
+  String get importOnlyOtherVersions =>
+      'Kun andre versioner fundet — vælg selv en, hvis den er rigtig.';
+
+  @override
+  String get importAccept => 'Acceptér';
+
+  @override
+  String get importReject => 'Afvis';
+
+  @override
+  String get importSkip => 'Spring over';
+
+  @override
+  String importOtherCandidates(int count) {
+    return 'Kandidater ($count)';
+  }
+
+  @override
+  String importCandidatesTitle(String title) {
+    return 'Kandidater til “$title”';
+  }
+
+  @override
+  String get importUseThis => 'Brug denne';
+
+  @override
+  String get importDifferentVersionWarning =>
+      'Dette er en anden version end originalen.';
+
+  @override
+  String get importSearch => 'Søg';
+
+  @override
+  String importSearchFor(String title) {
+    return 'Søg efter “$title”';
+  }
+
+  @override
+  String get importSearchNoResults => 'Intet fundet. Prøv andre ord.';
+
+  @override
+  String get importSearchResults => 'Resultater';
+
+  @override
+  String get importMatchedByIsrc => 'Samme ISRC';
+
+  @override
+  String importConfidenceSemantics(String level, int percent) {
+    return 'Sikkerhed $level, $percent procent';
+  }
+
+  @override
+  String get importConfidenceExact => 'Præcis';
+
+  @override
+  String get importConfidenceHigh => 'Høj';
+
+  @override
+  String get importConfidenceMedium => 'Mellem';
+
+  @override
+  String get importConfidenceLow => 'Lav';
+
+  @override
+  String get importConfidenceNone => 'Ingen';
+
+  @override
+  String get importDiffRemix => 'Remix';
+
+  @override
+  String get importDiffLive => 'Live';
+
+  @override
+  String get importDiffAcoustic => 'Akustisk';
+
+  @override
+  String get importDiffExtended => 'Forlænget';
+
+  @override
+  String get importDiffRadioEdit => 'Radioversion';
+
+  @override
+  String get importDiffInstrumental => 'Instrumental';
+
+  @override
+  String get importDiffKaraoke => 'Karaoke';
+
+  @override
+  String get importDiffCover => 'Coverversion';
+
+  @override
+  String get importDiffRemaster => 'Remaster';
+
+  @override
+  String get importDiffSped => 'Hurtigere';
+
+  @override
+  String get importDiffSlowed => 'Langsommere';
+
+  @override
+  String get importDiffDemo => 'Demo';
+
+  @override
+  String get importDiffExplicit => 'Forskel i eksplicit indhold';
+
+  @override
+  String get importDiffDuration => 'Anden længde';
+
+  @override
+  String get importDiffAlbum => 'Andet album';
+
+  @override
+  String get importDiffYear => 'Andet år';
+
+  @override
+  String get importDiffArtist => 'Anden kunstner';
+
+  @override
+  String get importDiffFeatured => 'Andre gæstekunstnere';
+
+  @override
+  String get importDiffTitle => 'Anden titel';
+
+  @override
+  String get importDiffPreview => 'Kun smagsprøve';
+
+  @override
+  String get onboardingSkip => 'Spring over';
+
+  @override
+  String get onboardingBack => 'Tilbage';
+
+  @override
+  String get onboardingNext => 'Næste';
+
+  @override
+  String get onboardingGetStarted => 'Kom i gang';
+
+  @override
+  String get onboardingFinish => 'Begynd at lytte';
+
+  @override
+  String onboardingStepOf(int step, int total) {
+    return 'Trin $step af $total';
+  }
+
+  @override
+  String get onboardingWelcomeTitle => 'Velkommen til Fermata';
+
+  @override
+  String get onboardingWelcomeBody =>
+      'En rolig musikafspiller til den musik, du ejer, og de tjenester, du allerede bruger.';
+
+  @override
+  String get onboardingPointFiles =>
+      'Dine egne filer kommer først og virker altid offline.';
+
+  @override
+  String get onboardingPointServices =>
+      'Søg i SoundCloud, Audius og flere på ét sted, og tag dine playlister med.';
+
+  @override
+  String get onboardingPointBackground =>
+      'Spiller videre i baggrunden, med dine medietaster og låseskærmen.';
+
+  @override
+  String get onboardingPointPrivacy =>
+      'Ingen reklamer, ingen sporing. Anbefalinger beregnes på din enhed.';
+
+  @override
+  String get onboardingMusicTitle => 'Tilføj din musik';
+
+  @override
+  String get onboardingMusicBody =>
+      'Vælg de mapper, hvor dine musikfiler ligger. Fermata læser dem i baggrunden og holder øje med nye filer.';
+
+  @override
+  String get onboardingAudioPermissionRationale =>
+      'For at afspille musikken på din telefon skal Fermata have tilladelse til at læse dine lydfiler. Den læser kun musik — aldrig billeder, beskeder eller andre filer.';
+
+  @override
+  String get onboardingAllowAudio => 'Giv adgang til musik';
+
+  @override
+  String get onboardingAudioDenied =>
+      'Uden denne tilladelse kan Fermata ikke se dine musikfiler. Du kan tillade det senere i systemindstillingerne.';
+
+  @override
+  String get onboardingSuggestedFolder => 'Din musikmappe';
+
+  @override
+  String get onboardingAdd => 'Tilføj';
+
+  @override
+  String get onboardingChooseFolder => 'Vælg en mappe…';
+
+  @override
+  String get onboardingFolderMissing => 'Den mappe findes ikke længere.';
+
+  @override
+  String get onboardingScanning => 'Fermata læser din musik i baggrunden.';
+
+  @override
+  String get onboardingMusicLater =>
+      'Du kan tilføje eller fjerne mapper når som helst under Bibliotek.';
+
+  @override
+  String get onboardingServicesTitle => 'Forbind dine tjenester';
+
+  @override
+  String get onboardingServicesBody =>
+      'Valgfrit. Forbind en konto for at søge i den, streame fra den og importere dine playlister. Du logger ind på tjenestens egen hjemmeside — Fermata ser aldrig din adgangskode.';
+
+  @override
+  String get onboardingRecommended => 'Anbefalet';
+
+  @override
+  String get onboardingServiceHint => 'Log ind for at bruge din konto.';
+
+  @override
+  String get onboardingNeedsCredentials =>
+      'Kræver først udviklernøgler — du kan sætte det op senere i Indstillinger.';
+
+  @override
+  String onboardingConnectedAs(String name) {
+    return 'Forbundet som $name';
+  }
+
+  @override
+  String onboardingNoAccountNeeded(String services) {
+    return 'Ingen konto nødvendig til: $services.';
+  }
+
+  @override
+  String get onboardingServicesLater =>
+      'Du kan forbinde eller afbryde tjenester når som helst i Indstillinger → Forbundne tjenester.';
+
+  @override
+  String get onboardingBackgroundTitle => 'Musik der spiller videre';
+
+  @override
+  String get onboardingBackgroundAndroid =>
+      'Fermata spiller videre, når du skifter app eller låser telefonen. En notifikation viser afspilningsknapperne.';
+
+  @override
+  String get onboardingNotificationRationale =>
+      'Android spørger, før apps må vise notifikationer. Fermata bruger dem til afspilningsknapperne og til færdige downloads — aldrig til reklamer.';
+
+  @override
+  String get onboardingAllowNotifications => 'Tillad notifikationer';
+
+  @override
+  String get onboardingNotificationsAllowed => 'Notifikationer er tilladt.';
+
+  @override
+  String get onboardingBatteryNote =>
+      'Hvis musikken stopper i baggrunden på din telefon, så se Indstillinger → Baggrundsafspilning.';
+
+  @override
+  String get onboardingBackgroundTray =>
+      'Når du lukker vinduet, stopper musikken ikke: Fermata bliver i systembakken. Afslut fra bakkemenuen, når du er færdig.';
+
+  @override
+  String get onboardingBackgroundNoTray =>
+      'Når du lukker vinduet, stopper musikken ikke. Dit skrivebord har ingen systembakke, så Fermata minimeres i stedet.';
+
+  @override
+  String get onboardingMediaKeys =>
+      'Medietaster og skrivebordets mediekontroller virker, mens Fermata er i baggrunden.';
+
+  @override
+  String get pagesPlay => 'Afspil';
+
+  @override
+  String get pagesShuffle => 'Bland';
+
+  @override
+  String pagesHoursMinutes(int hours, int minutes) {
+    return '$hours t $minutes min';
+  }
+
+  @override
+  String pagesMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String pagesTrackCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count numre',
+      one: '1 nummer',
+      zero: 'Ingen numre',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get pagesToday => 'I dag';
+
+  @override
+  String get pagesYesterday => 'I går';
+
+  @override
+  String get pagesDownloadEligible => 'Download';
+
+  @override
+  String get pagesOpenSettings => 'Åbn indstillinger';
+
+  @override
+  String get pagesImportAndMatch => 'Importér og match';
+
+  @override
+  String get pagesMore => 'Mere';
+
+  @override
+  String get pagesSort => 'Sortér';
+
+  @override
+  String get pagesFilter => 'Filtrér';
+
+  @override
+  String get pagesAscending => 'Stigende';
+
+  @override
+  String get pagesDescending => 'Faldende';
+
+  @override
+  String get pagesClearFilters => 'Ryd filtre';
+
+  @override
+  String get pagesNoMatches => 'Intet passer til filtrene.';
+
+  @override
+  String get pagesLoadMore => 'Indlæs flere';
+
+  @override
+  String get pagesRemove => 'Fjern';
+
+  @override
+  String get pagesRename => 'Omdøb';
+
+  @override
+  String pagesOpenOnProvider(String provider) {
+    return 'Åbn på $provider';
+  }
+
+  @override
+  String pagesDataFrom(String provider) {
+    return 'Data fra $provider';
+  }
+
+  @override
+  String get shelfContinueListening => 'Fortsæt med at lytte';
+
+  @override
+  String shelfDailyMix(int number) {
+    return 'Dagens mix $number';
+  }
+
+  @override
+  String get shelfDiscoverWeekly => 'Ugens opdagelser';
+
+  @override
+  String shelfBecauseYouLiked(String artist) {
+    return 'Fordi du kan lide $artist';
+  }
+
+  @override
+  String get shelfTrending => 'Populært lige nu';
+
+  @override
+  String get shelfNewReleases => 'Nye udgivelser';
+
+  @override
+  String get shelfRecentlyAdded => 'Senest tilføjet';
+
+  @override
+  String get moodFocus => 'Fokus';
+
+  @override
+  String get moodChill => 'Afslapning';
+
+  @override
+  String get moodWorkout => 'Træning';
+
+  @override
+  String get moodParty => 'Fest';
+
+  @override
+  String get moodSleep => 'Søvn';
+
+  @override
+  String get moodCommute => 'På farten';
+
+  @override
+  String get moodHappy => 'Godt humør';
+
+  @override
+  String get moodMelancholy => 'Melankoli';
+
+  @override
+  String get homeGoodMorning => 'Godmorgen';
+
+  @override
+  String get homeGoodAfternoon => 'God eftermiddag';
+
+  @override
+  String get homeGoodEvening => 'Godaften';
+
+  @override
+  String get homeGoodNight => 'God nat';
+
+  @override
+  String get homeSubtitle =>
+      'Udvalgt ud fra det, du lytter til — beregnet på denne enhed.';
+
+  @override
+  String get homeMix => 'Mix';
+
+  @override
+  String get homeShelf => 'Samling';
+
+  @override
+  String get homeMadeForYou => 'Lavet til dig';
+
+  @override
+  String get homeFirstRunTitle => 'Lad os hente din musik ind';
+
+  @override
+  String get homeFirstRunMessage =>
+      'Fermata afspiller dine egne filer og de tjenester, du forbinder. Start med en af disse.';
+
+  @override
+  String get homeAddFolderTitle => 'Tilføj en musikmappe';
+
+  @override
+  String get homeAddFolderBody =>
+      'Dine filer bliver, hvor de er, og kan afspilles offline.';
+
+  @override
+  String get homeConnectTitle => 'Forbind en tjeneste';
+
+  @override
+  String get homeConnectBody => 'SoundCloud, Audius, Jamendo og flere.';
+
+  @override
+  String get homeConnectAction => 'Forbundne tjenester';
+
+  @override
+  String get homeExploreTitle => 'Udforsk';
+
+  @override
+  String get homeExploreBody =>
+      'Gennemse stemninger, genrer og det, der er populært.';
+
+  @override
+  String get homeExploreAction => 'Begynd at udforske';
+
+  @override
+  String get searchHint => 'Sange, kunstnere, albums eller et delingslink';
+
+  @override
+  String get searchFilterAll => 'Alle';
+
+  @override
+  String get searchEmptyTitle => 'Søg i det hele på én gang';
+
+  @override
+  String get searchEmptyMessage =>
+      'Dit bibliotek og alle forbundne tjenester. Indsæt et playlistelink for at åbne eller importere den.';
+
+  @override
+  String get searchBrowseExplore => 'Gå til Udforsk';
+
+  @override
+  String get searchHistoryOff =>
+      'Søgehistorik er slået fra, så søgninger gemmes ikke.';
+
+  @override
+  String get searchRecent => 'Seneste søgninger';
+
+  @override
+  String get searchClearRecent => 'Ryd';
+
+  @override
+  String searchRemoveRecent(String query) {
+    return 'Fjern \"$query\"';
+  }
+
+  @override
+  String searchFor(String query) {
+    return 'Søg efter \"$query\"';
+  }
+
+  @override
+  String get searchInYourLibrary => 'I dit bibliotek';
+
+  @override
+  String get searchTopResult => 'Bedste resultat';
+
+  @override
+  String get searchTracks => 'Numre';
+
+  @override
+  String get searchArtists => 'Kunstnere';
+
+  @override
+  String get searchAlbums => 'Albums';
+
+  @override
+  String get searchPlaylists => 'Playlister';
+
+  @override
+  String searchShowAll(int count) {
+    return 'Vis alle $count';
+  }
+
+  @override
+  String searchNoResults(String query) {
+    return 'Ingen resultater for \"$query\"';
+  }
+
+  @override
+  String get searchNoResultsHint =>
+      'Tjek stavningen, eller prøv med færre ord.';
+
+  @override
+  String get searchConnectedServices => 'Forbundne tjenester';
+
+  @override
+  String searchNotSearched(String sources) {
+    return 'Ikke søgt i: $sources';
+  }
+
+  @override
+  String searchSourceNotConnected(String service) {
+    return '$service er ikke forbundet.';
+  }
+
+  @override
+  String get searchNeedsCredentials => 'skal sættes op';
+
+  @override
+  String get searchNotConnected => 'ikke forbundet';
+
+  @override
+  String get searchKindTrack => 'Nummer';
+
+  @override
+  String get searchKindArtist => 'Kunstner';
+
+  @override
+  String get searchKindAlbum => 'Album';
+
+  @override
+  String get searchKindPlaylist => 'Playliste';
+
+  @override
+  String searchLinkTrack(String provider) {
+    return 'Link til nummer på $provider';
+  }
+
+  @override
+  String searchLinkPlaylist(String provider) {
+    return 'Link til playliste på $provider';
+  }
+
+  @override
+  String searchLinkAlbum(String provider) {
+    return 'Link til album på $provider';
+  }
+
+  @override
+  String searchLinkArtist(String provider) {
+    return 'Link til kunstner på $provider';
+  }
+
+  @override
+  String searchLinkGeneric(String provider) {
+    return 'Link til $provider';
+  }
+
+  @override
+  String get searchOpenPlaylist => 'Åbn playliste';
+
+  @override
+  String get searchOpenAlbum => 'Åbn album';
+
+  @override
+  String get searchOpenArtist => 'Åbn kunstner';
+
+  @override
+  String searchSourceMissing(String provider) {
+    return '$provider er ikke tilgængelig i denne version af Fermata.';
+  }
+
+  @override
+  String get searchLinkNotFound =>
+      'Nummeret blev ikke fundet. Det er måske slettet eller gjort privat.';
+
+  @override
+  String get exploreSubtitle =>
+      'Stemninger, genrer og ny musik fra dine tjenester.';
+
+  @override
+  String get exploreMoods => 'Stemninger';
+
+  @override
+  String get exploreGenres => 'Genrer';
+
+  @override
+  String get exploreNoGenres =>
+      'Ingen genrer endnu. Tilføj musik eller forbind en tjeneste.';
+
+  @override
+  String get exploreGenre => 'Genre';
+
+  @override
+  String get exploreMood => 'Stemning';
+
+  @override
+  String get exploreNothingFound =>
+      'Intet at afspille lige nu. Prøv igen senere, eller forbind en anden tjeneste.';
+
+  @override
+  String get libraryTabTracks => 'Numre';
+
+  @override
+  String get libraryTabAlbums => 'Albums';
+
+  @override
+  String get libraryTabArtists => 'Kunstnere';
+
+  @override
+  String get libraryTabFolders => 'Mapper';
+
+  @override
+  String get libraryPermissionNeeded =>
+      'Fermata skal have adgang til din musik for at tilføje en mappe.';
+
+  @override
+  String get libraryOpenSystemSettings => 'Åbn indstillinger';
+
+  @override
+  String get libraryAddFolder => 'Tilføj mappe';
+
+  @override
+  String libraryFolderAdded(String folder) {
+    return '$folder er tilføjet — scanner nu';
+  }
+
+  @override
+  String get libraryLocalFiles => 'Lokale filer';
+
+  @override
+  String get libraryEmptyTitle => 'Dit bibliotek er tomt';
+
+  @override
+  String get libraryEmptyMessage =>
+      'Tilføj en musikmappe, eller importér en fil. Numre, du synes om eller afspiller fra tjenester, vises også her.';
+
+  @override
+  String get libraryImportFile => 'Importér en fil';
+
+  @override
+  String get libraryImportFileFailed =>
+      'Filen kan ikke tilføjes. Fermata læser MP3, FLAC, M4A, Ogg, Opus, WAV og AIFF.';
+
+  @override
+  String libraryImportFileDone(String title) {
+    return '\"$title\" er tilføjet';
+  }
+
+  @override
+  String get libraryFilterHint => 'Filtrér dit bibliotek';
+
+  @override
+  String get libraryQuickDownloaded => 'Downloadet';
+
+  @override
+  String librarySortedBy(String field) {
+    return 'Sorteret efter $field';
+  }
+
+  @override
+  String get librarySortTitle => 'Titel';
+
+  @override
+  String get librarySortArtist => 'Kunstner';
+
+  @override
+  String get librarySortAlbum => 'Album';
+
+  @override
+  String get librarySortYear => 'År';
+
+  @override
+  String get librarySortDuration => 'Varighed';
+
+  @override
+  String get librarySortDateAdded => 'Tilføjet';
+
+  @override
+  String get librarySortPlayCount => 'Mest afspillet';
+
+  @override
+  String get librarySortLastPlayed => 'Sidst afspillet';
+
+  @override
+  String get librarySortGenre => 'Genre';
+
+  @override
+  String get libraryFilterAvailability => 'Tilgængelighed';
+
+  @override
+  String get libraryFilterDownloaded => 'Downloadet';
+
+  @override
+  String get libraryFilterLocal => 'Kun lokale filer';
+
+  @override
+  String get libraryFilterOffline => 'Tilgængelig offline';
+
+  @override
+  String get libraryFilterFavorites => 'Synes godt om';
+
+  @override
+  String get libraryFilterSource => 'Kilde';
+
+  @override
+  String get libraryFilterGenre => 'Genre';
+
+  @override
+  String get libraryAnyGenre => 'Alle genrer';
+
+  @override
+  String get libraryFilterYear => 'År';
+
+  @override
+  String get libraryFrom => 'Fra';
+
+  @override
+  String get libraryTo => 'Til';
+
+  @override
+  String get libraryFilterDuration => 'Varighed (minutter)';
+
+  @override
+  String get libraryMinMinutes => 'Mindst';
+
+  @override
+  String get libraryMaxMinutes => 'Højst';
+
+  @override
+  String get libraryFilterAlbums => 'Filtrér albums';
+
+  @override
+  String get libraryNoAlbums => 'Ingen albums endnu';
+
+  @override
+  String get libraryFilterArtists => 'Filtrér kunstnere';
+
+  @override
+  String get libraryNoArtists => 'Ingen kunstnere endnu';
+
+  @override
+  String get libraryFolders => 'Musikmapper';
+
+  @override
+  String get libraryFoldersHintDesktop =>
+      'Overvågede mapper scannes automatisk igen, når filer ændres.';
+
+  @override
+  String get libraryFoldersHintAndroid =>
+      'Mapperne scannes igen, hver gang Fermata starter.';
+
+  @override
+  String get libraryNoFolders => 'Ingen musikmapper endnu';
+
+  @override
+  String get libraryNoFoldersMessage =>
+      'Tilføj de mapper, hvor du har din musik. Filer bliver aldrig flyttet eller uploadet.';
+
+  @override
+  String get libraryRescanAll => 'Scan igen';
+
+  @override
+  String get libraryFullRescan => 'Fuld scanning';
+
+  @override
+  String get libraryRescanFolder => 'Scan mappen igen';
+
+  @override
+  String get libraryRemoveFolder => 'Fjern mappe';
+
+  @override
+  String get libraryRemoveFolderTitle => 'Fjern mappen?';
+
+  @override
+  String libraryRemoveFolderMessage(String path) {
+    return 'Numre fra $path fjernes fra dit bibliotek. Selve filerne slettes ikke.';
+  }
+
+  @override
+  String get libraryWatchFolder => 'Hold øje med ændringer';
+
+  @override
+  String get libraryNeverScanned => 'Ikke scannet endnu';
+
+  @override
+  String libraryScannedOn(String date) {
+    return 'Scannet $date';
+  }
+
+  @override
+  String get libraryScanEnumerating => 'Leder efter musik …';
+
+  @override
+  String libraryScanProgress(int scanned, int total) {
+    return 'Scanner $scanned af $total filer';
+  }
+
+  @override
+  String get libraryScanDone => 'Scanningen er færdig';
+
+  @override
+  String get libraryScanFailed => 'Scanningen stoppede';
+
+  @override
+  String libraryScanCounts(int added, int updated, int removed) {
+    return '$added tilføjet · $updated opdateret · $removed fjernet';
+  }
+
+  @override
+  String libraryScanErrors(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count filer kunne ikke læses',
+      one: '1 fil kunne ikke læses',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get libraryTools => 'Værktøjer';
+
+  @override
+  String get libraryMissingFiles => 'Manglende filer';
+
+  @override
+  String get libraryMissingFilesHint =>
+      'Numre, hvis fil er flyttet eller slettet uden for Fermata. De kommer tilbage, hvis filen dukker op igen.';
+
+  @override
+  String get libraryNoMissingFiles => 'Ingen manglende filer';
+
+  @override
+  String get libraryRemoveAllMissing => 'Fjern alle fra biblioteket';
+
+  @override
+  String get libraryDuplicates => 'Dubletter';
+
+  @override
+  String get libraryDuplicatesHint => 'Numre, der ligner kopier af hinanden.';
+
+  @override
+  String get libraryNoDuplicates => 'Ingen dubletter fundet';
+
+  @override
+  String get libraryDuplicateSameFile => 'Identiske filer';
+
+  @override
+  String get libraryDuplicateSameIsrc => 'Samme indspilning (ISRC)';
+
+  @override
+  String get libraryDuplicateSameMetadata => 'Samme titel, kunstner og længde';
+
+  @override
+  String get libraryRemoveFromLibrary => 'Fjern fra biblioteket';
+
+  @override
+  String libraryRemoveFromLibraryTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Fjern $count numre fra dit bibliotek?',
+      one: 'Fjern 1 nummer fra dit bibliotek?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get libraryRemoveFromLibraryMessage => 'Filer på disken slettes ikke.';
+
+  @override
+  String libraryRemovedFromLibrary(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count numre fjernet',
+      one: '1 nummer fjernet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get libraryTrackDetails => 'Detaljer';
+
+  @override
+  String get libraryDetailDuration => 'Længde';
+
+  @override
+  String get libraryDetailFormat => 'Format';
+
+  @override
+  String get libraryDetailBitrate => 'Bitrate';
+
+  @override
+  String libraryKbps(int kbps) {
+    return '$kbps kbps';
+  }
+
+  @override
+  String get libraryDetailSampleRate => 'Samplingsfrekvens';
+
+  @override
+  String libraryKhz(String khz) {
+    return '$khz kHz';
+  }
+
+  @override
+  String get libraryDetailBitDepth => 'Bitdybde';
+
+  @override
+  String libraryBits(int bits) {
+    return '$bits bit';
+  }
+
+  @override
+  String get libraryDetailChannels => 'Kanaler';
+
+  @override
+  String get libraryDetailSize => 'Filstørrelse';
+
+  @override
+  String get libraryDetailReplayGain => 'ReplayGain';
+
+  @override
+  String get libraryDetailSource => 'Kilde';
+
+  @override
+  String get libraryDetailOffline => 'Offline';
+
+  @override
+  String get libraryDetailFile => 'Fil';
+
+  @override
+  String get libraryEditTags => 'Redigér tags';
+
+  @override
+  String get libraryTagTitle => 'Titel';
+
+  @override
+  String get libraryTagArtists => 'Kunstnere';
+
+  @override
+  String get libraryTagArtistsHint => 'Adskil flere kunstnere med ;';
+
+  @override
+  String get libraryTagAlbum => 'Album';
+
+  @override
+  String get libraryTagAlbumArtist => 'Albumkunstner';
+
+  @override
+  String get libraryTagYear => 'År';
+
+  @override
+  String get libraryTagGenre => 'Genre';
+
+  @override
+  String get libraryTagTrackNumber => 'Nummer';
+
+  @override
+  String get libraryTagDiscNumber => 'Disk';
+
+  @override
+  String get libraryTagsFileHint =>
+      'Ændringer skrives til filen, når formatet tillader det; ellers gemmes de kun i dit bibliotek.';
+
+  @override
+  String get libraryTagsOverrideOnly =>
+      'På denne enhed ændres filen ikke: dine rettelser gemmes i Fermatas bibliotek.';
+
+  @override
+  String get libraryTagsSavedToFile => 'Tags er gemt i filen';
+
+  @override
+  String get libraryTagsSavedAsOverride =>
+      'Gemt i dit bibliotek (filen blev ikke ændret)';
+
+  @override
+  String get playlistsNewSmart => 'Smart playliste';
+
+  @override
+  String get playlistsImport => 'Importér';
+
+  @override
+  String get playlistsImportFromService => 'Importér fra en tjeneste';
+
+  @override
+  String get playlistsImportM3u => 'Importér M3U-fil';
+
+  @override
+  String get playlistsImportM3uEmpty =>
+      'Der blev ikke fundet nogen afspillelige filer i playlistefilen.';
+
+  @override
+  String playlistsImportedM3u(int count, String name) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count numre importeret til $name',
+      one: '1 nummer importeret til $name',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String playlistsCreated(String name) {
+    return '$name er oprettet';
+  }
+
+  @override
+  String get playlistsEmptyMessage =>
+      'Lav en fra bunden, lad en smart playliste fylde sig selv, eller hent en fra en anden tjeneste.';
+
+  @override
+  String get playlistsFilterYours => 'Dine';
+
+  @override
+  String get playlistsFilterSmart => 'Smarte';
+
+  @override
+  String get playlistsFilterImported => 'Importerede';
+
+  @override
+  String get playlistsShowList => 'Vis som liste';
+
+  @override
+  String get playlistsShowGrid => 'Vis som gitter';
+
+  @override
+  String get playlistKindLocal => 'Playliste';
+
+  @override
+  String get playlistKindSmart => 'Smart playliste';
+
+  @override
+  String playlistKindImported(String provider) {
+    return 'Importeret fra $provider';
+  }
+
+  @override
+  String playlistOnProvider(String provider) {
+    return 'Playliste på $provider';
+  }
+
+  @override
+  String playlistBy(String owner) {
+    return 'af $owner';
+  }
+
+  @override
+  String get playlistDescription => 'Beskrivelse (valgfri)';
+
+  @override
+  String get playlistEditDetails => 'Redigér detaljer';
+
+  @override
+  String get playlistEditRules => 'Redigér regler';
+
+  @override
+  String get playlistChangeArtwork => 'Skift billede';
+
+  @override
+  String get playlistArtworkUpdated => 'Billedet er opdateret';
+
+  @override
+  String get playlistExportM3u => 'Eksportér som M3U';
+
+  @override
+  String playlistExported(String location) {
+    return 'Gemt i $location';
+  }
+
+  @override
+  String get playlistAutoDownload => 'Download automatisk';
+
+  @override
+  String get playlistAutoDownloadOn => 'Automatisk download er slået til';
+
+  @override
+  String get playlistAutoDownloadTitle => 'Download playlisten automatisk?';
+
+  @override
+  String get playlistAutoDownloadExplain =>
+      'Fermata downloader kun numre automatisk, når det er dine egne filer, eller når udbyderen tillader automatisk download. Ingen af streamingtjenesterne tillader det i dag, så deres numre forbliver online — du kan stadig selv downloade enkelte numre fra Audius eller Jamendo, hvor kunstneren tillader det.';
+
+  @override
+  String get playlistAutoDownloadConfirm => 'Slå til';
+
+  @override
+  String get playlistDedupe => 'Fjern dubletter';
+
+  @override
+  String get playlistNoDuplicates => 'Ingen dubletter fundet';
+
+  @override
+  String playlistDuplicatesRemoved(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dubletter fjernet',
+      one: '1 dublet fjernet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String playlistDeleteTitle(String name) {
+    return 'Slet \"$name\"?';
+  }
+
+  @override
+  String get playlistDeleteMessage =>
+      'Playlisten fjernes. Dens numre bliver i dit bibliotek.';
+
+  @override
+  String playlistDeleted(String name) {
+    return '$name er slettet';
+  }
+
+  @override
+  String get playlistNotFound => 'Playlisten findes ikke længere.';
+
+  @override
+  String get playlistEmpty => 'Playlisten er tom';
+
+  @override
+  String get playlistEmptyHint =>
+      'Tilføj numre fra søgning, dit bibliotek eller en hvilken som helst nummermenu.';
+
+  @override
+  String get playlistSmartEmpty => 'Intet passer til reglerne endnu';
+
+  @override
+  String get playlistSmartEmptyHint =>
+      'Redigér reglerne, eller afspil og synes om mere musik.';
+
+  @override
+  String playlistRulesSummary(int count, String match) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count regler',
+      one: '1 regel',
+    );
+    return '$_temp0, $match';
+  }
+
+  @override
+  String get playlistRemoveFromPlaylist => 'Fjern fra playlisten';
+
+  @override
+  String playlistRemovedTracks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count numre fjernet',
+      one: '1 nummer fjernet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String playlistPlaysVia(String provider) {
+    return 'Afspilles via $provider — skift';
+  }
+
+  @override
+  String get playlistSaveToLibrary => 'Gem i biblioteket';
+
+  @override
+  String playlistSavedToLibrary(String name) {
+    return '$name er gemt i dit bibliotek';
+  }
+
+  @override
+  String get smartNewTitle => 'Ny smart playliste';
+
+  @override
+  String get smartEditTitle => 'Redigér smart playliste';
+
+  @override
+  String get smartMatch => 'Medtag numre, der opfylder';
+
+  @override
+  String get smartMatchAll => 'alle regler';
+
+  @override
+  String get smartMatchAny => 'mindst én regel';
+
+  @override
+  String get smartAddRule => 'Tilføj regel';
+
+  @override
+  String get smartRemoveRule => 'Fjern regel';
+
+  @override
+  String get smartValue => 'Værdi';
+
+  @override
+  String get smartPickSource => 'Vælg en kilde';
+
+  @override
+  String get smartUnitMinutes => 'min';
+
+  @override
+  String get smartUnitDays => 'dage';
+
+  @override
+  String get smartLimit => 'Højst';
+
+  @override
+  String get smartNoLimit => 'Ingen grænse';
+
+  @override
+  String get smartPreviewLoading => 'Tæller numre, der passer …';
+
+  @override
+  String smartPreviewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count numre passer',
+      one: '1 nummer passer',
+      zero: 'Ingen numre passer',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String smartPreviewApprox(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Cirka $count numre passer',
+      one: 'Cirka 1 nummer passer',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get smartFieldTitle => 'Titel';
+
+  @override
+  String get smartFieldArtist => 'Kunstner';
+
+  @override
+  String get smartFieldAlbum => 'Album';
+
+  @override
+  String get smartFieldGenre => 'Genre';
+
+  @override
+  String get smartFieldYear => 'År';
+
+  @override
+  String get smartFieldDuration => 'Længde';
+
+  @override
+  String get smartFieldPlayCount => 'Antal afspilninger';
+
+  @override
+  String get smartFieldLastPlayed => 'Sidst afspillet';
+
+  @override
+  String get smartFieldDateAdded => 'Tilføjet';
+
+  @override
+  String get smartFieldSource => 'Kilde';
+
+  @override
+  String get smartFieldFavorite => 'Synes godt om';
+
+  @override
+  String get smartFieldDownloaded => 'Downloadet';
+
+  @override
+  String get smartOpContains => 'indeholder';
+
+  @override
+  String get smartOpNotContains => 'indeholder ikke';
+
+  @override
+  String get smartOpEquals => 'er';
+
+  @override
+  String get smartOpNotEquals => 'er ikke';
+
+  @override
+  String get smartOpStartsWith => 'starter med';
+
+  @override
+  String get smartOpGreaterThan => 'er mere end';
+
+  @override
+  String get smartOpLessThan => 'er mindre end';
+
+  @override
+  String get smartOpInLastDays => 'inden for de seneste';
+
+  @override
+  String get smartOpNotInLastDays => 'ikke inden for de seneste';
+
+  @override
+  String get smartOpIsTrue => 'ja';
+
+  @override
+  String get smartOpIsFalse => 'nej';
+
+  @override
+  String get alternativesFind => 'Find alternativer';
+
+  @override
+  String get alternativesTitle => 'Alternativer';
+
+  @override
+  String get alternativesLinkedNow => 'Forbundet nu';
+
+  @override
+  String get alternativesSuggested => 'Foreslåede match';
+
+  @override
+  String get alternativesSearch => 'Søg selv';
+
+  @override
+  String get alternativesSearchHint => 'Titel og kunstner, tryk derefter Enter';
+
+  @override
+  String get alternativesNone => 'Ingen match fundet.';
+
+  @override
+  String get alternativesUse => 'Brug';
+
+  @override
+  String get alternativesInUse => 'I brug';
+
+  @override
+  String get alternativesUnlink => 'Fjern forbindelse';
+
+  @override
+  String alternativesLinked(String provider) {
+    return 'Forbundet — afspilles fra $provider';
+  }
+
+  @override
+  String alternativesScore(int percent, String confidence) {
+    return '$percent % · $confidence';
+  }
+
+  @override
+  String get matchExact => 'præcist match';
+
+  @override
+  String get matchHigh => 'meget sandsynligt';
+
+  @override
+  String get matchMedium => 'muligt';
+
+  @override
+  String get matchLow => 'usandsynligt';
+
+  @override
+  String get matchNone => 'intet match';
+
+  @override
+  String get diffRemix => 'remix';
+
+  @override
+  String get diffLive => 'live';
+
+  @override
+  String get diffAcoustic => 'akustisk';
+
+  @override
+  String get diffExtended => 'forlænget';
+
+  @override
+  String get diffRadioEdit => 'radioversion';
+
+  @override
+  String get diffInstrumental => 'instrumental';
+
+  @override
+  String get diffKaraoke => 'karaoke';
+
+  @override
+  String get diffCover => 'coverversion';
+
+  @override
+  String get diffRemaster => 'remaster';
+
+  @override
+  String get diffSped => 'speedet op';
+
+  @override
+  String get diffSlowed => 'sænket tempo';
+
+  @override
+  String get diffDemo => 'demo';
+
+  @override
+  String get diffExplicit => 'eksplicit afviger';
+
+  @override
+  String get diffDuration => 'længden afviger';
+
+  @override
+  String get diffAlbum => 'andet album';
+
+  @override
+  String get diffYear => 'andet år';
+
+  @override
+  String get diffArtist => 'anden kunstner';
+
+  @override
+  String get diffFeatured => 'gæstekunstnere afviger';
+
+  @override
+  String get diffTitle => 'titlen afviger';
+
+  @override
+  String get diffPreview => 'kun forsmag';
+
+  @override
+  String get artistInLibrary => 'Kunstner i dit bibliotek';
+
+  @override
+  String artistOnProvider(String provider) {
+    return 'Kunstner på $provider';
+  }
+
+  @override
+  String artistFollowers(String count) {
+    return '$count følgere';
+  }
+
+  @override
+  String get artistTopTracks => 'Populære numre';
+
+  @override
+  String get artistTracks => 'Numre';
+
+  @override
+  String get artistNoTracks => 'Ingen numre fundet.';
+
+  @override
+  String get artistAlbums => 'Albums';
+
+  @override
+  String get artistReleases => 'Udgivelser';
+
+  @override
+  String get artistRelated => 'Fans lytter også til';
+
+  @override
+  String get albumInLibrary => 'Album i dit bibliotek';
+
+  @override
+  String albumOnProvider(String provider) {
+    return 'Album på $provider';
+  }
+
+  @override
+  String albumDisc(int number) {
+    return 'Disk $number';
+  }
+
+  @override
+  String get albumEmpty => 'Ingen numre på dette album.';
+
+  @override
+  String get downloadsPauseAll => 'Sæt alle på pause';
+
+  @override
+  String get downloadsResumeAll => 'Genoptag alle';
+
+  @override
+  String get downloadsPause => 'Pause';
+
+  @override
+  String get downloadsResume => 'Genoptag';
+
+  @override
+  String get downloadsProgress => 'Downloadstatus';
+
+  @override
+  String get downloadsFilterActive => 'Aktive';
+
+  @override
+  String get downloadsFilterCompleted => 'Færdige';
+
+  @override
+  String get downloadsFilterFailed => 'Mislykkede';
+
+  @override
+  String get downloadsActive => 'Downloader';
+
+  @override
+  String downloadsActiveCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count i køen',
+      one: '1 i køen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get downloadsFinished => 'Afsluttede';
+
+  @override
+  String get downloadsNothingHere => 'Ingenting her lige nu.';
+
+  @override
+  String get downloadsEmptyTitle => 'Ingen downloads endnu';
+
+  @override
+  String get downloadsEmptyMessage =>
+      'Numre kan kun downloades, hvor udbyderen tillader det — numre fra Audius og Jamendo, som kunstneren har gjort tilgængelige. Dine egne filer kan allerede afspilles offline.';
+
+  @override
+  String get downloadsStatusQueued => 'I kø';
+
+  @override
+  String get downloadsStatusWaiting => 'Venter';
+
+  @override
+  String get downloadsStatusDownloading => 'Downloader';
+
+  @override
+  String get downloadsStatusVerifying => 'Kontrollerer';
+
+  @override
+  String get downloadsStatusPaused => 'På pause';
+
+  @override
+  String get downloadsStatusCompleted => 'Downloadet';
+
+  @override
+  String get downloadsStatusFailed => 'Mislykkedes';
+
+  @override
+  String get downloadsStatusCanceled => 'Annulleret';
+
+  @override
+  String downloadsSizeOf(String received, String total) {
+    return '$received af $total';
+  }
+
+  @override
+  String downloadsSpeed(String speed) {
+    return '$speed/s';
+  }
+
+  @override
+  String downloadsEta(String time) {
+    return '$time tilbage';
+  }
+
+  @override
+  String downloadsAttempts(int count) {
+    return '$count forsøg';
+  }
+
+  @override
+  String get downloadsWaitingWifiTitle => 'Venter på wi-fi';
+
+  @override
+  String get downloadsWaitingWifi =>
+      'Downloads kører kun på wi-fi. De fortsætter af sig selv, når du får forbindelse.';
+
+  @override
+  String get downloadsDownloadSettings => 'Downloadindstillinger';
+
+  @override
+  String get downloadsWaitingConnection => 'Venter på internetforbindelse.';
+
+  @override
+  String get downloadsWaitingMobileData =>
+      'Du bruger mobildata. Downloads venter, til du tillader det eller får wi-fi.';
+
+  @override
+  String get downloadsMobileDataTitle => 'Download via mobildata?';
+
+  @override
+  String get downloadsMobileDataMessage =>
+      'Det kan bruge meget data. Du bliver spurgt igen, næste gang du starter Fermata.';
+
+  @override
+  String get downloadsMobileDataConfirm => 'Brug mobildata';
+
+  @override
+  String get downloadsMobileDataWait => 'Vent på wi-fi';
+
+  @override
+  String get downloadsMobileDataAllowed => 'Downloader via mobildata';
+
+  @override
+  String get downloadsStorage => 'Lagerplads';
+
+  @override
+  String get downloadsStorageSettings => 'Lagerindstillinger';
+
+  @override
+  String downloadsStorageDownloads(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Downloads ($count numre)',
+      one: 'Downloads (1 nummer)',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get downloadsStorageArtwork => 'Billedcache';
+
+  @override
+  String get downloadsStorageStreamCache => 'Streamingcache';
+
+  @override
+  String get downloadsStorageDatabase => 'Biblioteksdatabase';
+
+  @override
+  String get downloadsStorageLimit => 'Downloadgrænse';
+
+  @override
+  String get downloadsStorageFree => 'Ledigt på enheden';
+
+  @override
+  String get downloadsUnlimited => 'Ingen grænse';
+
+  @override
+  String get downloadsErrorSourceUnavailable =>
+      'Tjenesten er ikke tilgængelig lige nu.';
+
+  @override
+  String get downloadsErrorAuth => 'Forbind tjenesten igen for at downloade.';
+
+  @override
+  String get downloadsErrorNotFound =>
+      'Filen findes ikke længere hos tjenesten.';
+
+  @override
+  String get downloadsErrorForbidden => 'Tjenesten afviste downloaden.';
+
+  @override
+  String get downloadsErrorServer =>
+      'Tjenesten havde et problem. Prøv igen senere.';
+
+  @override
+  String get downloadsErrorNotAudio => 'Tjenesten sendte ikke en lydfil.';
+
+  @override
+  String get downloadsErrorCorrupt => 'Filen kom beskadiget frem. Prøv igen.';
+
+  @override
+  String get downloadsErrorDiskFull => 'Der er ikke nok ledig plads.';
+
+  @override
+  String get favoritesEmptyTitle => 'Sange, du synes om, vises her';
+
+  @override
+  String get favoritesEmptyMessage =>
+      'Tryk på hjertet ved et nummer for at gemme det her.';
+
+  @override
+  String get favoritesFilterHint => 'Filtrér sange, du synes om';
+
+  @override
+  String get favoritesSortRecent => 'Senest tilføjet';
+
+  @override
+  String get historyRecent => 'Senest afspillet';
+
+  @override
+  String get historyStats => 'Statistik';
+
+  @override
+  String get historyClear => 'Ryd historik';
+
+  @override
+  String get historyClearTitle => 'Ryd din lyttehistorik?';
+
+  @override
+  String get historyClearMessage =>
+      'Senest afspillet og statistik slettes fra denne enhed. Anbefalingerne starter forfra.';
+
+  @override
+  String get historyCleared => 'Historikken er ryddet';
+
+  @override
+  String get historyRecordingOff =>
+      'Lyttehistorik er slået fra, så nye afspilninger gemmes ikke.';
+
+  @override
+  String get historyEmptyTitle => 'Intet afspillet endnu';
+
+  @override
+  String get historyEmptyMessage =>
+      'Det, du lytter til, vises her, sorteret efter dag.';
+
+  @override
+  String get historyStatsEmpty => 'Afspil noget musik for at se din statistik.';
+
+  @override
+  String historyStatsPeriod(int days) {
+    return 'De seneste $days dage, beregnet på denne enhed';
+  }
+
+  @override
+  String get historyStatsPlays => 'Afspilninger';
+
+  @override
+  String get historyStatsTime => 'Lyttetid';
+
+  @override
+  String get historyStatsPerDay => 'Afspilninger pr. dag';
+
+  @override
+  String get historyStatsTopTracks => 'Mest spillede numre';
+
+  @override
+  String get historyStatsTopArtists => 'Mest spillede kunstnere';
+
+  @override
+  String get historyStatsTopGenres => 'Mest spillede genrer';
+
+  @override
+  String historyPlays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count afspilninger',
+      one: '1 afspilning',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String historyChartLabel(int days, int total, int peak) {
+    return 'Afspilninger pr. dag de seneste $days dage: $total i alt, højst $peak på én dag';
+  }
+
+  @override
   String get playerPlay => 'Afspil';
 
   @override

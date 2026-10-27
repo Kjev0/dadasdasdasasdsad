@@ -116,7 +116,7 @@ class AsyncBody<T> extends StatelessWidget {
   Widget build(BuildContext context) => value.when(
         data: data,
         error: (e, _) => ErrorState(error: e, onRetry: onRetry, compact: compactError),
-        loading: () => loading ?? const SkeletonTrackList(),
+        loading: () => loading ?? const ClippedSkeleton(),
       );
 }
 
@@ -435,4 +435,28 @@ class InlineNotice extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Icon + label row for popup menu items.
+Widget menuRow(IconData icon, String label) => Builder(
+      builder: (context) => Row(
+        children: [
+          Icon(icon, size: 20, color: context.colors.textSecondary),
+          const SizedBox(width: 12),
+          Flexible(child: Text(label, overflow: TextOverflow.ellipsis)),
+        ],
+      ),
+    );
+
+/// Shows a loading skeleton in a bounded area without overflowing (the
+/// skeleton is clipped instead of scrolling).
+class ClippedSkeleton extends StatelessWidget {
+  const ClippedSkeleton({super.key, this.child = const SkeletonTrackList()});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => ClipRect(
+        child: SingleChildScrollView(physics: const NeverScrollableScrollPhysics(), primary: false, child: child),
+      );
 }

@@ -52,7 +52,7 @@ class TopResultCard extends ConsumerWidget {
 
     final track = item is Track ? item as Track : null;
     final playable = track == null || isPlayableInApp(track);
-    final tappable = playable || (track != null && isExternalTrack(track));
+    final tappable = track == null || isPlayableInApp(track) || isExternalTrack(track);
     return Semantics(
       button: true,
       label: '$kind: $title',

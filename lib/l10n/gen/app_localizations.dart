@@ -482,6 +482,3504 @@ abstract class AppLocalizations {
   /// **'Unknown artist'**
   String get desktopUnknownArtist;
 
+  /// No description provided for @importTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import a playlist'**
+  String get importTitle;
+
+  /// No description provided for @importBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get importBack;
+
+  /// No description provided for @importStepSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Source'**
+  String get importStepSource;
+
+  /// No description provided for @importStepPlaylist.
+  ///
+  /// In en, this message translates to:
+  /// **'Playlist'**
+  String get importStepPlaylist;
+
+  /// No description provided for @importStepOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Matching'**
+  String get importStepOptions;
+
+  /// No description provided for @importStepOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} of {total}: {name}'**
+  String importStepOf(int step, int total, String name);
+
+  /// No description provided for @importChooseSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Where is the playlist?'**
+  String get importChooseSource;
+
+  /// No description provided for @importChooseSourceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Fermata finds each track on the services you choose next and keeps a link to the original.'**
+  String get importChooseSourceHint;
+
+  /// No description provided for @importM3uTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A playlist file (M3U)'**
+  String get importM3uTitle;
+
+  /// No description provided for @importM3uHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks from an .m3u or .m3u8 file on this device.'**
+  String get importM3uHint;
+
+  /// No description provided for @importM3uUnreadable.
+  ///
+  /// In en, this message translates to:
+  /// **'This playlist file can\'t be read.'**
+  String get importM3uUnreadable;
+
+  /// No description provided for @importM3uEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No tracks were found in this playlist file.'**
+  String get importM3uEmpty;
+
+  /// No description provided for @importSourceNotSetUp.
+  ///
+  /// In en, this message translates to:
+  /// **'{service} isn\'t set up yet.'**
+  String importSourceNotSetUp(String service);
+
+  /// No description provided for @importSourceLinkOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Public playlists by link. Connect to see your own playlists.'**
+  String get importSourceLinkOnly;
+
+  /// No description provided for @importSourceConnectFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect your account to import.'**
+  String get importSourceConnectFirst;
+
+  /// No description provided for @importSourceSignedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in as {name}'**
+  String importSourceSignedIn(String name);
+
+  /// No description provided for @importSetUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up'**
+  String get importSetUp;
+
+  /// No description provided for @importChooseWhat.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you want to import from {service}?'**
+  String importChooseWhat(String service);
+
+  /// No description provided for @importPasteLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste a playlist link'**
+  String get importPasteLink;
+
+  /// No description provided for @importPasteLinkHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A {service} playlist link or ID'**
+  String importPasteLinkHint(String service);
+
+  /// No description provided for @importContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get importContinue;
+
+  /// No description provided for @importLikedTracks.
+  ///
+  /// In en, this message translates to:
+  /// **'Liked tracks'**
+  String get importLikedTracks;
+
+  /// No description provided for @importLikedTracksHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Every track you liked on {service}.'**
+  String importLikedTracksHint(String service);
+
+  /// No description provided for @importLikedName.
+  ///
+  /// In en, this message translates to:
+  /// **'Liked on {service}'**
+  String importLikedName(String service);
+
+  /// No description provided for @importYourPlaylists.
+  ///
+  /// In en, this message translates to:
+  /// **'Your playlists'**
+  String get importYourPlaylists;
+
+  /// No description provided for @importNoPlaylists.
+  ///
+  /// In en, this message translates to:
+  /// **'You have no playlists there yet.'**
+  String get importNoPlaylists;
+
+  /// No description provided for @importTrackCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 track} other{{count} tracks}}'**
+  String importTrackCount(int count);
+
+  /// No description provided for @importConnectForLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect your {service} account in Settings to import your own playlists and liked tracks.'**
+  String importConnectForLibrary(String service);
+
+  /// No description provided for @importOptionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Where should Fermata look?'**
+  String get importOptionsTitle;
+
+  /// No description provided for @importSummaryPlaylist.
+  ///
+  /// In en, this message translates to:
+  /// **'“{name}” from {service}'**
+  String importSummaryPlaylist(String name, String service);
+
+  /// No description provided for @importSummaryLink.
+  ///
+  /// In en, this message translates to:
+  /// **'A playlist link from {service}'**
+  String importSummaryLink(String service);
+
+  /// No description provided for @importSummaryLiked.
+  ///
+  /// In en, this message translates to:
+  /// **'Your liked tracks on {service}'**
+  String importSummaryLiked(String service);
+
+  /// No description provided for @importSummaryM3u.
+  ///
+  /// In en, this message translates to:
+  /// **'“{name}” ({count, plural, =1{1 track} other{{count} tracks}})'**
+  String importSummaryM3u(String name, int count);
+
+  /// No description provided for @importTargets.
+  ///
+  /// In en, this message translates to:
+  /// **'Find matches on'**
+  String get importTargets;
+
+  /// No description provided for @importTargetsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'In this order. The first service with a good match is used for playback.'**
+  String get importTargetsHint;
+
+  /// No description provided for @importNoTargets.
+  ///
+  /// In en, this message translates to:
+  /// **'None of your services can play the matches. Connect a service such as SoundCloud or Audius first.'**
+  String get importNoTargets;
+
+  /// No description provided for @importTargetNotReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected or not set up'**
+  String get importTargetNotReady;
+
+  /// No description provided for @importMatchingGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Matching'**
+  String get importMatchingGroup;
+
+  /// No description provided for @importStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start import'**
+  String get importStart;
+
+  /// No description provided for @importFetchingLiked.
+  ///
+  /// In en, this message translates to:
+  /// **'Fetched {count} liked tracks…'**
+  String importFetchingLiked(int count);
+
+  /// No description provided for @importNothingToImport.
+  ///
+  /// In en, this message translates to:
+  /// **'There are no tracks to import.'**
+  String get importNothingToImport;
+
+  /// No description provided for @importStartFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The import couldn\'t be started.'**
+  String get importStartFailed;
+
+  /// No description provided for @importReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review matches'**
+  String get importReviewTitle;
+
+  /// No description provided for @importReviewHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the matches Fermata wasn\'t sure about. Nothing is saved until you press Save.'**
+  String get importReviewHint;
+
+  /// No description provided for @importUntitled.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported playlist'**
+  String get importUntitled;
+
+  /// No description provided for @importImporting.
+  ///
+  /// In en, this message translates to:
+  /// **'Importing…'**
+  String get importImporting;
+
+  /// No description provided for @importPhaseFetching.
+  ///
+  /// In en, this message translates to:
+  /// **'Fetching the playlist…'**
+  String get importPhaseFetching;
+
+  /// No description provided for @importPhaseMatchingStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding matches…'**
+  String get importPhaseMatchingStart;
+
+  /// No description provided for @importPhaseMatching.
+  ///
+  /// In en, this message translates to:
+  /// **'Matched {processed} of {total} tracks'**
+  String importPhaseMatching(int processed, int total);
+
+  /// No description provided for @importPhaseSaving.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving…'**
+  String get importPhaseSaving;
+
+  /// No description provided for @importCancelImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel import'**
+  String get importCancelImport;
+
+  /// No description provided for @importCancelTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel this import?'**
+  String get importCancelTitle;
+
+  /// No description provided for @importCancelBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your review choices are discarded. Nothing has been saved yet.'**
+  String get importCancelBody;
+
+  /// No description provided for @importCanceled.
+  ///
+  /// In en, this message translates to:
+  /// **'The import was canceled.'**
+  String get importCanceled;
+
+  /// No description provided for @importFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The import failed'**
+  String get importFailed;
+
+  /// No description provided for @importStartNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a new import'**
+  String get importStartNew;
+
+  /// No description provided for @importSessionMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'This import isn\'t available anymore'**
+  String get importSessionMissing;
+
+  /// No description provided for @importSessionMissingHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Imports in progress are kept until Fermata closes.'**
+  String get importSessionMissingHint;
+
+  /// No description provided for @importFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All · {count}'**
+  String importFilterAll(int count);
+
+  /// No description provided for @importFilterEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No tracks with this status.'**
+  String get importFilterEmpty;
+
+  /// No description provided for @importDecisionAuto.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-accepted'**
+  String get importDecisionAuto;
+
+  /// No description provided for @importDecisionAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted'**
+  String get importDecisionAccepted;
+
+  /// No description provided for @importDecisionReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs review'**
+  String get importDecisionReview;
+
+  /// No description provided for @importDecisionNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Not found'**
+  String get importDecisionNotFound;
+
+  /// No description provided for @importDecisionRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get importDecisionRejected;
+
+  /// No description provided for @importDecisionSkipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get importDecisionSkipped;
+
+  /// No description provided for @importAcceptAllHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept all high-confidence ({count})'**
+  String importAcceptAllHigh(int count);
+
+  /// No description provided for @importSavePlaylist.
+  ///
+  /// In en, this message translates to:
+  /// **'Save playlist'**
+  String get importSavePlaylist;
+
+  /// No description provided for @importSaveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Name the playlist'**
+  String get importSaveTitle;
+
+  /// No description provided for @importSavePendingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Some tracks still need review'**
+  String get importSavePendingTitle;
+
+  /// No description provided for @importSavePendingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 track hasn\'t been reviewed. It will be saved without a match.} other{{count} tracks haven\'t been reviewed. They will be saved without a match.}}'**
+  String importSavePendingBody(int count);
+
+  /// No description provided for @importSaveAnyway.
+  ///
+  /// In en, this message translates to:
+  /// **'Save anyway'**
+  String get importSaveAnyway;
+
+  /// No description provided for @importSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Playlist saved'**
+  String get importSaved;
+
+  /// No description provided for @importSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The playlist couldn\'t be saved.'**
+  String get importSaveFailed;
+
+  /// No description provided for @importDoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Playlist saved'**
+  String get importDoneTitle;
+
+  /// No description provided for @importDoneAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Every track has a match.'**
+  String get importDoneAll;
+
+  /// No description provided for @importDoneMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 track has no match.} other{{count} tracks have no match.}}'**
+  String importDoneMissing(int count);
+
+  /// No description provided for @importOpenPlaylist.
+  ///
+  /// In en, this message translates to:
+  /// **'Open playlist'**
+  String get importOpenPlaylist;
+
+  /// No description provided for @importShowMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Show missing tracks'**
+  String get importShowMissing;
+
+  /// No description provided for @importMissingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks without a match ({count})'**
+  String importMissingTitle(int count);
+
+  /// No description provided for @importReportHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks without a match in “{name}” ({count}):'**
+  String importReportHeader(String name, int count);
+
+  /// No description provided for @importOriginal.
+  ///
+  /// In en, this message translates to:
+  /// **'Original'**
+  String get importOriginal;
+
+  /// No description provided for @importMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Match'**
+  String get importMatch;
+
+  /// No description provided for @importNoMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'No match found'**
+  String get importNoMatch;
+
+  /// No description provided for @importOnlyOtherVersions.
+  ///
+  /// In en, this message translates to:
+  /// **'Only other versions found — choose one yourself if it\'s right.'**
+  String get importOnlyOtherVersions;
+
+  /// No description provided for @importAccept.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get importAccept;
+
+  /// No description provided for @importReject.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get importReject;
+
+  /// No description provided for @importSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get importSkip;
+
+  /// No description provided for @importOtherCandidates.
+  ///
+  /// In en, this message translates to:
+  /// **'Candidates ({count})'**
+  String importOtherCandidates(int count);
+
+  /// No description provided for @importCandidatesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Candidates for “{title}”'**
+  String importCandidatesTitle(String title);
+
+  /// No description provided for @importUseThis.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this'**
+  String get importUseThis;
+
+  /// No description provided for @importDifferentVersionWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a different version than the original.'**
+  String get importDifferentVersionWarning;
+
+  /// No description provided for @importSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get importSearch;
+
+  /// No description provided for @importSearchFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for “{title}”'**
+  String importSearchFor(String title);
+
+  /// No description provided for @importSearchNoResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing found. Try other words.'**
+  String get importSearchNoResults;
+
+  /// No description provided for @importSearchResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Results'**
+  String get importSearchResults;
+
+  /// No description provided for @importMatchedByIsrc.
+  ///
+  /// In en, this message translates to:
+  /// **'Same ISRC'**
+  String get importMatchedByIsrc;
+
+  /// No description provided for @importConfidenceSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Confidence {level}, {percent} percent'**
+  String importConfidenceSemantics(String level, int percent);
+
+  /// No description provided for @importConfidenceExact.
+  ///
+  /// In en, this message translates to:
+  /// **'Exact'**
+  String get importConfidenceExact;
+
+  /// No description provided for @importConfidenceHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get importConfidenceHigh;
+
+  /// No description provided for @importConfidenceMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get importConfidenceMedium;
+
+  /// No description provided for @importConfidenceLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get importConfidenceLow;
+
+  /// No description provided for @importConfidenceNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get importConfidenceNone;
+
+  /// No description provided for @importDiffRemix.
+  ///
+  /// In en, this message translates to:
+  /// **'Remix'**
+  String get importDiffRemix;
+
+  /// No description provided for @importDiffLive.
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get importDiffLive;
+
+  /// No description provided for @importDiffAcoustic.
+  ///
+  /// In en, this message translates to:
+  /// **'Acoustic'**
+  String get importDiffAcoustic;
+
+  /// No description provided for @importDiffExtended.
+  ///
+  /// In en, this message translates to:
+  /// **'Extended'**
+  String get importDiffExtended;
+
+  /// No description provided for @importDiffRadioEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Radio edit'**
+  String get importDiffRadioEdit;
+
+  /// No description provided for @importDiffInstrumental.
+  ///
+  /// In en, this message translates to:
+  /// **'Instrumental'**
+  String get importDiffInstrumental;
+
+  /// No description provided for @importDiffKaraoke.
+  ///
+  /// In en, this message translates to:
+  /// **'Karaoke'**
+  String get importDiffKaraoke;
+
+  /// No description provided for @importDiffCover.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover'**
+  String get importDiffCover;
+
+  /// No description provided for @importDiffRemaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaster'**
+  String get importDiffRemaster;
+
+  /// No description provided for @importDiffSped.
+  ///
+  /// In en, this message translates to:
+  /// **'Sped up'**
+  String get importDiffSped;
+
+  /// No description provided for @importDiffSlowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Slowed'**
+  String get importDiffSlowed;
+
+  /// No description provided for @importDiffDemo.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo'**
+  String get importDiffDemo;
+
+  /// No description provided for @importDiffExplicit.
+  ///
+  /// In en, this message translates to:
+  /// **'Explicit mismatch'**
+  String get importDiffExplicit;
+
+  /// No description provided for @importDiffDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Different length'**
+  String get importDiffDuration;
+
+  /// No description provided for @importDiffAlbum.
+  ///
+  /// In en, this message translates to:
+  /// **'Different album'**
+  String get importDiffAlbum;
+
+  /// No description provided for @importDiffYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Different year'**
+  String get importDiffYear;
+
+  /// No description provided for @importDiffArtist.
+  ///
+  /// In en, this message translates to:
+  /// **'Different artist'**
+  String get importDiffArtist;
+
+  /// No description provided for @importDiffFeatured.
+  ///
+  /// In en, this message translates to:
+  /// **'Different featured artists'**
+  String get importDiffFeatured;
+
+  /// No description provided for @importDiffTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Different title'**
+  String get importDiffTitle;
+
+  /// No description provided for @importDiffPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview only'**
+  String get importDiffPreview;
+
+  /// No description provided for @onboardingSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get onboardingSkip;
+
+  /// No description provided for @onboardingBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get onboardingBack;
+
+  /// No description provided for @onboardingNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get onboardingNext;
+
+  /// No description provided for @onboardingGetStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Get started'**
+  String get onboardingGetStarted;
+
+  /// No description provided for @onboardingFinish.
+  ///
+  /// In en, this message translates to:
+  /// **'Start listening'**
+  String get onboardingFinish;
+
+  /// No description provided for @onboardingStepOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} of {total}'**
+  String onboardingStepOf(int step, int total);
+
+  /// No description provided for @onboardingWelcomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Fermata'**
+  String get onboardingWelcomeTitle;
+
+  /// No description provided for @onboardingWelcomeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A calm music player for the music you own and the services you already use.'**
+  String get onboardingWelcomeBody;
+
+  /// No description provided for @onboardingPointFiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Your own files come first and always work offline.'**
+  String get onboardingPointFiles;
+
+  /// No description provided for @onboardingPointServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Search SoundCloud, Audius and more in one place, and bring your playlists with you.'**
+  String get onboardingPointServices;
+
+  /// No description provided for @onboardingPointBackground.
+  ///
+  /// In en, this message translates to:
+  /// **'Keeps playing in the background, with your media keys and lock screen.'**
+  String get onboardingPointBackground;
+
+  /// No description provided for @onboardingPointPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'No ads, no tracking. Recommendations are calculated on your device.'**
+  String get onboardingPointPrivacy;
+
+  /// No description provided for @onboardingMusicTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your music'**
+  String get onboardingMusicTitle;
+
+  /// No description provided for @onboardingMusicBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the folders where your music files are. Fermata reads them in the background and keeps watching for new files.'**
+  String get onboardingMusicBody;
+
+  /// No description provided for @onboardingAudioPermissionRationale.
+  ///
+  /// In en, this message translates to:
+  /// **'To play the music stored on your phone, Fermata needs permission to read your audio files. It only reads music — never photos, messages or other files.'**
+  String get onboardingAudioPermissionRationale;
+
+  /// No description provided for @onboardingAllowAudio.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow access to music'**
+  String get onboardingAllowAudio;
+
+  /// No description provided for @onboardingAudioDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Without this permission Fermata can\'t see your music files. You can allow it later in the system settings.'**
+  String get onboardingAudioDenied;
+
+  /// No description provided for @onboardingSuggestedFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Music folder'**
+  String get onboardingSuggestedFolder;
+
+  /// No description provided for @onboardingAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get onboardingAdd;
+
+  /// No description provided for @onboardingChooseFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a folder…'**
+  String get onboardingChooseFolder;
+
+  /// No description provided for @onboardingFolderMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'That folder doesn\'t exist anymore.'**
+  String get onboardingFolderMissing;
+
+  /// No description provided for @onboardingScanning.
+  ///
+  /// In en, this message translates to:
+  /// **'Fermata is reading your music in the background.'**
+  String get onboardingScanning;
+
+  /// No description provided for @onboardingMusicLater.
+  ///
+  /// In en, this message translates to:
+  /// **'You can add or remove folders any time in Library.'**
+  String get onboardingMusicLater;
+
+  /// No description provided for @onboardingServicesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect your services'**
+  String get onboardingServicesTitle;
+
+  /// No description provided for @onboardingServicesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional. Connect an account to search it, stream it and import your playlists. You sign in on the service\'s own website — Fermata never sees your password.'**
+  String get onboardingServicesBody;
+
+  /// No description provided for @onboardingRecommended.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended'**
+  String get onboardingRecommended;
+
+  /// No description provided for @onboardingServiceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to use your account.'**
+  String get onboardingServiceHint;
+
+  /// No description provided for @onboardingNeedsCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs developer credentials first — you can set this up later in Settings.'**
+  String get onboardingNeedsCredentials;
+
+  /// No description provided for @onboardingConnectedAs.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected as {name}'**
+  String onboardingConnectedAs(String name);
+
+  /// No description provided for @onboardingNoAccountNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'No account needed for: {services}.'**
+  String onboardingNoAccountNeeded(String services);
+
+  /// No description provided for @onboardingServicesLater.
+  ///
+  /// In en, this message translates to:
+  /// **'You can connect or disconnect services any time in Settings → Connected services.'**
+  String get onboardingServicesLater;
+
+  /// No description provided for @onboardingBackgroundTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Music that keeps playing'**
+  String get onboardingBackgroundTitle;
+
+  /// No description provided for @onboardingBackgroundAndroid.
+  ///
+  /// In en, this message translates to:
+  /// **'Fermata keeps playing when you switch apps or lock your phone. A notification shows the playback controls.'**
+  String get onboardingBackgroundAndroid;
+
+  /// No description provided for @onboardingNotificationRationale.
+  ///
+  /// In en, this message translates to:
+  /// **'Android asks before apps may show notifications. Fermata uses them for the playback controls and for finished downloads — never for advertising.'**
+  String get onboardingNotificationRationale;
+
+  /// No description provided for @onboardingAllowNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow notifications'**
+  String get onboardingAllowNotifications;
+
+  /// No description provided for @onboardingNotificationsAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are allowed.'**
+  String get onboardingNotificationsAllowed;
+
+  /// No description provided for @onboardingBatteryNote.
+  ///
+  /// In en, this message translates to:
+  /// **'If music stops in the background on your phone, see Settings → Background playback.'**
+  String get onboardingBatteryNote;
+
+  /// No description provided for @onboardingBackgroundTray.
+  ///
+  /// In en, this message translates to:
+  /// **'Closing the window doesn\'t stop the music: Fermata stays in the system tray. Quit from the tray menu when you\'re done.'**
+  String get onboardingBackgroundTray;
+
+  /// No description provided for @onboardingBackgroundNoTray.
+  ///
+  /// In en, this message translates to:
+  /// **'Closing the window doesn\'t stop the music. Your desktop has no system tray, so Fermata minimizes instead.'**
+  String get onboardingBackgroundNoTray;
+
+  /// No description provided for @onboardingMediaKeys.
+  ///
+  /// In en, this message translates to:
+  /// **'Media keys and your desktop\'s media controls work while Fermata is in the background.'**
+  String get onboardingMediaKeys;
+
+  /// No description provided for @pagesPlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get pagesPlay;
+
+  /// No description provided for @pagesShuffle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shuffle'**
+  String get pagesShuffle;
+
+  /// No description provided for @pagesHoursMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} h {minutes} min'**
+  String pagesHoursMinutes(int hours, int minutes);
+
+  /// No description provided for @pagesMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String pagesMinutes(int minutes);
+
+  /// No description provided for @pagesTrackCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No tracks} =1{1 track} other{{count} tracks}}'**
+  String pagesTrackCount(int count);
+
+  /// No description provided for @pagesToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get pagesToday;
+
+  /// No description provided for @pagesYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get pagesYesterday;
+
+  /// No description provided for @pagesDownloadEligible.
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get pagesDownloadEligible;
+
+  /// No description provided for @pagesOpenSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get pagesOpenSettings;
+
+  /// No description provided for @pagesImportAndMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Import & match'**
+  String get pagesImportAndMatch;
+
+  /// No description provided for @pagesMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get pagesMore;
+
+  /// No description provided for @pagesSort.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get pagesSort;
+
+  /// No description provided for @pagesFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get pagesFilter;
+
+  /// No description provided for @pagesAscending.
+  ///
+  /// In en, this message translates to:
+  /// **'Ascending'**
+  String get pagesAscending;
+
+  /// No description provided for @pagesDescending.
+  ///
+  /// In en, this message translates to:
+  /// **'Descending'**
+  String get pagesDescending;
+
+  /// No description provided for @pagesClearFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filters'**
+  String get pagesClearFilters;
+
+  /// No description provided for @pagesNoMatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing matches these filters.'**
+  String get pagesNoMatches;
+
+  /// No description provided for @pagesLoadMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Load more'**
+  String get pagesLoadMore;
+
+  /// No description provided for @pagesRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get pagesRemove;
+
+  /// No description provided for @pagesRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename'**
+  String get pagesRename;
+
+  /// No description provided for @pagesOpenOnProvider.
+  ///
+  /// In en, this message translates to:
+  /// **'Open on {provider}'**
+  String pagesOpenOnProvider(String provider);
+
+  /// No description provided for @pagesDataFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Data from {provider}'**
+  String pagesDataFrom(String provider);
+
+  /// No description provided for @shelfContinueListening.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue listening'**
+  String get shelfContinueListening;
+
+  /// No description provided for @shelfDailyMix.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Mix {number}'**
+  String shelfDailyMix(int number);
+
+  /// No description provided for @shelfDiscoverWeekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover Weekly'**
+  String get shelfDiscoverWeekly;
+
+  /// No description provided for @shelfBecauseYouLiked.
+  ///
+  /// In en, this message translates to:
+  /// **'Because you like {artist}'**
+  String shelfBecauseYouLiked(String artist);
+
+  /// No description provided for @shelfTrending.
+  ///
+  /// In en, this message translates to:
+  /// **'Trending'**
+  String get shelfTrending;
+
+  /// No description provided for @shelfNewReleases.
+  ///
+  /// In en, this message translates to:
+  /// **'New releases'**
+  String get shelfNewReleases;
+
+  /// No description provided for @shelfRecentlyAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Recently added'**
+  String get shelfRecentlyAdded;
+
+  /// No description provided for @moodFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus'**
+  String get moodFocus;
+
+  /// No description provided for @moodChill.
+  ///
+  /// In en, this message translates to:
+  /// **'Chill'**
+  String get moodChill;
+
+  /// No description provided for @moodWorkout.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout'**
+  String get moodWorkout;
+
+  /// No description provided for @moodParty.
+  ///
+  /// In en, this message translates to:
+  /// **'Party'**
+  String get moodParty;
+
+  /// No description provided for @moodSleep.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep'**
+  String get moodSleep;
+
+  /// No description provided for @moodCommute.
+  ///
+  /// In en, this message translates to:
+  /// **'On the road'**
+  String get moodCommute;
+
+  /// No description provided for @moodHappy.
+  ///
+  /// In en, this message translates to:
+  /// **'Feel good'**
+  String get moodHappy;
+
+  /// No description provided for @moodMelancholy.
+  ///
+  /// In en, this message translates to:
+  /// **'Melancholy'**
+  String get moodMelancholy;
+
+  /// No description provided for @homeGoodMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get homeGoodMorning;
+
+  /// No description provided for @homeGoodAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon'**
+  String get homeGoodAfternoon;
+
+  /// No description provided for @homeGoodEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening'**
+  String get homeGoodEvening;
+
+  /// No description provided for @homeGoodNight.
+  ///
+  /// In en, this message translates to:
+  /// **'Good night'**
+  String get homeGoodNight;
+
+  /// No description provided for @homeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Picked from what you play — worked out on this device.'**
+  String get homeSubtitle;
+
+  /// No description provided for @homeMix.
+  ///
+  /// In en, this message translates to:
+  /// **'Mix'**
+  String get homeMix;
+
+  /// No description provided for @homeShelf.
+  ///
+  /// In en, this message translates to:
+  /// **'Collection'**
+  String get homeShelf;
+
+  /// No description provided for @homeMadeForYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Made for you'**
+  String get homeMadeForYou;
+
+  /// No description provided for @homeFirstRunTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s bring in your music'**
+  String get homeFirstRunTitle;
+
+  /// No description provided for @homeFirstRunMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Fermata plays your own files and the services you connect. Start with one of these.'**
+  String get homeFirstRunMessage;
+
+  /// No description provided for @homeAddFolderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a music folder'**
+  String get homeAddFolderTitle;
+
+  /// No description provided for @homeAddFolderBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your files stay where they are and play offline.'**
+  String get homeAddFolderBody;
+
+  /// No description provided for @homeConnectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect a service'**
+  String get homeConnectTitle;
+
+  /// No description provided for @homeConnectBody.
+  ///
+  /// In en, this message translates to:
+  /// **'SoundCloud, Audius, Jamendo and more.'**
+  String get homeConnectBody;
+
+  /// No description provided for @homeConnectAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected services'**
+  String get homeConnectAction;
+
+  /// No description provided for @homeExploreTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore'**
+  String get homeExploreTitle;
+
+  /// No description provided for @homeExploreBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse moods, genres and what is trending.'**
+  String get homeExploreBody;
+
+  /// No description provided for @homeExploreAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Start exploring'**
+  String get homeExploreAction;
+
+  /// No description provided for @searchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Songs, artists, albums or a share link'**
+  String get searchHint;
+
+  /// No description provided for @searchFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get searchFilterAll;
+
+  /// No description provided for @searchEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Search everything at once'**
+  String get searchEmptyTitle;
+
+  /// No description provided for @searchEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your library and every connected service. Paste a playlist link to open or import it.'**
+  String get searchEmptyMessage;
+
+  /// No description provided for @searchBrowseExplore.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse Explore'**
+  String get searchBrowseExplore;
+
+  /// No description provided for @searchHistoryOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Search history is turned off, so searches are not saved.'**
+  String get searchHistoryOff;
+
+  /// No description provided for @searchRecent.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent searches'**
+  String get searchRecent;
+
+  /// No description provided for @searchClearRecent.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get searchClearRecent;
+
+  /// No description provided for @searchRemoveRecent.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove \"{query}\"'**
+  String searchRemoveRecent(String query);
+
+  /// No description provided for @searchFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for \"{query}\"'**
+  String searchFor(String query);
+
+  /// No description provided for @searchInYourLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'In your library'**
+  String get searchInYourLibrary;
+
+  /// No description provided for @searchTopResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Top result'**
+  String get searchTopResult;
+
+  /// No description provided for @searchTracks.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks'**
+  String get searchTracks;
+
+  /// No description provided for @searchArtists.
+  ///
+  /// In en, this message translates to:
+  /// **'Artists'**
+  String get searchArtists;
+
+  /// No description provided for @searchAlbums.
+  ///
+  /// In en, this message translates to:
+  /// **'Albums'**
+  String get searchAlbums;
+
+  /// No description provided for @searchPlaylists.
+  ///
+  /// In en, this message translates to:
+  /// **'Playlists'**
+  String get searchPlaylists;
+
+  /// No description provided for @searchShowAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Show all {count}'**
+  String searchShowAll(int count);
+
+  /// No description provided for @searchNoResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No results for \"{query}\"'**
+  String searchNoResults(String query);
+
+  /// No description provided for @searchNoResultsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the spelling, or try fewer words.'**
+  String get searchNoResultsHint;
+
+  /// No description provided for @searchConnectedServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected services'**
+  String get searchConnectedServices;
+
+  /// No description provided for @searchNotSearched.
+  ///
+  /// In en, this message translates to:
+  /// **'Not searched: {sources}'**
+  String searchNotSearched(String sources);
+
+  /// No description provided for @searchSourceNotConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'{service} isn\'t connected.'**
+  String searchSourceNotConnected(String service);
+
+  /// No description provided for @searchNeedsCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'needs setup'**
+  String get searchNeedsCredentials;
+
+  /// No description provided for @searchNotConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'not connected'**
+  String get searchNotConnected;
+
+  /// No description provided for @searchKindTrack.
+  ///
+  /// In en, this message translates to:
+  /// **'Track'**
+  String get searchKindTrack;
+
+  /// No description provided for @searchKindArtist.
+  ///
+  /// In en, this message translates to:
+  /// **'Artist'**
+  String get searchKindArtist;
+
+  /// No description provided for @searchKindAlbum.
+  ///
+  /// In en, this message translates to:
+  /// **'Album'**
+  String get searchKindAlbum;
+
+  /// No description provided for @searchKindPlaylist.
+  ///
+  /// In en, this message translates to:
+  /// **'Playlist'**
+  String get searchKindPlaylist;
+
+  /// No description provided for @searchLinkTrack.
+  ///
+  /// In en, this message translates to:
+  /// **'{provider} track link'**
+  String searchLinkTrack(String provider);
+
+  /// No description provided for @searchLinkPlaylist.
+  ///
+  /// In en, this message translates to:
+  /// **'{provider} playlist link'**
+  String searchLinkPlaylist(String provider);
+
+  /// No description provided for @searchLinkAlbum.
+  ///
+  /// In en, this message translates to:
+  /// **'{provider} album link'**
+  String searchLinkAlbum(String provider);
+
+  /// No description provided for @searchLinkArtist.
+  ///
+  /// In en, this message translates to:
+  /// **'{provider} artist link'**
+  String searchLinkArtist(String provider);
+
+  /// No description provided for @searchLinkGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'{provider} link'**
+  String searchLinkGeneric(String provider);
+
+  /// No description provided for @searchOpenPlaylist.
+  ///
+  /// In en, this message translates to:
+  /// **'Open playlist'**
+  String get searchOpenPlaylist;
+
+  /// No description provided for @searchOpenAlbum.
+  ///
+  /// In en, this message translates to:
+  /// **'Open album'**
+  String get searchOpenAlbum;
+
+  /// No description provided for @searchOpenArtist.
+  ///
+  /// In en, this message translates to:
+  /// **'Open artist'**
+  String get searchOpenArtist;
+
+  /// No description provided for @searchSourceMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'{provider} isn\'t available in this version of Fermata.'**
+  String searchSourceMissing(String provider);
+
+  /// No description provided for @searchLinkNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This track couldn\'t be found. It may have been removed or made private.'**
+  String get searchLinkNotFound;
+
+  /// No description provided for @exploreSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Moods, genres and new music from your services.'**
+  String get exploreSubtitle;
+
+  /// No description provided for @exploreMoods.
+  ///
+  /// In en, this message translates to:
+  /// **'Moods'**
+  String get exploreMoods;
+
+  /// No description provided for @exploreGenres.
+  ///
+  /// In en, this message translates to:
+  /// **'Genres'**
+  String get exploreGenres;
+
+  /// No description provided for @exploreNoGenres.
+  ///
+  /// In en, this message translates to:
+  /// **'No genres yet. Add music or connect a service.'**
+  String get exploreNoGenres;
+
+  /// No description provided for @exploreGenre.
+  ///
+  /// In en, this message translates to:
+  /// **'Genre'**
+  String get exploreGenre;
+
+  /// No description provided for @exploreMood.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood'**
+  String get exploreMood;
+
+  /// No description provided for @exploreNothingFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing playable found right now. Try again later or connect another service.'**
+  String get exploreNothingFound;
+
+  /// No description provided for @libraryTabTracks.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks'**
+  String get libraryTabTracks;
+
+  /// No description provided for @libraryTabAlbums.
+  ///
+  /// In en, this message translates to:
+  /// **'Albums'**
+  String get libraryTabAlbums;
+
+  /// No description provided for @libraryTabArtists.
+  ///
+  /// In en, this message translates to:
+  /// **'Artists'**
+  String get libraryTabArtists;
+
+  /// No description provided for @libraryTabFolders.
+  ///
+  /// In en, this message translates to:
+  /// **'Folders'**
+  String get libraryTabFolders;
+
+  /// No description provided for @libraryPermissionNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Fermata needs access to your music to add a folder.'**
+  String get libraryPermissionNeeded;
+
+  /// No description provided for @libraryOpenSystemSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get libraryOpenSystemSettings;
+
+  /// No description provided for @libraryAddFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Add folder'**
+  String get libraryAddFolder;
+
+  /// No description provided for @libraryFolderAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Added {folder} — scanning now'**
+  String libraryFolderAdded(String folder);
+
+  /// No description provided for @libraryLocalFiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Local files'**
+  String get libraryLocalFiles;
+
+  /// No description provided for @libraryEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your library is empty'**
+  String get libraryEmptyTitle;
+
+  /// No description provided for @libraryEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a music folder or import a file. Tracks you like or play from services show up here too.'**
+  String get libraryEmptyMessage;
+
+  /// No description provided for @libraryImportFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Import a file'**
+  String get libraryImportFile;
+
+  /// No description provided for @libraryImportFileFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'This file can\'t be added. Fermata reads MP3, FLAC, M4A, Ogg, Opus, WAV and AIFF.'**
+  String get libraryImportFileFailed;
+
+  /// No description provided for @libraryImportFileDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Added \"{title}\"'**
+  String libraryImportFileDone(String title);
+
+  /// No description provided for @libraryFilterHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter your library'**
+  String get libraryFilterHint;
+
+  /// No description provided for @libraryQuickDownloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloaded'**
+  String get libraryQuickDownloaded;
+
+  /// No description provided for @librarySortedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sorted by {field}'**
+  String librarySortedBy(String field);
+
+  /// No description provided for @librarySortTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get librarySortTitle;
+
+  /// No description provided for @librarySortArtist.
+  ///
+  /// In en, this message translates to:
+  /// **'Artist'**
+  String get librarySortArtist;
+
+  /// No description provided for @librarySortAlbum.
+  ///
+  /// In en, this message translates to:
+  /// **'Album'**
+  String get librarySortAlbum;
+
+  /// No description provided for @librarySortYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get librarySortYear;
+
+  /// No description provided for @librarySortDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get librarySortDuration;
+
+  /// No description provided for @librarySortDateAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Date added'**
+  String get librarySortDateAdded;
+
+  /// No description provided for @librarySortPlayCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Most played'**
+  String get librarySortPlayCount;
+
+  /// No description provided for @librarySortLastPlayed.
+  ///
+  /// In en, this message translates to:
+  /// **'Last played'**
+  String get librarySortLastPlayed;
+
+  /// No description provided for @librarySortGenre.
+  ///
+  /// In en, this message translates to:
+  /// **'Genre'**
+  String get librarySortGenre;
+
+  /// No description provided for @libraryFilterAvailability.
+  ///
+  /// In en, this message translates to:
+  /// **'Availability'**
+  String get libraryFilterAvailability;
+
+  /// No description provided for @libraryFilterDownloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloaded'**
+  String get libraryFilterDownloaded;
+
+  /// No description provided for @libraryFilterLocal.
+  ///
+  /// In en, this message translates to:
+  /// **'Local files only'**
+  String get libraryFilterLocal;
+
+  /// No description provided for @libraryFilterOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Available offline'**
+  String get libraryFilterOffline;
+
+  /// No description provided for @libraryFilterFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Liked songs'**
+  String get libraryFilterFavorites;
+
+  /// No description provided for @libraryFilterSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Source'**
+  String get libraryFilterSource;
+
+  /// No description provided for @libraryFilterGenre.
+  ///
+  /// In en, this message translates to:
+  /// **'Genre'**
+  String get libraryFilterGenre;
+
+  /// No description provided for @libraryAnyGenre.
+  ///
+  /// In en, this message translates to:
+  /// **'Any genre'**
+  String get libraryAnyGenre;
+
+  /// No description provided for @libraryFilterYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get libraryFilterYear;
+
+  /// No description provided for @libraryFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get libraryFrom;
+
+  /// No description provided for @libraryTo.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get libraryTo;
+
+  /// No description provided for @libraryFilterDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration (minutes)'**
+  String get libraryFilterDuration;
+
+  /// No description provided for @libraryMinMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'At least'**
+  String get libraryMinMinutes;
+
+  /// No description provided for @libraryMaxMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'At most'**
+  String get libraryMaxMinutes;
+
+  /// No description provided for @libraryFilterAlbums.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter albums'**
+  String get libraryFilterAlbums;
+
+  /// No description provided for @libraryNoAlbums.
+  ///
+  /// In en, this message translates to:
+  /// **'No albums yet'**
+  String get libraryNoAlbums;
+
+  /// No description provided for @libraryFilterArtists.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter artists'**
+  String get libraryFilterArtists;
+
+  /// No description provided for @libraryNoArtists.
+  ///
+  /// In en, this message translates to:
+  /// **'No artists yet'**
+  String get libraryNoArtists;
+
+  /// No description provided for @libraryFolders.
+  ///
+  /// In en, this message translates to:
+  /// **'Music folders'**
+  String get libraryFolders;
+
+  /// No description provided for @libraryFoldersHintDesktop.
+  ///
+  /// In en, this message translates to:
+  /// **'Watched folders are rescanned automatically when files change.'**
+  String get libraryFoldersHintDesktop;
+
+  /// No description provided for @libraryFoldersHintAndroid.
+  ///
+  /// In en, this message translates to:
+  /// **'Folders are rescanned each time Fermata starts.'**
+  String get libraryFoldersHintAndroid;
+
+  /// No description provided for @libraryNoFolders.
+  ///
+  /// In en, this message translates to:
+  /// **'No music folders yet'**
+  String get libraryNoFolders;
+
+  /// No description provided for @libraryNoFoldersMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the folders where you keep music. Files are never moved or uploaded.'**
+  String get libraryNoFoldersMessage;
+
+  /// No description provided for @libraryRescanAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Rescan'**
+  String get libraryRescanAll;
+
+  /// No description provided for @libraryFullRescan.
+  ///
+  /// In en, this message translates to:
+  /// **'Full rescan'**
+  String get libraryFullRescan;
+
+  /// No description provided for @libraryRescanFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Rescan folder'**
+  String get libraryRescanFolder;
+
+  /// No description provided for @libraryRemoveFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove folder'**
+  String get libraryRemoveFolder;
+
+  /// No description provided for @libraryRemoveFolderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this folder?'**
+  String get libraryRemoveFolderTitle;
+
+  /// No description provided for @libraryRemoveFolderMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks from {path} leave your library. The files themselves aren\'t deleted.'**
+  String libraryRemoveFolderMessage(String path);
+
+  /// No description provided for @libraryWatchFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch for changes'**
+  String get libraryWatchFolder;
+
+  /// No description provided for @libraryNeverScanned.
+  ///
+  /// In en, this message translates to:
+  /// **'Not scanned yet'**
+  String get libraryNeverScanned;
+
+  /// No description provided for @libraryScannedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanned {date}'**
+  String libraryScannedOn(String date);
+
+  /// No description provided for @libraryScanEnumerating.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking for music…'**
+  String get libraryScanEnumerating;
+
+  /// No description provided for @libraryScanProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning {scanned} of {total} files'**
+  String libraryScanProgress(int scanned, int total);
+
+  /// No description provided for @libraryScanDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan complete'**
+  String get libraryScanDone;
+
+  /// No description provided for @libraryScanFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The scan stopped'**
+  String get libraryScanFailed;
+
+  /// No description provided for @libraryScanCounts.
+  ///
+  /// In en, this message translates to:
+  /// **'{added} added · {updated} updated · {removed} removed'**
+  String libraryScanCounts(int added, int updated, int removed);
+
+  /// No description provided for @libraryScanErrors.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 file couldn\'t be read} other{{count} files couldn\'t be read}}'**
+  String libraryScanErrors(int count);
+
+  /// No description provided for @libraryTools.
+  ///
+  /// In en, this message translates to:
+  /// **'Tools'**
+  String get libraryTools;
+
+  /// No description provided for @libraryMissingFiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Missing files'**
+  String get libraryMissingFiles;
+
+  /// No description provided for @libraryMissingFilesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks whose file was moved or deleted outside Fermata. They come back if the file returns.'**
+  String get libraryMissingFilesHint;
+
+  /// No description provided for @libraryNoMissingFiles.
+  ///
+  /// In en, this message translates to:
+  /// **'No missing files'**
+  String get libraryNoMissingFiles;
+
+  /// No description provided for @libraryRemoveAllMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove all from library'**
+  String get libraryRemoveAllMissing;
+
+  /// No description provided for @libraryDuplicates.
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicates'**
+  String get libraryDuplicates;
+
+  /// No description provided for @libraryDuplicatesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks that look like copies of each other.'**
+  String get libraryDuplicatesHint;
+
+  /// No description provided for @libraryNoDuplicates.
+  ///
+  /// In en, this message translates to:
+  /// **'No duplicates found'**
+  String get libraryNoDuplicates;
+
+  /// No description provided for @libraryDuplicateSameFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Identical files'**
+  String get libraryDuplicateSameFile;
+
+  /// No description provided for @libraryDuplicateSameIsrc.
+  ///
+  /// In en, this message translates to:
+  /// **'Same recording (ISRC)'**
+  String get libraryDuplicateSameIsrc;
+
+  /// No description provided for @libraryDuplicateSameMetadata.
+  ///
+  /// In en, this message translates to:
+  /// **'Same title, artist and length'**
+  String get libraryDuplicateSameMetadata;
+
+  /// No description provided for @libraryRemoveFromLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from library'**
+  String get libraryRemoveFromLibrary;
+
+  /// No description provided for @libraryRemoveFromLibraryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Remove 1 track from your library?} other{Remove {count} tracks from your library?}}'**
+  String libraryRemoveFromLibraryTitle(int count);
+
+  /// No description provided for @libraryRemoveFromLibraryMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Files on disk aren\'t deleted.'**
+  String get libraryRemoveFromLibraryMessage;
+
+  /// No description provided for @libraryRemovedFromLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 track removed} other{{count} tracks removed}}'**
+  String libraryRemovedFromLibrary(int count);
+
+  /// No description provided for @libraryTrackDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get libraryTrackDetails;
+
+  /// No description provided for @libraryDetailDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Length'**
+  String get libraryDetailDuration;
+
+  /// No description provided for @libraryDetailFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Format'**
+  String get libraryDetailFormat;
+
+  /// No description provided for @libraryDetailBitrate.
+  ///
+  /// In en, this message translates to:
+  /// **'Bitrate'**
+  String get libraryDetailBitrate;
+
+  /// No description provided for @libraryKbps.
+  ///
+  /// In en, this message translates to:
+  /// **'{kbps} kbps'**
+  String libraryKbps(int kbps);
+
+  /// No description provided for @libraryDetailSampleRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample rate'**
+  String get libraryDetailSampleRate;
+
+  /// No description provided for @libraryKhz.
+  ///
+  /// In en, this message translates to:
+  /// **'{khz} kHz'**
+  String libraryKhz(String khz);
+
+  /// No description provided for @libraryDetailBitDepth.
+  ///
+  /// In en, this message translates to:
+  /// **'Bit depth'**
+  String get libraryDetailBitDepth;
+
+  /// No description provided for @libraryBits.
+  ///
+  /// In en, this message translates to:
+  /// **'{bits}-bit'**
+  String libraryBits(int bits);
+
+  /// No description provided for @libraryDetailChannels.
+  ///
+  /// In en, this message translates to:
+  /// **'Channels'**
+  String get libraryDetailChannels;
+
+  /// No description provided for @libraryDetailSize.
+  ///
+  /// In en, this message translates to:
+  /// **'File size'**
+  String get libraryDetailSize;
+
+  /// No description provided for @libraryDetailReplayGain.
+  ///
+  /// In en, this message translates to:
+  /// **'ReplayGain'**
+  String get libraryDetailReplayGain;
+
+  /// No description provided for @libraryDetailSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Source'**
+  String get libraryDetailSource;
+
+  /// No description provided for @libraryDetailOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get libraryDetailOffline;
+
+  /// No description provided for @libraryDetailFile.
+  ///
+  /// In en, this message translates to:
+  /// **'File'**
+  String get libraryDetailFile;
+
+  /// No description provided for @libraryEditTags.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit tags'**
+  String get libraryEditTags;
+
+  /// No description provided for @libraryTagTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get libraryTagTitle;
+
+  /// No description provided for @libraryTagArtists.
+  ///
+  /// In en, this message translates to:
+  /// **'Artists'**
+  String get libraryTagArtists;
+
+  /// No description provided for @libraryTagArtistsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Separate several artists with ;'**
+  String get libraryTagArtistsHint;
+
+  /// No description provided for @libraryTagAlbum.
+  ///
+  /// In en, this message translates to:
+  /// **'Album'**
+  String get libraryTagAlbum;
+
+  /// No description provided for @libraryTagAlbumArtist.
+  ///
+  /// In en, this message translates to:
+  /// **'Album artist'**
+  String get libraryTagAlbumArtist;
+
+  /// No description provided for @libraryTagYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get libraryTagYear;
+
+  /// No description provided for @libraryTagGenre.
+  ///
+  /// In en, this message translates to:
+  /// **'Genre'**
+  String get libraryTagGenre;
+
+  /// No description provided for @libraryTagTrackNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Track no.'**
+  String get libraryTagTrackNumber;
+
+  /// No description provided for @libraryTagDiscNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Disc no.'**
+  String get libraryTagDiscNumber;
+
+  /// No description provided for @libraryTagsFileHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes are written to the file when its format allows it; otherwise they\'re kept in your library only.'**
+  String get libraryTagsFileHint;
+
+  /// No description provided for @libraryTagsOverrideOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'On this device the file isn\'t changed: your edits are saved in Fermata\'s library.'**
+  String get libraryTagsOverrideOnly;
+
+  /// No description provided for @libraryTagsSavedToFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Tags saved to the file'**
+  String get libraryTagsSavedToFile;
+
+  /// No description provided for @libraryTagsSavedAsOverride.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved in your library (the file wasn\'t changed)'**
+  String get libraryTagsSavedAsOverride;
+
+  /// No description provided for @playlistsNewSmart.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart playlist'**
+  String get playlistsNewSmart;
+
+  /// No description provided for @playlistsImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get playlistsImport;
+
+  /// No description provided for @playlistsImportFromService.
+  ///
+  /// In en, this message translates to:
+  /// **'Import from a service'**
+  String get playlistsImportFromService;
+
+  /// No description provided for @playlistsImportM3u.
+  ///
+  /// In en, this message translates to:
+  /// **'Import M3U file'**
+  String get playlistsImportM3u;
+
+  /// No description provided for @playlistsImportM3uEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No playable files were found in that playlist file.'**
+  String get playlistsImportM3uEmpty;
+
+  /// No description provided for @playlistsImportedM3u.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Imported 1 track into {name}} other{Imported {count} tracks into {name}}}'**
+  String playlistsImportedM3u(int count, String name);
+
+  /// No description provided for @playlistsCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Created {name}'**
+  String playlistsCreated(String name);
+
+  /// No description provided for @playlistsEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Make one from scratch, let a smart playlist fill itself, or bring one over from another service.'**
+  String get playlistsEmptyMessage;
+
+  /// No description provided for @playlistsFilterYours.
+  ///
+  /// In en, this message translates to:
+  /// **'Yours'**
+  String get playlistsFilterYours;
+
+  /// No description provided for @playlistsFilterSmart.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart'**
+  String get playlistsFilterSmart;
+
+  /// No description provided for @playlistsFilterImported.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported'**
+  String get playlistsFilterImported;
+
+  /// No description provided for @playlistsShowList.
+  ///
+  /// In en, this message translates to:
+  /// **'Show as list'**
+  String get playlistsShowList;
+
+  /// No description provided for @playlistsShowGrid.
+  ///
+  /// In en, this message translates to:
+  /// **'Show as grid'**
+  String get playlistsShowGrid;
+
+  /// No description provided for @playlistKindLocal.
+  ///
+  /// In en, this message translates to:
+  /// **'Playlist'**
+  String get playlistKindLocal;
+
+  /// No description provided for @playlistKindSmart.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart playlist'**
+  String get playlistKindSmart;
+
+  /// No description provided for @playlistKindImported.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported from {provider}'**
+  String playlistKindImported(String provider);
+
+  /// No description provided for @playlistOnProvider.
+  ///
+  /// In en, this message translates to:
+  /// **'Playlist on {provider}'**
+  String playlistOnProvider(String provider);
+
+  /// No description provided for @playlistBy.
+  ///
+  /// In en, this message translates to:
+  /// **'by {owner}'**
+  String playlistBy(String owner);
+
+  /// No description provided for @playlistDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description (optional)'**
+  String get playlistDescription;
+
+  /// No description provided for @playlistEditDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit details'**
+  String get playlistEditDetails;
+
+  /// No description provided for @playlistEditRules.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit rules'**
+  String get playlistEditRules;
+
+  /// No description provided for @playlistChangeArtwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Change artwork'**
+  String get playlistChangeArtwork;
+
+  /// No description provided for @playlistArtworkUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Artwork updated'**
+  String get playlistArtworkUpdated;
+
+  /// No description provided for @playlistExportM3u.
+  ///
+  /// In en, this message translates to:
+  /// **'Export as M3U'**
+  String get playlistExportM3u;
+
+  /// No description provided for @playlistExported.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved to {location}'**
+  String playlistExported(String location);
+
+  /// No description provided for @playlistAutoDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'Download automatically'**
+  String get playlistAutoDownload;
+
+  /// No description provided for @playlistAutoDownloadOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-download on'**
+  String get playlistAutoDownloadOn;
+
+  /// No description provided for @playlistAutoDownloadTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Download this playlist automatically?'**
+  String get playlistAutoDownloadTitle;
+
+  /// No description provided for @playlistAutoDownloadExplain.
+  ///
+  /// In en, this message translates to:
+  /// **'Fermata only downloads tracks automatically when they\'re your own files or the provider permits automatic downloads. None of the streaming services allow that today, so their tracks stay online — you can still download single Audius or Jamendo tracks yourself where the artist allows it.'**
+  String get playlistAutoDownloadExplain;
+
+  /// No description provided for @playlistAutoDownloadConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on'**
+  String get playlistAutoDownloadConfirm;
+
+  /// No description provided for @playlistDedupe.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove duplicates'**
+  String get playlistDedupe;
+
+  /// No description provided for @playlistNoDuplicates.
+  ///
+  /// In en, this message translates to:
+  /// **'No duplicates found'**
+  String get playlistNoDuplicates;
+
+  /// No description provided for @playlistDuplicatesRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Removed 1 duplicate} other{Removed {count} duplicates}}'**
+  String playlistDuplicatesRemoved(int count);
+
+  /// No description provided for @playlistDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete \"{name}\"?'**
+  String playlistDeleteTitle(String name);
+
+  /// No description provided for @playlistDeleteMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'The playlist is removed. Its tracks stay in your library.'**
+  String get playlistDeleteMessage;
+
+  /// No description provided for @playlistDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted {name}'**
+  String playlistDeleted(String name);
+
+  /// No description provided for @playlistNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This playlist doesn\'t exist anymore.'**
+  String get playlistNotFound;
+
+  /// No description provided for @playlistEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'This playlist is empty'**
+  String get playlistEmpty;
+
+  /// No description provided for @playlistEmptyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add tracks from search, your library or any track menu.'**
+  String get playlistEmptyHint;
+
+  /// No description provided for @playlistSmartEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing matches the rules yet'**
+  String get playlistSmartEmpty;
+
+  /// No description provided for @playlistSmartEmptyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit the rules, or play and like more music.'**
+  String get playlistSmartEmptyHint;
+
+  /// No description provided for @playlistRulesSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 rule} other{{count} rules}}, {match}'**
+  String playlistRulesSummary(int count, String match);
+
+  /// No description provided for @playlistRemoveFromPlaylist.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from playlist'**
+  String get playlistRemoveFromPlaylist;
+
+  /// No description provided for @playlistRemovedTracks.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Removed 1 track} other{Removed {count} tracks}}'**
+  String playlistRemovedTracks(int count);
+
+  /// No description provided for @playlistPlaysVia.
+  ///
+  /// In en, this message translates to:
+  /// **'Plays via {provider} — change'**
+  String playlistPlaysVia(String provider);
+
+  /// No description provided for @playlistSaveToLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Save to library'**
+  String get playlistSaveToLibrary;
+
+  /// No description provided for @playlistSavedToLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved {name} to your library'**
+  String playlistSavedToLibrary(String name);
+
+  /// No description provided for @smartNewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New smart playlist'**
+  String get smartNewTitle;
+
+  /// No description provided for @smartEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit smart playlist'**
+  String get smartEditTitle;
+
+  /// No description provided for @smartMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Include tracks that match'**
+  String get smartMatch;
+
+  /// No description provided for @smartMatchAll.
+  ///
+  /// In en, this message translates to:
+  /// **'all rules'**
+  String get smartMatchAll;
+
+  /// No description provided for @smartMatchAny.
+  ///
+  /// In en, this message translates to:
+  /// **'any rule'**
+  String get smartMatchAny;
+
+  /// No description provided for @smartAddRule.
+  ///
+  /// In en, this message translates to:
+  /// **'Add rule'**
+  String get smartAddRule;
+
+  /// No description provided for @smartRemoveRule.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove rule'**
+  String get smartRemoveRule;
+
+  /// No description provided for @smartValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Value'**
+  String get smartValue;
+
+  /// No description provided for @smartPickSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a source'**
+  String get smartPickSource;
+
+  /// No description provided for @smartUnitMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'min'**
+  String get smartUnitMinutes;
+
+  /// No description provided for @smartUnitDays.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get smartUnitDays;
+
+  /// No description provided for @smartLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Limit'**
+  String get smartLimit;
+
+  /// No description provided for @smartNoLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'No limit'**
+  String get smartNoLimit;
+
+  /// No description provided for @smartPreviewLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Counting matching tracks…'**
+  String get smartPreviewLoading;
+
+  /// No description provided for @smartPreviewCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No tracks match} =1{1 track matches} other{{count} tracks match}}'**
+  String smartPreviewCount(int count);
+
+  /// No description provided for @smartPreviewApprox.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{About 1 track matches} other{About {count} tracks match}}'**
+  String smartPreviewApprox(int count);
+
+  /// No description provided for @smartFieldTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get smartFieldTitle;
+
+  /// No description provided for @smartFieldArtist.
+  ///
+  /// In en, this message translates to:
+  /// **'Artist'**
+  String get smartFieldArtist;
+
+  /// No description provided for @smartFieldAlbum.
+  ///
+  /// In en, this message translates to:
+  /// **'Album'**
+  String get smartFieldAlbum;
+
+  /// No description provided for @smartFieldGenre.
+  ///
+  /// In en, this message translates to:
+  /// **'Genre'**
+  String get smartFieldGenre;
+
+  /// No description provided for @smartFieldYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get smartFieldYear;
+
+  /// No description provided for @smartFieldDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Length'**
+  String get smartFieldDuration;
+
+  /// No description provided for @smartFieldPlayCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Play count'**
+  String get smartFieldPlayCount;
+
+  /// No description provided for @smartFieldLastPlayed.
+  ///
+  /// In en, this message translates to:
+  /// **'Last played'**
+  String get smartFieldLastPlayed;
+
+  /// No description provided for @smartFieldDateAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Date added'**
+  String get smartFieldDateAdded;
+
+  /// No description provided for @smartFieldSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Source'**
+  String get smartFieldSource;
+
+  /// No description provided for @smartFieldFavorite.
+  ///
+  /// In en, this message translates to:
+  /// **'Liked'**
+  String get smartFieldFavorite;
+
+  /// No description provided for @smartFieldDownloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloaded'**
+  String get smartFieldDownloaded;
+
+  /// No description provided for @smartOpContains.
+  ///
+  /// In en, this message translates to:
+  /// **'contains'**
+  String get smartOpContains;
+
+  /// No description provided for @smartOpNotContains.
+  ///
+  /// In en, this message translates to:
+  /// **'doesn\'t contain'**
+  String get smartOpNotContains;
+
+  /// No description provided for @smartOpEquals.
+  ///
+  /// In en, this message translates to:
+  /// **'is'**
+  String get smartOpEquals;
+
+  /// No description provided for @smartOpNotEquals.
+  ///
+  /// In en, this message translates to:
+  /// **'isn\'t'**
+  String get smartOpNotEquals;
+
+  /// No description provided for @smartOpStartsWith.
+  ///
+  /// In en, this message translates to:
+  /// **'starts with'**
+  String get smartOpStartsWith;
+
+  /// No description provided for @smartOpGreaterThan.
+  ///
+  /// In en, this message translates to:
+  /// **'is more than'**
+  String get smartOpGreaterThan;
+
+  /// No description provided for @smartOpLessThan.
+  ///
+  /// In en, this message translates to:
+  /// **'is less than'**
+  String get smartOpLessThan;
+
+  /// No description provided for @smartOpInLastDays.
+  ///
+  /// In en, this message translates to:
+  /// **'in the last'**
+  String get smartOpInLastDays;
+
+  /// No description provided for @smartOpNotInLastDays.
+  ///
+  /// In en, this message translates to:
+  /// **'not in the last'**
+  String get smartOpNotInLastDays;
+
+  /// No description provided for @smartOpIsTrue.
+  ///
+  /// In en, this message translates to:
+  /// **'yes'**
+  String get smartOpIsTrue;
+
+  /// No description provided for @smartOpIsFalse.
+  ///
+  /// In en, this message translates to:
+  /// **'no'**
+  String get smartOpIsFalse;
+
+  /// No description provided for @alternativesFind.
+  ///
+  /// In en, this message translates to:
+  /// **'Find alternatives'**
+  String get alternativesFind;
+
+  /// No description provided for @alternativesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Alternatives'**
+  String get alternativesTitle;
+
+  /// No description provided for @alternativesLinkedNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Linked now'**
+  String get alternativesLinkedNow;
+
+  /// No description provided for @alternativesSuggested.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested matches'**
+  String get alternativesSuggested;
+
+  /// No description provided for @alternativesSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search yourself'**
+  String get alternativesSearch;
+
+  /// No description provided for @alternativesSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Title and artist, then press Enter'**
+  String get alternativesSearchHint;
+
+  /// No description provided for @alternativesNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No matches found.'**
+  String get alternativesNone;
+
+  /// No description provided for @alternativesUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Use'**
+  String get alternativesUse;
+
+  /// No description provided for @alternativesInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'In use'**
+  String get alternativesInUse;
+
+  /// No description provided for @alternativesUnlink.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlink'**
+  String get alternativesUnlink;
+
+  /// No description provided for @alternativesLinked.
+  ///
+  /// In en, this message translates to:
+  /// **'Linked — plays from {provider}'**
+  String alternativesLinked(String provider);
+
+  /// No description provided for @alternativesScore.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% · {confidence}'**
+  String alternativesScore(int percent, String confidence);
+
+  /// No description provided for @matchExact.
+  ///
+  /// In en, this message translates to:
+  /// **'exact match'**
+  String get matchExact;
+
+  /// No description provided for @matchHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'very likely'**
+  String get matchHigh;
+
+  /// No description provided for @matchMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'possible'**
+  String get matchMedium;
+
+  /// No description provided for @matchLow.
+  ///
+  /// In en, this message translates to:
+  /// **'unlikely'**
+  String get matchLow;
+
+  /// No description provided for @matchNone.
+  ///
+  /// In en, this message translates to:
+  /// **'no match'**
+  String get matchNone;
+
+  /// No description provided for @diffRemix.
+  ///
+  /// In en, this message translates to:
+  /// **'remix'**
+  String get diffRemix;
+
+  /// No description provided for @diffLive.
+  ///
+  /// In en, this message translates to:
+  /// **'live'**
+  String get diffLive;
+
+  /// No description provided for @diffAcoustic.
+  ///
+  /// In en, this message translates to:
+  /// **'acoustic'**
+  String get diffAcoustic;
+
+  /// No description provided for @diffExtended.
+  ///
+  /// In en, this message translates to:
+  /// **'extended'**
+  String get diffExtended;
+
+  /// No description provided for @diffRadioEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'radio edit'**
+  String get diffRadioEdit;
+
+  /// No description provided for @diffInstrumental.
+  ///
+  /// In en, this message translates to:
+  /// **'instrumental'**
+  String get diffInstrumental;
+
+  /// No description provided for @diffKaraoke.
+  ///
+  /// In en, this message translates to:
+  /// **'karaoke'**
+  String get diffKaraoke;
+
+  /// No description provided for @diffCover.
+  ///
+  /// In en, this message translates to:
+  /// **'cover'**
+  String get diffCover;
+
+  /// No description provided for @diffRemaster.
+  ///
+  /// In en, this message translates to:
+  /// **'remaster'**
+  String get diffRemaster;
+
+  /// No description provided for @diffSped.
+  ///
+  /// In en, this message translates to:
+  /// **'sped up'**
+  String get diffSped;
+
+  /// No description provided for @diffSlowed.
+  ///
+  /// In en, this message translates to:
+  /// **'slowed'**
+  String get diffSlowed;
+
+  /// No description provided for @diffDemo.
+  ///
+  /// In en, this message translates to:
+  /// **'demo'**
+  String get diffDemo;
+
+  /// No description provided for @diffExplicit.
+  ///
+  /// In en, this message translates to:
+  /// **'explicit differs'**
+  String get diffExplicit;
+
+  /// No description provided for @diffDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'length differs'**
+  String get diffDuration;
+
+  /// No description provided for @diffAlbum.
+  ///
+  /// In en, this message translates to:
+  /// **'other album'**
+  String get diffAlbum;
+
+  /// No description provided for @diffYear.
+  ///
+  /// In en, this message translates to:
+  /// **'other year'**
+  String get diffYear;
+
+  /// No description provided for @diffArtist.
+  ///
+  /// In en, this message translates to:
+  /// **'other artist'**
+  String get diffArtist;
+
+  /// No description provided for @diffFeatured.
+  ///
+  /// In en, this message translates to:
+  /// **'featured artists differ'**
+  String get diffFeatured;
+
+  /// No description provided for @diffTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'title differs'**
+  String get diffTitle;
+
+  /// No description provided for @diffPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'preview only'**
+  String get diffPreview;
+
+  /// No description provided for @artistInLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Artist in your library'**
+  String get artistInLibrary;
+
+  /// No description provided for @artistOnProvider.
+  ///
+  /// In en, this message translates to:
+  /// **'Artist on {provider}'**
+  String artistOnProvider(String provider);
+
+  /// No description provided for @artistFollowers.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} followers'**
+  String artistFollowers(String count);
+
+  /// No description provided for @artistTopTracks.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular tracks'**
+  String get artistTopTracks;
+
+  /// No description provided for @artistTracks.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks'**
+  String get artistTracks;
+
+  /// No description provided for @artistNoTracks.
+  ///
+  /// In en, this message translates to:
+  /// **'No tracks found.'**
+  String get artistNoTracks;
+
+  /// No description provided for @artistAlbums.
+  ///
+  /// In en, this message translates to:
+  /// **'Albums'**
+  String get artistAlbums;
+
+  /// No description provided for @artistReleases.
+  ///
+  /// In en, this message translates to:
+  /// **'Releases'**
+  String get artistReleases;
+
+  /// No description provided for @artistRelated.
+  ///
+  /// In en, this message translates to:
+  /// **'Fans also like'**
+  String get artistRelated;
+
+  /// No description provided for @albumInLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Album in your library'**
+  String get albumInLibrary;
+
+  /// No description provided for @albumOnProvider.
+  ///
+  /// In en, this message translates to:
+  /// **'Album on {provider}'**
+  String albumOnProvider(String provider);
+
+  /// No description provided for @albumDisc.
+  ///
+  /// In en, this message translates to:
+  /// **'Disc {number}'**
+  String albumDisc(int number);
+
+  /// No description provided for @albumEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No tracks on this album.'**
+  String get albumEmpty;
+
+  /// No description provided for @downloadsPauseAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause all'**
+  String get downloadsPauseAll;
+
+  /// No description provided for @downloadsResumeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume all'**
+  String get downloadsResumeAll;
+
+  /// No description provided for @downloadsPause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get downloadsPause;
+
+  /// No description provided for @downloadsResume.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get downloadsResume;
+
+  /// No description provided for @downloadsProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Download progress'**
+  String get downloadsProgress;
+
+  /// No description provided for @downloadsFilterActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get downloadsFilterActive;
+
+  /// No description provided for @downloadsFilterCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get downloadsFilterCompleted;
+
+  /// No description provided for @downloadsFilterFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get downloadsFilterFailed;
+
+  /// No description provided for @downloadsActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading'**
+  String get downloadsActive;
+
+  /// No description provided for @downloadsActiveCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 in the queue} other{{count} in the queue}}'**
+  String downloadsActiveCount(int count);
+
+  /// No description provided for @downloadsFinished.
+  ///
+  /// In en, this message translates to:
+  /// **'Finished'**
+  String get downloadsFinished;
+
+  /// No description provided for @downloadsNothingHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing here right now.'**
+  String get downloadsNothingHere;
+
+  /// No description provided for @downloadsEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No downloads yet'**
+  String get downloadsEmptyTitle;
+
+  /// No description provided for @downloadsEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks can be downloaded only where the provider allows it — Audius and Jamendo tracks the artist made downloadable. Your own files already play offline.'**
+  String get downloadsEmptyMessage;
+
+  /// No description provided for @downloadsStatusQueued.
+  ///
+  /// In en, this message translates to:
+  /// **'Queued'**
+  String get downloadsStatusQueued;
+
+  /// No description provided for @downloadsStatusWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting'**
+  String get downloadsStatusWaiting;
+
+  /// No description provided for @downloadsStatusDownloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading'**
+  String get downloadsStatusDownloading;
+
+  /// No description provided for @downloadsStatusVerifying.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking'**
+  String get downloadsStatusVerifying;
+
+  /// No description provided for @downloadsStatusPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get downloadsStatusPaused;
+
+  /// No description provided for @downloadsStatusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloaded'**
+  String get downloadsStatusCompleted;
+
+  /// No description provided for @downloadsStatusFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get downloadsStatusFailed;
+
+  /// No description provided for @downloadsStatusCanceled.
+  ///
+  /// In en, this message translates to:
+  /// **'Canceled'**
+  String get downloadsStatusCanceled;
+
+  /// No description provided for @downloadsSizeOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{received} of {total}'**
+  String downloadsSizeOf(String received, String total);
+
+  /// No description provided for @downloadsSpeed.
+  ///
+  /// In en, this message translates to:
+  /// **'{speed}/s'**
+  String downloadsSpeed(String speed);
+
+  /// No description provided for @downloadsEta.
+  ///
+  /// In en, this message translates to:
+  /// **'{time} left'**
+  String downloadsEta(String time);
+
+  /// No description provided for @downloadsAttempts.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} attempts'**
+  String downloadsAttempts(int count);
+
+  /// No description provided for @downloadsWaitingWifiTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for Wi-Fi'**
+  String get downloadsWaitingWifiTitle;
+
+  /// No description provided for @downloadsWaitingWifi.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloads only run on Wi-Fi. They continue by themselves when you connect.'**
+  String get downloadsWaitingWifi;
+
+  /// No description provided for @downloadsDownloadSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Download settings'**
+  String get downloadsDownloadSettings;
+
+  /// No description provided for @downloadsWaitingConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for an internet connection.'**
+  String get downloadsWaitingConnection;
+
+  /// No description provided for @downloadsWaitingMobileData.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re on mobile data. Downloads wait until you allow it or connect to Wi-Fi.'**
+  String get downloadsWaitingMobileData;
+
+  /// No description provided for @downloadsMobileDataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Download over mobile data?'**
+  String get downloadsMobileDataTitle;
+
+  /// No description provided for @downloadsMobileDataMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This can use a lot of data. You\'ll be asked again the next time you start Fermata.'**
+  String get downloadsMobileDataMessage;
+
+  /// No description provided for @downloadsMobileDataConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Use mobile data'**
+  String get downloadsMobileDataConfirm;
+
+  /// No description provided for @downloadsMobileDataWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Wait for Wi-Fi'**
+  String get downloadsMobileDataWait;
+
+  /// No description provided for @downloadsMobileDataAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading over mobile data'**
+  String get downloadsMobileDataAllowed;
+
+  /// No description provided for @downloadsStorage.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage'**
+  String get downloadsStorage;
+
+  /// No description provided for @downloadsStorageSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage settings'**
+  String get downloadsStorageSettings;
+
+  /// No description provided for @downloadsStorageDownloads.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Downloads (1 track)} other{Downloads ({count} tracks)}}'**
+  String downloadsStorageDownloads(int count);
+
+  /// No description provided for @downloadsStorageArtwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Artwork cache'**
+  String get downloadsStorageArtwork;
+
+  /// No description provided for @downloadsStorageStreamCache.
+  ///
+  /// In en, this message translates to:
+  /// **'Stream cache'**
+  String get downloadsStorageStreamCache;
+
+  /// No description provided for @downloadsStorageDatabase.
+  ///
+  /// In en, this message translates to:
+  /// **'Library database'**
+  String get downloadsStorageDatabase;
+
+  /// No description provided for @downloadsStorageLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Download limit'**
+  String get downloadsStorageLimit;
+
+  /// No description provided for @downloadsStorageFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Free on this device'**
+  String get downloadsStorageFree;
+
+  /// No description provided for @downloadsUnlimited.
+  ///
+  /// In en, this message translates to:
+  /// **'No limit'**
+  String get downloadsUnlimited;
+
+  /// No description provided for @downloadsErrorSourceUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The service isn\'t available right now.'**
+  String get downloadsErrorSourceUnavailable;
+
+  /// No description provided for @downloadsErrorAuth.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnect the service to download.'**
+  String get downloadsErrorAuth;
+
+  /// No description provided for @downloadsErrorNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'The file is gone from the service.'**
+  String get downloadsErrorNotFound;
+
+  /// No description provided for @downloadsErrorForbidden.
+  ///
+  /// In en, this message translates to:
+  /// **'The service refused the download.'**
+  String get downloadsErrorForbidden;
+
+  /// No description provided for @downloadsErrorServer.
+  ///
+  /// In en, this message translates to:
+  /// **'The service had a problem. Try again later.'**
+  String get downloadsErrorServer;
+
+  /// No description provided for @downloadsErrorNotAudio.
+  ///
+  /// In en, this message translates to:
+  /// **'The service didn\'t send an audio file.'**
+  String get downloadsErrorNotAudio;
+
+  /// No description provided for @downloadsErrorCorrupt.
+  ///
+  /// In en, this message translates to:
+  /// **'The file arrived damaged. Try again.'**
+  String get downloadsErrorCorrupt;
+
+  /// No description provided for @downloadsErrorDiskFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough free space.'**
+  String get downloadsErrorDiskFull;
+
+  /// No description provided for @favoritesEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Songs you like show up here'**
+  String get favoritesEmptyTitle;
+
+  /// No description provided for @favoritesEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the heart on any track to keep it close.'**
+  String get favoritesEmptyMessage;
+
+  /// No description provided for @favoritesFilterHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter liked songs'**
+  String get favoritesFilterHint;
+
+  /// No description provided for @favoritesSortRecent.
+  ///
+  /// In en, this message translates to:
+  /// **'Recently liked'**
+  String get favoritesSortRecent;
+
+  /// No description provided for @historyRecent.
+  ///
+  /// In en, this message translates to:
+  /// **'Recently played'**
+  String get historyRecent;
+
+  /// No description provided for @historyStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get historyStats;
+
+  /// No description provided for @historyClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear history'**
+  String get historyClear;
+
+  /// No description provided for @historyClearTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear your listening history?'**
+  String get historyClearTitle;
+
+  /// No description provided for @historyClearMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Recently played and statistics are deleted from this device. Recommendations start over.'**
+  String get historyClearMessage;
+
+  /// No description provided for @historyCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'History cleared'**
+  String get historyCleared;
+
+  /// No description provided for @historyRecordingOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening history is turned off, so new plays aren\'t saved.'**
+  String get historyRecordingOff;
+
+  /// No description provided for @historyEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing played yet'**
+  String get historyEmptyTitle;
+
+  /// No description provided for @historyEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'What you listen to shows up here, grouped by day.'**
+  String get historyEmptyMessage;
+
+  /// No description provided for @historyStatsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Play some music to see your statistics.'**
+  String get historyStatsEmpty;
+
+  /// No description provided for @historyStatsPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Last {days} days, calculated on this device'**
+  String historyStatsPeriod(int days);
+
+  /// No description provided for @historyStatsPlays.
+  ///
+  /// In en, this message translates to:
+  /// **'Plays'**
+  String get historyStatsPlays;
+
+  /// No description provided for @historyStatsTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening time'**
+  String get historyStatsTime;
+
+  /// No description provided for @historyStatsPerDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Plays per day'**
+  String get historyStatsPerDay;
+
+  /// No description provided for @historyStatsTopTracks.
+  ///
+  /// In en, this message translates to:
+  /// **'Top tracks'**
+  String get historyStatsTopTracks;
+
+  /// No description provided for @historyStatsTopArtists.
+  ///
+  /// In en, this message translates to:
+  /// **'Top artists'**
+  String get historyStatsTopArtists;
+
+  /// No description provided for @historyStatsTopGenres.
+  ///
+  /// In en, this message translates to:
+  /// **'Top genres'**
+  String get historyStatsTopGenres;
+
+  /// No description provided for @historyPlays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 play} other{{count} plays}}'**
+  String historyPlays(int count);
+
+  /// No description provided for @historyChartLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Plays per day over the last {days} days: {total} in total, at most {peak} in one day'**
+  String historyChartLabel(int days, int total, int peak);
+
   /// No description provided for @playerPlay.
   ///
   /// In en, this message translates to:

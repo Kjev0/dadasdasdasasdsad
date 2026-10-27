@@ -235,6 +235,2109 @@ class AppLocalizationsEn extends AppLocalizations {
   String get desktopUnknownArtist => 'Unknown artist';
 
   @override
+  String get importTitle => 'Import a playlist';
+
+  @override
+  String get importBack => 'Back';
+
+  @override
+  String get importStepSource => 'Source';
+
+  @override
+  String get importStepPlaylist => 'Playlist';
+
+  @override
+  String get importStepOptions => 'Matching';
+
+  @override
+  String importStepOf(int step, int total, String name) {
+    return 'Step $step of $total: $name';
+  }
+
+  @override
+  String get importChooseSource => 'Where is the playlist?';
+
+  @override
+  String get importChooseSourceHint =>
+      'Fermata finds each track on the services you choose next and keeps a link to the original.';
+
+  @override
+  String get importM3uTitle => 'A playlist file (M3U)';
+
+  @override
+  String get importM3uHint =>
+      'Tracks from an .m3u or .m3u8 file on this device.';
+
+  @override
+  String get importM3uUnreadable => 'This playlist file can\'t be read.';
+
+  @override
+  String get importM3uEmpty => 'No tracks were found in this playlist file.';
+
+  @override
+  String importSourceNotSetUp(String service) {
+    return '$service isn\'t set up yet.';
+  }
+
+  @override
+  String get importSourceLinkOnly =>
+      'Public playlists by link. Connect to see your own playlists.';
+
+  @override
+  String get importSourceConnectFirst => 'Connect your account to import.';
+
+  @override
+  String importSourceSignedIn(String name) {
+    return 'Signed in as $name';
+  }
+
+  @override
+  String get importSetUp => 'Set up';
+
+  @override
+  String importChooseWhat(String service) {
+    return 'What do you want to import from $service?';
+  }
+
+  @override
+  String get importPasteLink => 'Paste a playlist link';
+
+  @override
+  String importPasteLinkHint(String service) {
+    return 'A $service playlist link or ID';
+  }
+
+  @override
+  String get importContinue => 'Continue';
+
+  @override
+  String get importLikedTracks => 'Liked tracks';
+
+  @override
+  String importLikedTracksHint(String service) {
+    return 'Every track you liked on $service.';
+  }
+
+  @override
+  String importLikedName(String service) {
+    return 'Liked on $service';
+  }
+
+  @override
+  String get importYourPlaylists => 'Your playlists';
+
+  @override
+  String get importNoPlaylists => 'You have no playlists there yet.';
+
+  @override
+  String importTrackCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tracks',
+      one: '1 track',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String importConnectForLibrary(String service) {
+    return 'Connect your $service account in Settings to import your own playlists and liked tracks.';
+  }
+
+  @override
+  String get importOptionsTitle => 'Where should Fermata look?';
+
+  @override
+  String importSummaryPlaylist(String name, String service) {
+    return '“$name” from $service';
+  }
+
+  @override
+  String importSummaryLink(String service) {
+    return 'A playlist link from $service';
+  }
+
+  @override
+  String importSummaryLiked(String service) {
+    return 'Your liked tracks on $service';
+  }
+
+  @override
+  String importSummaryM3u(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tracks',
+      one: '1 track',
+    );
+    return '“$name” ($_temp0)';
+  }
+
+  @override
+  String get importTargets => 'Find matches on';
+
+  @override
+  String get importTargetsHint =>
+      'In this order. The first service with a good match is used for playback.';
+
+  @override
+  String get importNoTargets =>
+      'None of your services can play the matches. Connect a service such as SoundCloud or Audius first.';
+
+  @override
+  String get importTargetNotReady => 'Not connected or not set up';
+
+  @override
+  String get importMatchingGroup => 'Matching';
+
+  @override
+  String get importStart => 'Start import';
+
+  @override
+  String importFetchingLiked(int count) {
+    return 'Fetched $count liked tracks…';
+  }
+
+  @override
+  String get importNothingToImport => 'There are no tracks to import.';
+
+  @override
+  String get importStartFailed => 'The import couldn\'t be started.';
+
+  @override
+  String get importReviewTitle => 'Review matches';
+
+  @override
+  String get importReviewHint =>
+      'Check the matches Fermata wasn\'t sure about. Nothing is saved until you press Save.';
+
+  @override
+  String get importUntitled => 'Imported playlist';
+
+  @override
+  String get importImporting => 'Importing…';
+
+  @override
+  String get importPhaseFetching => 'Fetching the playlist…';
+
+  @override
+  String get importPhaseMatchingStart => 'Finding matches…';
+
+  @override
+  String importPhaseMatching(int processed, int total) {
+    return 'Matched $processed of $total tracks';
+  }
+
+  @override
+  String get importPhaseSaving => 'Saving…';
+
+  @override
+  String get importCancelImport => 'Cancel import';
+
+  @override
+  String get importCancelTitle => 'Cancel this import?';
+
+  @override
+  String get importCancelBody =>
+      'Your review choices are discarded. Nothing has been saved yet.';
+
+  @override
+  String get importCanceled => 'The import was canceled.';
+
+  @override
+  String get importFailed => 'The import failed';
+
+  @override
+  String get importStartNew => 'Start a new import';
+
+  @override
+  String get importSessionMissing => 'This import isn\'t available anymore';
+
+  @override
+  String get importSessionMissingHint =>
+      'Imports in progress are kept until Fermata closes.';
+
+  @override
+  String importFilterAll(int count) {
+    return 'All · $count';
+  }
+
+  @override
+  String get importFilterEmpty => 'No tracks with this status.';
+
+  @override
+  String get importDecisionAuto => 'Auto-accepted';
+
+  @override
+  String get importDecisionAccepted => 'Accepted';
+
+  @override
+  String get importDecisionReview => 'Needs review';
+
+  @override
+  String get importDecisionNotFound => 'Not found';
+
+  @override
+  String get importDecisionRejected => 'Rejected';
+
+  @override
+  String get importDecisionSkipped => 'Skipped';
+
+  @override
+  String importAcceptAllHigh(int count) {
+    return 'Accept all high-confidence ($count)';
+  }
+
+  @override
+  String get importSavePlaylist => 'Save playlist';
+
+  @override
+  String get importSaveTitle => 'Name the playlist';
+
+  @override
+  String get importSavePendingTitle => 'Some tracks still need review';
+
+  @override
+  String importSavePendingBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count tracks haven\'t been reviewed. They will be saved without a match.',
+      one: '1 track hasn\'t been reviewed. It will be saved without a match.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get importSaveAnyway => 'Save anyway';
+
+  @override
+  String get importSaved => 'Playlist saved';
+
+  @override
+  String get importSaveFailed => 'The playlist couldn\'t be saved.';
+
+  @override
+  String get importDoneTitle => 'Playlist saved';
+
+  @override
+  String get importDoneAll => 'Every track has a match.';
+
+  @override
+  String importDoneMissing(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tracks have no match.',
+      one: '1 track has no match.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get importOpenPlaylist => 'Open playlist';
+
+  @override
+  String get importShowMissing => 'Show missing tracks';
+
+  @override
+  String importMissingTitle(int count) {
+    return 'Tracks without a match ($count)';
+  }
+
+  @override
+  String importReportHeader(String name, int count) {
+    return 'Tracks without a match in “$name” ($count):';
+  }
+
+  @override
+  String get importOriginal => 'Original';
+
+  @override
+  String get importMatch => 'Match';
+
+  @override
+  String get importNoMatch => 'No match found';
+
+  @override
+  String get importOnlyOtherVersions =>
+      'Only other versions found — choose one yourself if it\'s right.';
+
+  @override
+  String get importAccept => 'Accept';
+
+  @override
+  String get importReject => 'Reject';
+
+  @override
+  String get importSkip => 'Skip';
+
+  @override
+  String importOtherCandidates(int count) {
+    return 'Candidates ($count)';
+  }
+
+  @override
+  String importCandidatesTitle(String title) {
+    return 'Candidates for “$title”';
+  }
+
+  @override
+  String get importUseThis => 'Use this';
+
+  @override
+  String get importDifferentVersionWarning =>
+      'This is a different version than the original.';
+
+  @override
+  String get importSearch => 'Search';
+
+  @override
+  String importSearchFor(String title) {
+    return 'Search for “$title”';
+  }
+
+  @override
+  String get importSearchNoResults => 'Nothing found. Try other words.';
+
+  @override
+  String get importSearchResults => 'Results';
+
+  @override
+  String get importMatchedByIsrc => 'Same ISRC';
+
+  @override
+  String importConfidenceSemantics(String level, int percent) {
+    return 'Confidence $level, $percent percent';
+  }
+
+  @override
+  String get importConfidenceExact => 'Exact';
+
+  @override
+  String get importConfidenceHigh => 'High';
+
+  @override
+  String get importConfidenceMedium => 'Medium';
+
+  @override
+  String get importConfidenceLow => 'Low';
+
+  @override
+  String get importConfidenceNone => 'None';
+
+  @override
+  String get importDiffRemix => 'Remix';
+
+  @override
+  String get importDiffLive => 'Live';
+
+  @override
+  String get importDiffAcoustic => 'Acoustic';
+
+  @override
+  String get importDiffExtended => 'Extended';
+
+  @override
+  String get importDiffRadioEdit => 'Radio edit';
+
+  @override
+  String get importDiffInstrumental => 'Instrumental';
+
+  @override
+  String get importDiffKaraoke => 'Karaoke';
+
+  @override
+  String get importDiffCover => 'Cover';
+
+  @override
+  String get importDiffRemaster => 'Remaster';
+
+  @override
+  String get importDiffSped => 'Sped up';
+
+  @override
+  String get importDiffSlowed => 'Slowed';
+
+  @override
+  String get importDiffDemo => 'Demo';
+
+  @override
+  String get importDiffExplicit => 'Explicit mismatch';
+
+  @override
+  String get importDiffDuration => 'Different length';
+
+  @override
+  String get importDiffAlbum => 'Different album';
+
+  @override
+  String get importDiffYear => 'Different year';
+
+  @override
+  String get importDiffArtist => 'Different artist';
+
+  @override
+  String get importDiffFeatured => 'Different featured artists';
+
+  @override
+  String get importDiffTitle => 'Different title';
+
+  @override
+  String get importDiffPreview => 'Preview only';
+
+  @override
+  String get onboardingSkip => 'Skip';
+
+  @override
+  String get onboardingBack => 'Back';
+
+  @override
+  String get onboardingNext => 'Next';
+
+  @override
+  String get onboardingGetStarted => 'Get started';
+
+  @override
+  String get onboardingFinish => 'Start listening';
+
+  @override
+  String onboardingStepOf(int step, int total) {
+    return 'Step $step of $total';
+  }
+
+  @override
+  String get onboardingWelcomeTitle => 'Welcome to Fermata';
+
+  @override
+  String get onboardingWelcomeBody =>
+      'A calm music player for the music you own and the services you already use.';
+
+  @override
+  String get onboardingPointFiles =>
+      'Your own files come first and always work offline.';
+
+  @override
+  String get onboardingPointServices =>
+      'Search SoundCloud, Audius and more in one place, and bring your playlists with you.';
+
+  @override
+  String get onboardingPointBackground =>
+      'Keeps playing in the background, with your media keys and lock screen.';
+
+  @override
+  String get onboardingPointPrivacy =>
+      'No ads, no tracking. Recommendations are calculated on your device.';
+
+  @override
+  String get onboardingMusicTitle => 'Add your music';
+
+  @override
+  String get onboardingMusicBody =>
+      'Choose the folders where your music files are. Fermata reads them in the background and keeps watching for new files.';
+
+  @override
+  String get onboardingAudioPermissionRationale =>
+      'To play the music stored on your phone, Fermata needs permission to read your audio files. It only reads music — never photos, messages or other files.';
+
+  @override
+  String get onboardingAllowAudio => 'Allow access to music';
+
+  @override
+  String get onboardingAudioDenied =>
+      'Without this permission Fermata can\'t see your music files. You can allow it later in the system settings.';
+
+  @override
+  String get onboardingSuggestedFolder => 'Your Music folder';
+
+  @override
+  String get onboardingAdd => 'Add';
+
+  @override
+  String get onboardingChooseFolder => 'Choose a folder…';
+
+  @override
+  String get onboardingFolderMissing => 'That folder doesn\'t exist anymore.';
+
+  @override
+  String get onboardingScanning =>
+      'Fermata is reading your music in the background.';
+
+  @override
+  String get onboardingMusicLater =>
+      'You can add or remove folders any time in Library.';
+
+  @override
+  String get onboardingServicesTitle => 'Connect your services';
+
+  @override
+  String get onboardingServicesBody =>
+      'Optional. Connect an account to search it, stream it and import your playlists. You sign in on the service\'s own website — Fermata never sees your password.';
+
+  @override
+  String get onboardingRecommended => 'Recommended';
+
+  @override
+  String get onboardingServiceHint => 'Sign in to use your account.';
+
+  @override
+  String get onboardingNeedsCredentials =>
+      'Needs developer credentials first — you can set this up later in Settings.';
+
+  @override
+  String onboardingConnectedAs(String name) {
+    return 'Connected as $name';
+  }
+
+  @override
+  String onboardingNoAccountNeeded(String services) {
+    return 'No account needed for: $services.';
+  }
+
+  @override
+  String get onboardingServicesLater =>
+      'You can connect or disconnect services any time in Settings → Connected services.';
+
+  @override
+  String get onboardingBackgroundTitle => 'Music that keeps playing';
+
+  @override
+  String get onboardingBackgroundAndroid =>
+      'Fermata keeps playing when you switch apps or lock your phone. A notification shows the playback controls.';
+
+  @override
+  String get onboardingNotificationRationale =>
+      'Android asks before apps may show notifications. Fermata uses them for the playback controls and for finished downloads — never for advertising.';
+
+  @override
+  String get onboardingAllowNotifications => 'Allow notifications';
+
+  @override
+  String get onboardingNotificationsAllowed => 'Notifications are allowed.';
+
+  @override
+  String get onboardingBatteryNote =>
+      'If music stops in the background on your phone, see Settings → Background playback.';
+
+  @override
+  String get onboardingBackgroundTray =>
+      'Closing the window doesn\'t stop the music: Fermata stays in the system tray. Quit from the tray menu when you\'re done.';
+
+  @override
+  String get onboardingBackgroundNoTray =>
+      'Closing the window doesn\'t stop the music. Your desktop has no system tray, so Fermata minimizes instead.';
+
+  @override
+  String get onboardingMediaKeys =>
+      'Media keys and your desktop\'s media controls work while Fermata is in the background.';
+
+  @override
+  String get pagesPlay => 'Play';
+
+  @override
+  String get pagesShuffle => 'Shuffle';
+
+  @override
+  String pagesHoursMinutes(int hours, int minutes) {
+    return '$hours h $minutes min';
+  }
+
+  @override
+  String pagesMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String pagesTrackCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tracks',
+      one: '1 track',
+      zero: 'No tracks',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get pagesToday => 'Today';
+
+  @override
+  String get pagesYesterday => 'Yesterday';
+
+  @override
+  String get pagesDownloadEligible => 'Download';
+
+  @override
+  String get pagesOpenSettings => 'Open settings';
+
+  @override
+  String get pagesImportAndMatch => 'Import & match';
+
+  @override
+  String get pagesMore => 'More';
+
+  @override
+  String get pagesSort => 'Sort';
+
+  @override
+  String get pagesFilter => 'Filter';
+
+  @override
+  String get pagesAscending => 'Ascending';
+
+  @override
+  String get pagesDescending => 'Descending';
+
+  @override
+  String get pagesClearFilters => 'Clear filters';
+
+  @override
+  String get pagesNoMatches => 'Nothing matches these filters.';
+
+  @override
+  String get pagesLoadMore => 'Load more';
+
+  @override
+  String get pagesRemove => 'Remove';
+
+  @override
+  String get pagesRename => 'Rename';
+
+  @override
+  String pagesOpenOnProvider(String provider) {
+    return 'Open on $provider';
+  }
+
+  @override
+  String pagesDataFrom(String provider) {
+    return 'Data from $provider';
+  }
+
+  @override
+  String get shelfContinueListening => 'Continue listening';
+
+  @override
+  String shelfDailyMix(int number) {
+    return 'Daily Mix $number';
+  }
+
+  @override
+  String get shelfDiscoverWeekly => 'Discover Weekly';
+
+  @override
+  String shelfBecauseYouLiked(String artist) {
+    return 'Because you like $artist';
+  }
+
+  @override
+  String get shelfTrending => 'Trending';
+
+  @override
+  String get shelfNewReleases => 'New releases';
+
+  @override
+  String get shelfRecentlyAdded => 'Recently added';
+
+  @override
+  String get moodFocus => 'Focus';
+
+  @override
+  String get moodChill => 'Chill';
+
+  @override
+  String get moodWorkout => 'Workout';
+
+  @override
+  String get moodParty => 'Party';
+
+  @override
+  String get moodSleep => 'Sleep';
+
+  @override
+  String get moodCommute => 'On the road';
+
+  @override
+  String get moodHappy => 'Feel good';
+
+  @override
+  String get moodMelancholy => 'Melancholy';
+
+  @override
+  String get homeGoodMorning => 'Good morning';
+
+  @override
+  String get homeGoodAfternoon => 'Good afternoon';
+
+  @override
+  String get homeGoodEvening => 'Good evening';
+
+  @override
+  String get homeGoodNight => 'Good night';
+
+  @override
+  String get homeSubtitle =>
+      'Picked from what you play — worked out on this device.';
+
+  @override
+  String get homeMix => 'Mix';
+
+  @override
+  String get homeShelf => 'Collection';
+
+  @override
+  String get homeMadeForYou => 'Made for you';
+
+  @override
+  String get homeFirstRunTitle => 'Let\'s bring in your music';
+
+  @override
+  String get homeFirstRunMessage =>
+      'Fermata plays your own files and the services you connect. Start with one of these.';
+
+  @override
+  String get homeAddFolderTitle => 'Add a music folder';
+
+  @override
+  String get homeAddFolderBody =>
+      'Your files stay where they are and play offline.';
+
+  @override
+  String get homeConnectTitle => 'Connect a service';
+
+  @override
+  String get homeConnectBody => 'SoundCloud, Audius, Jamendo and more.';
+
+  @override
+  String get homeConnectAction => 'Connected services';
+
+  @override
+  String get homeExploreTitle => 'Explore';
+
+  @override
+  String get homeExploreBody => 'Browse moods, genres and what is trending.';
+
+  @override
+  String get homeExploreAction => 'Start exploring';
+
+  @override
+  String get searchHint => 'Songs, artists, albums or a share link';
+
+  @override
+  String get searchFilterAll => 'All';
+
+  @override
+  String get searchEmptyTitle => 'Search everything at once';
+
+  @override
+  String get searchEmptyMessage =>
+      'Your library and every connected service. Paste a playlist link to open or import it.';
+
+  @override
+  String get searchBrowseExplore => 'Browse Explore';
+
+  @override
+  String get searchHistoryOff =>
+      'Search history is turned off, so searches are not saved.';
+
+  @override
+  String get searchRecent => 'Recent searches';
+
+  @override
+  String get searchClearRecent => 'Clear';
+
+  @override
+  String searchRemoveRecent(String query) {
+    return 'Remove \"$query\"';
+  }
+
+  @override
+  String searchFor(String query) {
+    return 'Search for \"$query\"';
+  }
+
+  @override
+  String get searchInYourLibrary => 'In your library';
+
+  @override
+  String get searchTopResult => 'Top result';
+
+  @override
+  String get searchTracks => 'Tracks';
+
+  @override
+  String get searchArtists => 'Artists';
+
+  @override
+  String get searchAlbums => 'Albums';
+
+  @override
+  String get searchPlaylists => 'Playlists';
+
+  @override
+  String searchShowAll(int count) {
+    return 'Show all $count';
+  }
+
+  @override
+  String searchNoResults(String query) {
+    return 'No results for \"$query\"';
+  }
+
+  @override
+  String get searchNoResultsHint => 'Check the spelling, or try fewer words.';
+
+  @override
+  String get searchConnectedServices => 'Connected services';
+
+  @override
+  String searchNotSearched(String sources) {
+    return 'Not searched: $sources';
+  }
+
+  @override
+  String searchSourceNotConnected(String service) {
+    return '$service isn\'t connected.';
+  }
+
+  @override
+  String get searchNeedsCredentials => 'needs setup';
+
+  @override
+  String get searchNotConnected => 'not connected';
+
+  @override
+  String get searchKindTrack => 'Track';
+
+  @override
+  String get searchKindArtist => 'Artist';
+
+  @override
+  String get searchKindAlbum => 'Album';
+
+  @override
+  String get searchKindPlaylist => 'Playlist';
+
+  @override
+  String searchLinkTrack(String provider) {
+    return '$provider track link';
+  }
+
+  @override
+  String searchLinkPlaylist(String provider) {
+    return '$provider playlist link';
+  }
+
+  @override
+  String searchLinkAlbum(String provider) {
+    return '$provider album link';
+  }
+
+  @override
+  String searchLinkArtist(String provider) {
+    return '$provider artist link';
+  }
+
+  @override
+  String searchLinkGeneric(String provider) {
+    return '$provider link';
+  }
+
+  @override
+  String get searchOpenPlaylist => 'Open playlist';
+
+  @override
+  String get searchOpenAlbum => 'Open album';
+
+  @override
+  String get searchOpenArtist => 'Open artist';
+
+  @override
+  String searchSourceMissing(String provider) {
+    return '$provider isn\'t available in this version of Fermata.';
+  }
+
+  @override
+  String get searchLinkNotFound =>
+      'This track couldn\'t be found. It may have been removed or made private.';
+
+  @override
+  String get exploreSubtitle =>
+      'Moods, genres and new music from your services.';
+
+  @override
+  String get exploreMoods => 'Moods';
+
+  @override
+  String get exploreGenres => 'Genres';
+
+  @override
+  String get exploreNoGenres =>
+      'No genres yet. Add music or connect a service.';
+
+  @override
+  String get exploreGenre => 'Genre';
+
+  @override
+  String get exploreMood => 'Mood';
+
+  @override
+  String get exploreNothingFound =>
+      'Nothing playable found right now. Try again later or connect another service.';
+
+  @override
+  String get libraryTabTracks => 'Tracks';
+
+  @override
+  String get libraryTabAlbums => 'Albums';
+
+  @override
+  String get libraryTabArtists => 'Artists';
+
+  @override
+  String get libraryTabFolders => 'Folders';
+
+  @override
+  String get libraryPermissionNeeded =>
+      'Fermata needs access to your music to add a folder.';
+
+  @override
+  String get libraryOpenSystemSettings => 'Open settings';
+
+  @override
+  String get libraryAddFolder => 'Add folder';
+
+  @override
+  String libraryFolderAdded(String folder) {
+    return 'Added $folder — scanning now';
+  }
+
+  @override
+  String get libraryLocalFiles => 'Local files';
+
+  @override
+  String get libraryEmptyTitle => 'Your library is empty';
+
+  @override
+  String get libraryEmptyMessage =>
+      'Add a music folder or import a file. Tracks you like or play from services show up here too.';
+
+  @override
+  String get libraryImportFile => 'Import a file';
+
+  @override
+  String get libraryImportFileFailed =>
+      'This file can\'t be added. Fermata reads MP3, FLAC, M4A, Ogg, Opus, WAV and AIFF.';
+
+  @override
+  String libraryImportFileDone(String title) {
+    return 'Added \"$title\"';
+  }
+
+  @override
+  String get libraryFilterHint => 'Filter your library';
+
+  @override
+  String get libraryQuickDownloaded => 'Downloaded';
+
+  @override
+  String librarySortedBy(String field) {
+    return 'Sorted by $field';
+  }
+
+  @override
+  String get librarySortTitle => 'Title';
+
+  @override
+  String get librarySortArtist => 'Artist';
+
+  @override
+  String get librarySortAlbum => 'Album';
+
+  @override
+  String get librarySortYear => 'Year';
+
+  @override
+  String get librarySortDuration => 'Duration';
+
+  @override
+  String get librarySortDateAdded => 'Date added';
+
+  @override
+  String get librarySortPlayCount => 'Most played';
+
+  @override
+  String get librarySortLastPlayed => 'Last played';
+
+  @override
+  String get librarySortGenre => 'Genre';
+
+  @override
+  String get libraryFilterAvailability => 'Availability';
+
+  @override
+  String get libraryFilterDownloaded => 'Downloaded';
+
+  @override
+  String get libraryFilterLocal => 'Local files only';
+
+  @override
+  String get libraryFilterOffline => 'Available offline';
+
+  @override
+  String get libraryFilterFavorites => 'Liked songs';
+
+  @override
+  String get libraryFilterSource => 'Source';
+
+  @override
+  String get libraryFilterGenre => 'Genre';
+
+  @override
+  String get libraryAnyGenre => 'Any genre';
+
+  @override
+  String get libraryFilterYear => 'Year';
+
+  @override
+  String get libraryFrom => 'From';
+
+  @override
+  String get libraryTo => 'To';
+
+  @override
+  String get libraryFilterDuration => 'Duration (minutes)';
+
+  @override
+  String get libraryMinMinutes => 'At least';
+
+  @override
+  String get libraryMaxMinutes => 'At most';
+
+  @override
+  String get libraryFilterAlbums => 'Filter albums';
+
+  @override
+  String get libraryNoAlbums => 'No albums yet';
+
+  @override
+  String get libraryFilterArtists => 'Filter artists';
+
+  @override
+  String get libraryNoArtists => 'No artists yet';
+
+  @override
+  String get libraryFolders => 'Music folders';
+
+  @override
+  String get libraryFoldersHintDesktop =>
+      'Watched folders are rescanned automatically when files change.';
+
+  @override
+  String get libraryFoldersHintAndroid =>
+      'Folders are rescanned each time Fermata starts.';
+
+  @override
+  String get libraryNoFolders => 'No music folders yet';
+
+  @override
+  String get libraryNoFoldersMessage =>
+      'Add the folders where you keep music. Files are never moved or uploaded.';
+
+  @override
+  String get libraryRescanAll => 'Rescan';
+
+  @override
+  String get libraryFullRescan => 'Full rescan';
+
+  @override
+  String get libraryRescanFolder => 'Rescan folder';
+
+  @override
+  String get libraryRemoveFolder => 'Remove folder';
+
+  @override
+  String get libraryRemoveFolderTitle => 'Remove this folder?';
+
+  @override
+  String libraryRemoveFolderMessage(String path) {
+    return 'Tracks from $path leave your library. The files themselves aren\'t deleted.';
+  }
+
+  @override
+  String get libraryWatchFolder => 'Watch for changes';
+
+  @override
+  String get libraryNeverScanned => 'Not scanned yet';
+
+  @override
+  String libraryScannedOn(String date) {
+    return 'Scanned $date';
+  }
+
+  @override
+  String get libraryScanEnumerating => 'Looking for music…';
+
+  @override
+  String libraryScanProgress(int scanned, int total) {
+    return 'Scanning $scanned of $total files';
+  }
+
+  @override
+  String get libraryScanDone => 'Scan complete';
+
+  @override
+  String get libraryScanFailed => 'The scan stopped';
+
+  @override
+  String libraryScanCounts(int added, int updated, int removed) {
+    return '$added added · $updated updated · $removed removed';
+  }
+
+  @override
+  String libraryScanErrors(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count files couldn\'t be read',
+      one: '1 file couldn\'t be read',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get libraryTools => 'Tools';
+
+  @override
+  String get libraryMissingFiles => 'Missing files';
+
+  @override
+  String get libraryMissingFilesHint =>
+      'Tracks whose file was moved or deleted outside Fermata. They come back if the file returns.';
+
+  @override
+  String get libraryNoMissingFiles => 'No missing files';
+
+  @override
+  String get libraryRemoveAllMissing => 'Remove all from library';
+
+  @override
+  String get libraryDuplicates => 'Duplicates';
+
+  @override
+  String get libraryDuplicatesHint =>
+      'Tracks that look like copies of each other.';
+
+  @override
+  String get libraryNoDuplicates => 'No duplicates found';
+
+  @override
+  String get libraryDuplicateSameFile => 'Identical files';
+
+  @override
+  String get libraryDuplicateSameIsrc => 'Same recording (ISRC)';
+
+  @override
+  String get libraryDuplicateSameMetadata => 'Same title, artist and length';
+
+  @override
+  String get libraryRemoveFromLibrary => 'Remove from library';
+
+  @override
+  String libraryRemoveFromLibraryTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Remove $count tracks from your library?',
+      one: 'Remove 1 track from your library?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get libraryRemoveFromLibraryMessage =>
+      'Files on disk aren\'t deleted.';
+
+  @override
+  String libraryRemovedFromLibrary(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tracks removed',
+      one: '1 track removed',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get libraryTrackDetails => 'Details';
+
+  @override
+  String get libraryDetailDuration => 'Length';
+
+  @override
+  String get libraryDetailFormat => 'Format';
+
+  @override
+  String get libraryDetailBitrate => 'Bitrate';
+
+  @override
+  String libraryKbps(int kbps) {
+    return '$kbps kbps';
+  }
+
+  @override
+  String get libraryDetailSampleRate => 'Sample rate';
+
+  @override
+  String libraryKhz(String khz) {
+    return '$khz kHz';
+  }
+
+  @override
+  String get libraryDetailBitDepth => 'Bit depth';
+
+  @override
+  String libraryBits(int bits) {
+    return '$bits-bit';
+  }
+
+  @override
+  String get libraryDetailChannels => 'Channels';
+
+  @override
+  String get libraryDetailSize => 'File size';
+
+  @override
+  String get libraryDetailReplayGain => 'ReplayGain';
+
+  @override
+  String get libraryDetailSource => 'Source';
+
+  @override
+  String get libraryDetailOffline => 'Offline';
+
+  @override
+  String get libraryDetailFile => 'File';
+
+  @override
+  String get libraryEditTags => 'Edit tags';
+
+  @override
+  String get libraryTagTitle => 'Title';
+
+  @override
+  String get libraryTagArtists => 'Artists';
+
+  @override
+  String get libraryTagArtistsHint => 'Separate several artists with ;';
+
+  @override
+  String get libraryTagAlbum => 'Album';
+
+  @override
+  String get libraryTagAlbumArtist => 'Album artist';
+
+  @override
+  String get libraryTagYear => 'Year';
+
+  @override
+  String get libraryTagGenre => 'Genre';
+
+  @override
+  String get libraryTagTrackNumber => 'Track no.';
+
+  @override
+  String get libraryTagDiscNumber => 'Disc no.';
+
+  @override
+  String get libraryTagsFileHint =>
+      'Changes are written to the file when its format allows it; otherwise they\'re kept in your library only.';
+
+  @override
+  String get libraryTagsOverrideOnly =>
+      'On this device the file isn\'t changed: your edits are saved in Fermata\'s library.';
+
+  @override
+  String get libraryTagsSavedToFile => 'Tags saved to the file';
+
+  @override
+  String get libraryTagsSavedAsOverride =>
+      'Saved in your library (the file wasn\'t changed)';
+
+  @override
+  String get playlistsNewSmart => 'Smart playlist';
+
+  @override
+  String get playlistsImport => 'Import';
+
+  @override
+  String get playlistsImportFromService => 'Import from a service';
+
+  @override
+  String get playlistsImportM3u => 'Import M3U file';
+
+  @override
+  String get playlistsImportM3uEmpty =>
+      'No playable files were found in that playlist file.';
+
+  @override
+  String playlistsImportedM3u(int count, String name) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Imported $count tracks into $name',
+      one: 'Imported 1 track into $name',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String playlistsCreated(String name) {
+    return 'Created $name';
+  }
+
+  @override
+  String get playlistsEmptyMessage =>
+      'Make one from scratch, let a smart playlist fill itself, or bring one over from another service.';
+
+  @override
+  String get playlistsFilterYours => 'Yours';
+
+  @override
+  String get playlistsFilterSmart => 'Smart';
+
+  @override
+  String get playlistsFilterImported => 'Imported';
+
+  @override
+  String get playlistsShowList => 'Show as list';
+
+  @override
+  String get playlistsShowGrid => 'Show as grid';
+
+  @override
+  String get playlistKindLocal => 'Playlist';
+
+  @override
+  String get playlistKindSmart => 'Smart playlist';
+
+  @override
+  String playlistKindImported(String provider) {
+    return 'Imported from $provider';
+  }
+
+  @override
+  String playlistOnProvider(String provider) {
+    return 'Playlist on $provider';
+  }
+
+  @override
+  String playlistBy(String owner) {
+    return 'by $owner';
+  }
+
+  @override
+  String get playlistDescription => 'Description (optional)';
+
+  @override
+  String get playlistEditDetails => 'Edit details';
+
+  @override
+  String get playlistEditRules => 'Edit rules';
+
+  @override
+  String get playlistChangeArtwork => 'Change artwork';
+
+  @override
+  String get playlistArtworkUpdated => 'Artwork updated';
+
+  @override
+  String get playlistExportM3u => 'Export as M3U';
+
+  @override
+  String playlistExported(String location) {
+    return 'Saved to $location';
+  }
+
+  @override
+  String get playlistAutoDownload => 'Download automatically';
+
+  @override
+  String get playlistAutoDownloadOn => 'Auto-download on';
+
+  @override
+  String get playlistAutoDownloadTitle =>
+      'Download this playlist automatically?';
+
+  @override
+  String get playlistAutoDownloadExplain =>
+      'Fermata only downloads tracks automatically when they\'re your own files or the provider permits automatic downloads. None of the streaming services allow that today, so their tracks stay online — you can still download single Audius or Jamendo tracks yourself where the artist allows it.';
+
+  @override
+  String get playlistAutoDownloadConfirm => 'Turn on';
+
+  @override
+  String get playlistDedupe => 'Remove duplicates';
+
+  @override
+  String get playlistNoDuplicates => 'No duplicates found';
+
+  @override
+  String playlistDuplicatesRemoved(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Removed $count duplicates',
+      one: 'Removed 1 duplicate',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String playlistDeleteTitle(String name) {
+    return 'Delete \"$name\"?';
+  }
+
+  @override
+  String get playlistDeleteMessage =>
+      'The playlist is removed. Its tracks stay in your library.';
+
+  @override
+  String playlistDeleted(String name) {
+    return 'Deleted $name';
+  }
+
+  @override
+  String get playlistNotFound => 'This playlist doesn\'t exist anymore.';
+
+  @override
+  String get playlistEmpty => 'This playlist is empty';
+
+  @override
+  String get playlistEmptyHint =>
+      'Add tracks from search, your library or any track menu.';
+
+  @override
+  String get playlistSmartEmpty => 'Nothing matches the rules yet';
+
+  @override
+  String get playlistSmartEmptyHint =>
+      'Edit the rules, or play and like more music.';
+
+  @override
+  String playlistRulesSummary(int count, String match) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rules',
+      one: '1 rule',
+    );
+    return '$_temp0, $match';
+  }
+
+  @override
+  String get playlistRemoveFromPlaylist => 'Remove from playlist';
+
+  @override
+  String playlistRemovedTracks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Removed $count tracks',
+      one: 'Removed 1 track',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String playlistPlaysVia(String provider) {
+    return 'Plays via $provider — change';
+  }
+
+  @override
+  String get playlistSaveToLibrary => 'Save to library';
+
+  @override
+  String playlistSavedToLibrary(String name) {
+    return 'Saved $name to your library';
+  }
+
+  @override
+  String get smartNewTitle => 'New smart playlist';
+
+  @override
+  String get smartEditTitle => 'Edit smart playlist';
+
+  @override
+  String get smartMatch => 'Include tracks that match';
+
+  @override
+  String get smartMatchAll => 'all rules';
+
+  @override
+  String get smartMatchAny => 'any rule';
+
+  @override
+  String get smartAddRule => 'Add rule';
+
+  @override
+  String get smartRemoveRule => 'Remove rule';
+
+  @override
+  String get smartValue => 'Value';
+
+  @override
+  String get smartPickSource => 'Choose a source';
+
+  @override
+  String get smartUnitMinutes => 'min';
+
+  @override
+  String get smartUnitDays => 'days';
+
+  @override
+  String get smartLimit => 'Limit';
+
+  @override
+  String get smartNoLimit => 'No limit';
+
+  @override
+  String get smartPreviewLoading => 'Counting matching tracks…';
+
+  @override
+  String smartPreviewCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tracks match',
+      one: '1 track matches',
+      zero: 'No tracks match',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String smartPreviewApprox(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'About $count tracks match',
+      one: 'About 1 track matches',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get smartFieldTitle => 'Title';
+
+  @override
+  String get smartFieldArtist => 'Artist';
+
+  @override
+  String get smartFieldAlbum => 'Album';
+
+  @override
+  String get smartFieldGenre => 'Genre';
+
+  @override
+  String get smartFieldYear => 'Year';
+
+  @override
+  String get smartFieldDuration => 'Length';
+
+  @override
+  String get smartFieldPlayCount => 'Play count';
+
+  @override
+  String get smartFieldLastPlayed => 'Last played';
+
+  @override
+  String get smartFieldDateAdded => 'Date added';
+
+  @override
+  String get smartFieldSource => 'Source';
+
+  @override
+  String get smartFieldFavorite => 'Liked';
+
+  @override
+  String get smartFieldDownloaded => 'Downloaded';
+
+  @override
+  String get smartOpContains => 'contains';
+
+  @override
+  String get smartOpNotContains => 'doesn\'t contain';
+
+  @override
+  String get smartOpEquals => 'is';
+
+  @override
+  String get smartOpNotEquals => 'isn\'t';
+
+  @override
+  String get smartOpStartsWith => 'starts with';
+
+  @override
+  String get smartOpGreaterThan => 'is more than';
+
+  @override
+  String get smartOpLessThan => 'is less than';
+
+  @override
+  String get smartOpInLastDays => 'in the last';
+
+  @override
+  String get smartOpNotInLastDays => 'not in the last';
+
+  @override
+  String get smartOpIsTrue => 'yes';
+
+  @override
+  String get smartOpIsFalse => 'no';
+
+  @override
+  String get alternativesFind => 'Find alternatives';
+
+  @override
+  String get alternativesTitle => 'Alternatives';
+
+  @override
+  String get alternativesLinkedNow => 'Linked now';
+
+  @override
+  String get alternativesSuggested => 'Suggested matches';
+
+  @override
+  String get alternativesSearch => 'Search yourself';
+
+  @override
+  String get alternativesSearchHint => 'Title and artist, then press Enter';
+
+  @override
+  String get alternativesNone => 'No matches found.';
+
+  @override
+  String get alternativesUse => 'Use';
+
+  @override
+  String get alternativesInUse => 'In use';
+
+  @override
+  String get alternativesUnlink => 'Unlink';
+
+  @override
+  String alternativesLinked(String provider) {
+    return 'Linked — plays from $provider';
+  }
+
+  @override
+  String alternativesScore(int percent, String confidence) {
+    return '$percent% · $confidence';
+  }
+
+  @override
+  String get matchExact => 'exact match';
+
+  @override
+  String get matchHigh => 'very likely';
+
+  @override
+  String get matchMedium => 'possible';
+
+  @override
+  String get matchLow => 'unlikely';
+
+  @override
+  String get matchNone => 'no match';
+
+  @override
+  String get diffRemix => 'remix';
+
+  @override
+  String get diffLive => 'live';
+
+  @override
+  String get diffAcoustic => 'acoustic';
+
+  @override
+  String get diffExtended => 'extended';
+
+  @override
+  String get diffRadioEdit => 'radio edit';
+
+  @override
+  String get diffInstrumental => 'instrumental';
+
+  @override
+  String get diffKaraoke => 'karaoke';
+
+  @override
+  String get diffCover => 'cover';
+
+  @override
+  String get diffRemaster => 'remaster';
+
+  @override
+  String get diffSped => 'sped up';
+
+  @override
+  String get diffSlowed => 'slowed';
+
+  @override
+  String get diffDemo => 'demo';
+
+  @override
+  String get diffExplicit => 'explicit differs';
+
+  @override
+  String get diffDuration => 'length differs';
+
+  @override
+  String get diffAlbum => 'other album';
+
+  @override
+  String get diffYear => 'other year';
+
+  @override
+  String get diffArtist => 'other artist';
+
+  @override
+  String get diffFeatured => 'featured artists differ';
+
+  @override
+  String get diffTitle => 'title differs';
+
+  @override
+  String get diffPreview => 'preview only';
+
+  @override
+  String get artistInLibrary => 'Artist in your library';
+
+  @override
+  String artistOnProvider(String provider) {
+    return 'Artist on $provider';
+  }
+
+  @override
+  String artistFollowers(String count) {
+    return '$count followers';
+  }
+
+  @override
+  String get artistTopTracks => 'Popular tracks';
+
+  @override
+  String get artistTracks => 'Tracks';
+
+  @override
+  String get artistNoTracks => 'No tracks found.';
+
+  @override
+  String get artistAlbums => 'Albums';
+
+  @override
+  String get artistReleases => 'Releases';
+
+  @override
+  String get artistRelated => 'Fans also like';
+
+  @override
+  String get albumInLibrary => 'Album in your library';
+
+  @override
+  String albumOnProvider(String provider) {
+    return 'Album on $provider';
+  }
+
+  @override
+  String albumDisc(int number) {
+    return 'Disc $number';
+  }
+
+  @override
+  String get albumEmpty => 'No tracks on this album.';
+
+  @override
+  String get downloadsPauseAll => 'Pause all';
+
+  @override
+  String get downloadsResumeAll => 'Resume all';
+
+  @override
+  String get downloadsPause => 'Pause';
+
+  @override
+  String get downloadsResume => 'Resume';
+
+  @override
+  String get downloadsProgress => 'Download progress';
+
+  @override
+  String get downloadsFilterActive => 'Active';
+
+  @override
+  String get downloadsFilterCompleted => 'Completed';
+
+  @override
+  String get downloadsFilterFailed => 'Failed';
+
+  @override
+  String get downloadsActive => 'Downloading';
+
+  @override
+  String downloadsActiveCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count in the queue',
+      one: '1 in the queue',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get downloadsFinished => 'Finished';
+
+  @override
+  String get downloadsNothingHere => 'Nothing here right now.';
+
+  @override
+  String get downloadsEmptyTitle => 'No downloads yet';
+
+  @override
+  String get downloadsEmptyMessage =>
+      'Tracks can be downloaded only where the provider allows it — Audius and Jamendo tracks the artist made downloadable. Your own files already play offline.';
+
+  @override
+  String get downloadsStatusQueued => 'Queued';
+
+  @override
+  String get downloadsStatusWaiting => 'Waiting';
+
+  @override
+  String get downloadsStatusDownloading => 'Downloading';
+
+  @override
+  String get downloadsStatusVerifying => 'Checking';
+
+  @override
+  String get downloadsStatusPaused => 'Paused';
+
+  @override
+  String get downloadsStatusCompleted => 'Downloaded';
+
+  @override
+  String get downloadsStatusFailed => 'Failed';
+
+  @override
+  String get downloadsStatusCanceled => 'Canceled';
+
+  @override
+  String downloadsSizeOf(String received, String total) {
+    return '$received of $total';
+  }
+
+  @override
+  String downloadsSpeed(String speed) {
+    return '$speed/s';
+  }
+
+  @override
+  String downloadsEta(String time) {
+    return '$time left';
+  }
+
+  @override
+  String downloadsAttempts(int count) {
+    return '$count attempts';
+  }
+
+  @override
+  String get downloadsWaitingWifiTitle => 'Waiting for Wi-Fi';
+
+  @override
+  String get downloadsWaitingWifi =>
+      'Downloads only run on Wi-Fi. They continue by themselves when you connect.';
+
+  @override
+  String get downloadsDownloadSettings => 'Download settings';
+
+  @override
+  String get downloadsWaitingConnection =>
+      'Waiting for an internet connection.';
+
+  @override
+  String get downloadsWaitingMobileData =>
+      'You\'re on mobile data. Downloads wait until you allow it or connect to Wi-Fi.';
+
+  @override
+  String get downloadsMobileDataTitle => 'Download over mobile data?';
+
+  @override
+  String get downloadsMobileDataMessage =>
+      'This can use a lot of data. You\'ll be asked again the next time you start Fermata.';
+
+  @override
+  String get downloadsMobileDataConfirm => 'Use mobile data';
+
+  @override
+  String get downloadsMobileDataWait => 'Wait for Wi-Fi';
+
+  @override
+  String get downloadsMobileDataAllowed => 'Downloading over mobile data';
+
+  @override
+  String get downloadsStorage => 'Storage';
+
+  @override
+  String get downloadsStorageSettings => 'Storage settings';
+
+  @override
+  String downloadsStorageDownloads(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Downloads ($count tracks)',
+      one: 'Downloads (1 track)',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get downloadsStorageArtwork => 'Artwork cache';
+
+  @override
+  String get downloadsStorageStreamCache => 'Stream cache';
+
+  @override
+  String get downloadsStorageDatabase => 'Library database';
+
+  @override
+  String get downloadsStorageLimit => 'Download limit';
+
+  @override
+  String get downloadsStorageFree => 'Free on this device';
+
+  @override
+  String get downloadsUnlimited => 'No limit';
+
+  @override
+  String get downloadsErrorSourceUnavailable =>
+      'The service isn\'t available right now.';
+
+  @override
+  String get downloadsErrorAuth => 'Reconnect the service to download.';
+
+  @override
+  String get downloadsErrorNotFound => 'The file is gone from the service.';
+
+  @override
+  String get downloadsErrorForbidden => 'The service refused the download.';
+
+  @override
+  String get downloadsErrorServer =>
+      'The service had a problem. Try again later.';
+
+  @override
+  String get downloadsErrorNotAudio =>
+      'The service didn\'t send an audio file.';
+
+  @override
+  String get downloadsErrorCorrupt => 'The file arrived damaged. Try again.';
+
+  @override
+  String get downloadsErrorDiskFull => 'Not enough free space.';
+
+  @override
+  String get favoritesEmptyTitle => 'Songs you like show up here';
+
+  @override
+  String get favoritesEmptyMessage =>
+      'Tap the heart on any track to keep it close.';
+
+  @override
+  String get favoritesFilterHint => 'Filter liked songs';
+
+  @override
+  String get favoritesSortRecent => 'Recently liked';
+
+  @override
+  String get historyRecent => 'Recently played';
+
+  @override
+  String get historyStats => 'Statistics';
+
+  @override
+  String get historyClear => 'Clear history';
+
+  @override
+  String get historyClearTitle => 'Clear your listening history?';
+
+  @override
+  String get historyClearMessage =>
+      'Recently played and statistics are deleted from this device. Recommendations start over.';
+
+  @override
+  String get historyCleared => 'History cleared';
+
+  @override
+  String get historyRecordingOff =>
+      'Listening history is turned off, so new plays aren\'t saved.';
+
+  @override
+  String get historyEmptyTitle => 'Nothing played yet';
+
+  @override
+  String get historyEmptyMessage =>
+      'What you listen to shows up here, grouped by day.';
+
+  @override
+  String get historyStatsEmpty => 'Play some music to see your statistics.';
+
+  @override
+  String historyStatsPeriod(int days) {
+    return 'Last $days days, calculated on this device';
+  }
+
+  @override
+  String get historyStatsPlays => 'Plays';
+
+  @override
+  String get historyStatsTime => 'Listening time';
+
+  @override
+  String get historyStatsPerDay => 'Plays per day';
+
+  @override
+  String get historyStatsTopTracks => 'Top tracks';
+
+  @override
+  String get historyStatsTopArtists => 'Top artists';
+
+  @override
+  String get historyStatsTopGenres => 'Top genres';
+
+  @override
+  String historyPlays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count plays',
+      one: '1 play',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String historyChartLabel(int days, int total, int peak) {
+    return 'Plays per day over the last $days days: $total in total, at most $peak in one day';
+  }
+
+  @override
   String get playerPlay => 'Play';
 
   @override

@@ -43,6 +43,7 @@ class SectionFrame extends StatelessWidget {
     return LayoutBuilder(builder: (context, constraints) {
       final pad = constraints.maxWidth < 600 ? 16.0 : 32.0;
       return ListView(
+        key: const ValueKey('settings.sectionBody'),
         padding: EdgeInsets.fromLTRB(pad, showHeading ? 24 : 12, pad, 40),
         children: [
           Center(

@@ -82,10 +82,12 @@ class SkeletonGrid extends StatelessWidget {
   const SkeletonGrid({super.key});
 
   @override
-  Widget build(BuildContext context) => SkeletonShimmer(
-        child: Padding(
-          padding: pageInsets(context),
-          child: Wrap(spacing: 12, runSpacing: 12, children: [for (var i = 0; i < 6; i++) const SkeletonCard(width: 150)]),
+  Widget build(BuildContext context) => ClippedSkeleton(
+        child: SkeletonShimmer(
+          child: Padding(
+            padding: pageInsets(context),
+            child: Wrap(spacing: 12, runSpacing: 12, children: [for (var i = 0; i < 6; i++) const SkeletonCard(width: 150)]),
+          ),
         ),
       );
 }

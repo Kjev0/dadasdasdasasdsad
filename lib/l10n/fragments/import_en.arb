@@ -1,0 +1,321 @@
+{
+  "importTitle": "Import a playlist",
+  "importBack": "Back",
+  "importStepSource": "Source",
+  "importStepPlaylist": "Playlist",
+  "importStepOptions": "Matching",
+  "importStepOf": "Step {step} of {total}: {name}",
+  "@importStepOf": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "importChooseSource": "Where is the playlist?",
+  "importChooseSourceHint": "Fermata finds each track on the services you choose next and keeps a link to the original.",
+  "importM3uTitle": "A playlist file (M3U)",
+  "importM3uHint": "Tracks from an .m3u or .m3u8 file on this device.",
+  "importM3uUnreadable": "This playlist file can't be read.",
+  "importM3uEmpty": "No tracks were found in this playlist file.",
+  "importSourceNotSetUp": "{service} isn't set up yet.",
+  "@importSourceNotSetUp": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "importSourceLinkOnly": "Public playlists by link. Connect to see your own playlists.",
+  "importSourceConnectFirst": "Connect your account to import.",
+  "importSourceSignedIn": "Signed in as {name}",
+  "@importSourceSignedIn": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "importSetUp": "Set up",
+  "importChooseWhat": "What do you want to import from {service}?",
+  "@importChooseWhat": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "importPasteLink": "Paste a playlist link",
+  "importPasteLinkHint": "A {service} playlist link or ID",
+  "@importPasteLinkHint": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "importContinue": "Continue",
+  "importLikedTracks": "Liked tracks",
+  "importLikedTracksHint": "Every track you liked on {service}.",
+  "@importLikedTracksHint": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "importLikedName": "Liked on {service}",
+  "@importLikedName": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "importYourPlaylists": "Your playlists",
+  "importNoPlaylists": "You have no playlists there yet.",
+  "importTrackCount": "{count, plural, =1{1 track} other{{count} tracks}}",
+  "@importTrackCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importConnectForLibrary": "Connect your {service} account in Settings to import your own playlists and liked tracks.",
+  "@importConnectForLibrary": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "importOptionsTitle": "Where should Fermata look?",
+  "importSummaryPlaylist": "“{name}” from {service}",
+  "@importSummaryPlaylist": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "importSummaryLink": "A playlist link from {service}",
+  "@importSummaryLink": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "importSummaryLiked": "Your liked tracks on {service}",
+  "@importSummaryLiked": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "importSummaryM3u": "“{name}” ({count, plural, =1{1 track} other{{count} tracks}})",
+  "@importSummaryM3u": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importTargets": "Find matches on",
+  "importTargetsHint": "In this order. The first service with a good match is used for playback.",
+  "importNoTargets": "None of your services can play the matches. Connect a service such as SoundCloud or Audius first.",
+  "importTargetNotReady": "Not connected or not set up",
+  "importMatchingGroup": "Matching",
+  "importStart": "Start import",
+  "importFetchingLiked": "Fetched {count} liked tracks…",
+  "@importFetchingLiked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importNothingToImport": "There are no tracks to import.",
+  "importStartFailed": "The import couldn't be started.",
+  "importReviewTitle": "Review matches",
+  "importReviewHint": "Check the matches Fermata wasn't sure about. Nothing is saved until you press Save.",
+  "importUntitled": "Imported playlist",
+  "importImporting": "Importing…",
+  "importPhaseFetching": "Fetching the playlist…",
+  "importPhaseMatchingStart": "Finding matches…",
+  "importPhaseMatching": "Matched {processed} of {total} tracks",
+  "@importPhaseMatching": {
+    "placeholders": {
+      "processed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "importPhaseSaving": "Saving…",
+  "importCancelImport": "Cancel import",
+  "importCancelTitle": "Cancel this import?",
+  "importCancelBody": "Your review choices are discarded. Nothing has been saved yet.",
+  "importCanceled": "The import was canceled.",
+  "importFailed": "The import failed",
+  "importStartNew": "Start a new import",
+  "importSessionMissing": "This import isn't available anymore",
+  "importSessionMissingHint": "Imports in progress are kept until Fermata closes.",
+  "importFilterAll": "All · {count}",
+  "@importFilterAll": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importFilterEmpty": "No tracks with this status.",
+  "importDecisionAuto": "Auto-accepted",
+  "importDecisionAccepted": "Accepted",
+  "importDecisionReview": "Needs review",
+  "importDecisionNotFound": "Not found",
+  "importDecisionRejected": "Rejected",
+  "importDecisionSkipped": "Skipped",
+  "importAcceptAllHigh": "Accept all high-confidence ({count})",
+  "@importAcceptAllHigh": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importSavePlaylist": "Save playlist",
+  "importSaveTitle": "Name the playlist",
+  "importSavePendingTitle": "Some tracks still need review",
+  "importSavePendingBody": "{count, plural, =1{1 track hasn't been reviewed. It will be saved without a match.} other{{count} tracks haven't been reviewed. They will be saved without a match.}}",
+  "@importSavePendingBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importSaveAnyway": "Save anyway",
+  "importSaved": "Playlist saved",
+  "importSaveFailed": "The playlist couldn't be saved.",
+  "importDoneTitle": "Playlist saved",
+  "importDoneAll": "Every track has a match.",
+  "importDoneMissing": "{count, plural, =1{1 track has no match.} other{{count} tracks have no match.}}",
+  "@importDoneMissing": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importOpenPlaylist": "Open playlist",
+  "importShowMissing": "Show missing tracks",
+  "importMissingTitle": "Tracks without a match ({count})",
+  "@importMissingTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReportHeader": "Tracks without a match in “{name}” ({count}):",
+  "@importReportHeader": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importOriginal": "Original",
+  "importMatch": "Match",
+  "importNoMatch": "No match found",
+  "importOnlyOtherVersions": "Only other versions found — choose one yourself if it's right.",
+  "importAccept": "Accept",
+  "importReject": "Reject",
+  "importSkip": "Skip",
+  "importOtherCandidates": "Candidates ({count})",
+  "@importOtherCandidates": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importCandidatesTitle": "Candidates for “{title}”",
+  "@importCandidatesTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "importUseThis": "Use this",
+  "importDifferentVersionWarning": "This is a different version than the original.",
+  "importSearch": "Search",
+  "importSearchFor": "Search for “{title}”",
+  "@importSearchFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "importSearchNoResults": "Nothing found. Try other words.",
+  "importSearchResults": "Results",
+  "importMatchedByIsrc": "Same ISRC",
+  "importConfidenceSemantics": "Confidence {level}, {percent} percent",
+  "@importConfidenceSemantics": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "importConfidenceExact": "Exact",
+  "importConfidenceHigh": "High",
+  "importConfidenceMedium": "Medium",
+  "importConfidenceLow": "Low",
+  "importConfidenceNone": "None",
+  "importDiffRemix": "Remix",
+  "importDiffLive": "Live",
+  "importDiffAcoustic": "Acoustic",
+  "importDiffExtended": "Extended",
+  "importDiffRadioEdit": "Radio edit",
+  "importDiffInstrumental": "Instrumental",
+  "importDiffKaraoke": "Karaoke",
+  "importDiffCover": "Cover",
+  "importDiffRemaster": "Remaster",
+  "importDiffSped": "Sped up",
+  "importDiffSlowed": "Slowed",
+  "importDiffDemo": "Demo",
+  "importDiffExplicit": "Explicit mismatch",
+  "importDiffDuration": "Different length",
+  "importDiffAlbum": "Different album",
+  "importDiffYear": "Different year",
+  "importDiffArtist": "Different artist",
+  "importDiffFeatured": "Different featured artists",
+  "importDiffTitle": "Different title",
+  "importDiffPreview": "Preview only"
+}

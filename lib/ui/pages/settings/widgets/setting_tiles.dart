@@ -31,12 +31,11 @@ class SettingsGroup extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(4, 0, 4, 10),
               child: Text(description!, style: context.type.bodySmall),
             ),
-          DecoratedBox(
-            decoration: BoxDecoration(
-              color: c.surface,
-              borderRadius: context.radii.mdAll,
-              border: Border.all(color: c.outlineSubtle),
-            ),
+          // A Material (not a DecoratedBox) so ListTile ink stays visible.
+          Material(
+            color: c.surface,
+            shape: RoundedRectangleBorder(borderRadius: context.radii.mdAll, side: BorderSide(color: c.outlineSubtle)),
+            clipBehavior: Clip.antiAlias,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -256,10 +255,18 @@ class SettingChoice<T> extends StatelessWidget {
         : DropdownButton<T>(
             value: selected?.value,
             isDense: true,
+            isExpanded: true,
             underline: const SizedBox.shrink(),
             borderRadius: context.radii.mdAll,
-            onChanged: enabled ? (v) => v == null ? null : onChanged!(v) : null,
-            items: [for (final o in options) DropdownMenuItem(value: o.value, child: Text(o.label))],
+            onChanged: enabled
+                ? (v) {
+                    if (v != null) onChanged!(v);
+                  }
+                : null,
+            items: [
+              for (final o in options)
+                DropdownMenuItem(value: o.value, child: Text(o.label, maxLines: 1, overflow: TextOverflow.ellipsis)),
+            ],
           );
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -270,9 +277,13 @@ class SettingChoice<T> extends StatelessWidget {
           child: narrow
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [text, const SizedBox(height: 10), control],
+                  children: [text, const SizedBox(height: 10), segmented ? control : SizedBox(width: double.infinity, child: control)],
                 )
-              : Row(children: [Expanded(child: text), const SizedBox(width: 16), control]),
+              : Row(children: [
+                  Expanded(child: text),
+                  const SizedBox(width: 16),
+                  if (segmented) control else SizedBox(width: 240, child: control),
+                ]),
         );
       },
     );

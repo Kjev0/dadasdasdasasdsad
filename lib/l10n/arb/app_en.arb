@@ -151,6 +151,1273 @@
   "desktopHotkeysUnsupportedWayland": "Global shortcuts don't work in Wayland sessions. Use your desktop's keyboard settings instead: media keys and commands like “playerctl play-pause” control Fermata through MPRIS.",
   "desktopHotkeysUnsupportedPlatform": "Global shortcuts aren't available on this platform.",
   "desktopUnknownArtist": "Unknown artist",
+  "importTitle": "Import a playlist",
+  "importBack": "Back",
+  "importStepSource": "Source",
+  "importStepPlaylist": "Playlist",
+  "importStepOptions": "Matching",
+  "importStepOf": "Step {step} of {total}: {name}",
+  "@importStepOf": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "importChooseSource": "Where is the playlist?",
+  "importChooseSourceHint": "Fermata finds each track on the services you choose next and keeps a link to the original.",
+  "importM3uTitle": "A playlist file (M3U)",
+  "importM3uHint": "Tracks from an .m3u or .m3u8 file on this device.",
+  "importM3uUnreadable": "This playlist file can't be read.",
+  "importM3uEmpty": "No tracks were found in this playlist file.",
+  "importSourceNotSetUp": "{service} isn't set up yet.",
+  "@importSourceNotSetUp": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "importSourceLinkOnly": "Public playlists by link. Connect to see your own playlists.",
+  "importSourceConnectFirst": "Connect your account to import.",
+  "importSourceSignedIn": "Signed in as {name}",
+  "@importSourceSignedIn": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "importSetUp": "Set up",
+  "importChooseWhat": "What do you want to import from {service}?",
+  "@importChooseWhat": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "importPasteLink": "Paste a playlist link",
+  "importPasteLinkHint": "A {service} playlist link or ID",
+  "@importPasteLinkHint": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "importContinue": "Continue",
+  "importLikedTracks": "Liked tracks",
+  "importLikedTracksHint": "Every track you liked on {service}.",
+  "@importLikedTracksHint": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "importLikedName": "Liked on {service}",
+  "@importLikedName": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "importYourPlaylists": "Your playlists",
+  "importNoPlaylists": "You have no playlists there yet.",
+  "importTrackCount": "{count, plural, =1{1 track} other{{count} tracks}}",
+  "@importTrackCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importConnectForLibrary": "Connect your {service} account in Settings to import your own playlists and liked tracks.",
+  "@importConnectForLibrary": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "importOptionsTitle": "Where should Fermata look?",
+  "importSummaryPlaylist": "“{name}” from {service}",
+  "@importSummaryPlaylist": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "importSummaryLink": "A playlist link from {service}",
+  "@importSummaryLink": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "importSummaryLiked": "Your liked tracks on {service}",
+  "@importSummaryLiked": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "importSummaryM3u": "“{name}” ({count, plural, =1{1 track} other{{count} tracks}})",
+  "@importSummaryM3u": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importTargets": "Find matches on",
+  "importTargetsHint": "In this order. The first service with a good match is used for playback.",
+  "importNoTargets": "None of your services can play the matches. Connect a service such as SoundCloud or Audius first.",
+  "importTargetNotReady": "Not connected or not set up",
+  "importMatchingGroup": "Matching",
+  "importStart": "Start import",
+  "importFetchingLiked": "Fetched {count} liked tracks…",
+  "@importFetchingLiked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importNothingToImport": "There are no tracks to import.",
+  "importStartFailed": "The import couldn't be started.",
+  "importReviewTitle": "Review matches",
+  "importReviewHint": "Check the matches Fermata wasn't sure about. Nothing is saved until you press Save.",
+  "importUntitled": "Imported playlist",
+  "importImporting": "Importing…",
+  "importPhaseFetching": "Fetching the playlist…",
+  "importPhaseMatchingStart": "Finding matches…",
+  "importPhaseMatching": "Matched {processed} of {total} tracks",
+  "@importPhaseMatching": {
+    "placeholders": {
+      "processed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "importPhaseSaving": "Saving…",
+  "importCancelImport": "Cancel import",
+  "importCancelTitle": "Cancel this import?",
+  "importCancelBody": "Your review choices are discarded. Nothing has been saved yet.",
+  "importCanceled": "The import was canceled.",
+  "importFailed": "The import failed",
+  "importStartNew": "Start a new import",
+  "importSessionMissing": "This import isn't available anymore",
+  "importSessionMissingHint": "Imports in progress are kept until Fermata closes.",
+  "importFilterAll": "All · {count}",
+  "@importFilterAll": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importFilterEmpty": "No tracks with this status.",
+  "importDecisionAuto": "Auto-accepted",
+  "importDecisionAccepted": "Accepted",
+  "importDecisionReview": "Needs review",
+  "importDecisionNotFound": "Not found",
+  "importDecisionRejected": "Rejected",
+  "importDecisionSkipped": "Skipped",
+  "importAcceptAllHigh": "Accept all high-confidence ({count})",
+  "@importAcceptAllHigh": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importSavePlaylist": "Save playlist",
+  "importSaveTitle": "Name the playlist",
+  "importSavePendingTitle": "Some tracks still need review",
+  "importSavePendingBody": "{count, plural, =1{1 track hasn't been reviewed. It will be saved without a match.} other{{count} tracks haven't been reviewed. They will be saved without a match.}}",
+  "@importSavePendingBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importSaveAnyway": "Save anyway",
+  "importSaved": "Playlist saved",
+  "importSaveFailed": "The playlist couldn't be saved.",
+  "importDoneTitle": "Playlist saved",
+  "importDoneAll": "Every track has a match.",
+  "importDoneMissing": "{count, plural, =1{1 track has no match.} other{{count} tracks have no match.}}",
+  "@importDoneMissing": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importOpenPlaylist": "Open playlist",
+  "importShowMissing": "Show missing tracks",
+  "importMissingTitle": "Tracks without a match ({count})",
+  "@importMissingTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importReportHeader": "Tracks without a match in “{name}” ({count}):",
+  "@importReportHeader": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importOriginal": "Original",
+  "importMatch": "Match",
+  "importNoMatch": "No match found",
+  "importOnlyOtherVersions": "Only other versions found — choose one yourself if it's right.",
+  "importAccept": "Accept",
+  "importReject": "Reject",
+  "importSkip": "Skip",
+  "importOtherCandidates": "Candidates ({count})",
+  "@importOtherCandidates": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importCandidatesTitle": "Candidates for “{title}”",
+  "@importCandidatesTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "importUseThis": "Use this",
+  "importDifferentVersionWarning": "This is a different version than the original.",
+  "importSearch": "Search",
+  "importSearchFor": "Search for “{title}”",
+  "@importSearchFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "importSearchNoResults": "Nothing found. Try other words.",
+  "importSearchResults": "Results",
+  "importMatchedByIsrc": "Same ISRC",
+  "importConfidenceSemantics": "Confidence {level}, {percent} percent",
+  "@importConfidenceSemantics": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "importConfidenceExact": "Exact",
+  "importConfidenceHigh": "High",
+  "importConfidenceMedium": "Medium",
+  "importConfidenceLow": "Low",
+  "importConfidenceNone": "None",
+  "importDiffRemix": "Remix",
+  "importDiffLive": "Live",
+  "importDiffAcoustic": "Acoustic",
+  "importDiffExtended": "Extended",
+  "importDiffRadioEdit": "Radio edit",
+  "importDiffInstrumental": "Instrumental",
+  "importDiffKaraoke": "Karaoke",
+  "importDiffCover": "Cover",
+  "importDiffRemaster": "Remaster",
+  "importDiffSped": "Sped up",
+  "importDiffSlowed": "Slowed",
+  "importDiffDemo": "Demo",
+  "importDiffExplicit": "Explicit mismatch",
+  "importDiffDuration": "Different length",
+  "importDiffAlbum": "Different album",
+  "importDiffYear": "Different year",
+  "importDiffArtist": "Different artist",
+  "importDiffFeatured": "Different featured artists",
+  "importDiffTitle": "Different title",
+  "importDiffPreview": "Preview only",
+  "onboardingSkip": "Skip",
+  "onboardingBack": "Back",
+  "onboardingNext": "Next",
+  "onboardingGetStarted": "Get started",
+  "onboardingFinish": "Start listening",
+  "onboardingStepOf": "Step {step} of {total}",
+  "@onboardingStepOf": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingWelcomeTitle": "Welcome to Fermata",
+  "onboardingWelcomeBody": "A calm music player for the music you own and the services you already use.",
+  "onboardingPointFiles": "Your own files come first and always work offline.",
+  "onboardingPointServices": "Search SoundCloud, Audius and more in one place, and bring your playlists with you.",
+  "onboardingPointBackground": "Keeps playing in the background, with your media keys and lock screen.",
+  "onboardingPointPrivacy": "No ads, no tracking. Recommendations are calculated on your device.",
+  "onboardingMusicTitle": "Add your music",
+  "onboardingMusicBody": "Choose the folders where your music files are. Fermata reads them in the background and keeps watching for new files.",
+  "onboardingAudioPermissionRationale": "To play the music stored on your phone, Fermata needs permission to read your audio files. It only reads music — never photos, messages or other files.",
+  "onboardingAllowAudio": "Allow access to music",
+  "onboardingAudioDenied": "Without this permission Fermata can't see your music files. You can allow it later in the system settings.",
+  "onboardingSuggestedFolder": "Your Music folder",
+  "onboardingAdd": "Add",
+  "onboardingChooseFolder": "Choose a folder…",
+  "onboardingFolderMissing": "That folder doesn't exist anymore.",
+  "onboardingScanning": "Fermata is reading your music in the background.",
+  "onboardingMusicLater": "You can add or remove folders any time in Library.",
+  "onboardingServicesTitle": "Connect your services",
+  "onboardingServicesBody": "Optional. Connect an account to search it, stream it and import your playlists. You sign in on the service's own website — Fermata never sees your password.",
+  "onboardingRecommended": "Recommended",
+  "onboardingServiceHint": "Sign in to use your account.",
+  "onboardingNeedsCredentials": "Needs developer credentials first — you can set this up later in Settings.",
+  "onboardingConnectedAs": "Connected as {name}",
+  "@onboardingConnectedAs": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingNoAccountNeeded": "No account needed for: {services}.",
+  "@onboardingNoAccountNeeded": {
+    "placeholders": {
+      "services": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingServicesLater": "You can connect or disconnect services any time in Settings → Connected services.",
+  "onboardingBackgroundTitle": "Music that keeps playing",
+  "onboardingBackgroundAndroid": "Fermata keeps playing when you switch apps or lock your phone. A notification shows the playback controls.",
+  "onboardingNotificationRationale": "Android asks before apps may show notifications. Fermata uses them for the playback controls and for finished downloads — never for advertising.",
+  "onboardingAllowNotifications": "Allow notifications",
+  "onboardingNotificationsAllowed": "Notifications are allowed.",
+  "onboardingBatteryNote": "If music stops in the background on your phone, see Settings → Background playback.",
+  "onboardingBackgroundTray": "Closing the window doesn't stop the music: Fermata stays in the system tray. Quit from the tray menu when you're done.",
+  "onboardingBackgroundNoTray": "Closing the window doesn't stop the music. Your desktop has no system tray, so Fermata minimizes instead.",
+  "onboardingMediaKeys": "Media keys and your desktop's media controls work while Fermata is in the background.",
+  "pagesPlay": "Play",
+  "pagesShuffle": "Shuffle",
+  "pagesHoursMinutes": "{hours} h {minutes} min",
+  "@pagesHoursMinutes": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "pagesMinutes": "{minutes} min",
+  "@pagesMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "pagesTrackCount": "{count, plural, =0{No tracks} =1{1 track} other{{count} tracks}}",
+  "@pagesTrackCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pagesToday": "Today",
+  "pagesYesterday": "Yesterday",
+  "pagesDownloadEligible": "Download",
+  "pagesOpenSettings": "Open settings",
+  "pagesImportAndMatch": "Import & match",
+  "pagesMore": "More",
+  "pagesSort": "Sort",
+  "pagesFilter": "Filter",
+  "pagesAscending": "Ascending",
+  "pagesDescending": "Descending",
+  "pagesClearFilters": "Clear filters",
+  "pagesNoMatches": "Nothing matches these filters.",
+  "pagesLoadMore": "Load more",
+  "pagesRemove": "Remove",
+  "pagesRename": "Rename",
+  "pagesOpenOnProvider": "Open on {provider}",
+  "@pagesOpenOnProvider": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "pagesDataFrom": "Data from {provider}",
+  "@pagesDataFrom": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "shelfContinueListening": "Continue listening",
+  "shelfDailyMix": "Daily Mix {number}",
+  "@shelfDailyMix": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "shelfDiscoverWeekly": "Discover Weekly",
+  "shelfBecauseYouLiked": "Because you like {artist}",
+  "@shelfBecauseYouLiked": {
+    "placeholders": {
+      "artist": {
+        "type": "String"
+      }
+    }
+  },
+  "shelfTrending": "Trending",
+  "shelfNewReleases": "New releases",
+  "shelfRecentlyAdded": "Recently added",
+  "moodFocus": "Focus",
+  "moodChill": "Chill",
+  "moodWorkout": "Workout",
+  "moodParty": "Party",
+  "moodSleep": "Sleep",
+  "moodCommute": "On the road",
+  "moodHappy": "Feel good",
+  "moodMelancholy": "Melancholy",
+  "homeGoodMorning": "Good morning",
+  "homeGoodAfternoon": "Good afternoon",
+  "homeGoodEvening": "Good evening",
+  "homeGoodNight": "Good night",
+  "homeSubtitle": "Picked from what you play — worked out on this device.",
+  "homeMix": "Mix",
+  "homeShelf": "Collection",
+  "homeMadeForYou": "Made for you",
+  "homeFirstRunTitle": "Let's bring in your music",
+  "homeFirstRunMessage": "Fermata plays your own files and the services you connect. Start with one of these.",
+  "homeAddFolderTitle": "Add a music folder",
+  "homeAddFolderBody": "Your files stay where they are and play offline.",
+  "homeConnectTitle": "Connect a service",
+  "homeConnectBody": "SoundCloud, Audius, Jamendo and more.",
+  "homeConnectAction": "Connected services",
+  "homeExploreTitle": "Explore",
+  "homeExploreBody": "Browse moods, genres and what is trending.",
+  "homeExploreAction": "Start exploring",
+  "searchHint": "Songs, artists, albums or a share link",
+  "searchFilterAll": "All",
+  "searchEmptyTitle": "Search everything at once",
+  "searchEmptyMessage": "Your library and every connected service. Paste a playlist link to open or import it.",
+  "searchBrowseExplore": "Browse Explore",
+  "searchHistoryOff": "Search history is turned off, so searches are not saved.",
+  "searchRecent": "Recent searches",
+  "searchClearRecent": "Clear",
+  "searchRemoveRecent": "Remove \"{query}\"",
+  "@searchRemoveRecent": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "searchFor": "Search for \"{query}\"",
+  "@searchFor": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "searchInYourLibrary": "In your library",
+  "searchTopResult": "Top result",
+  "searchTracks": "Tracks",
+  "searchArtists": "Artists",
+  "searchAlbums": "Albums",
+  "searchPlaylists": "Playlists",
+  "searchShowAll": "Show all {count}",
+  "@searchShowAll": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchNoResults": "No results for \"{query}\"",
+  "@searchNoResults": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "searchNoResultsHint": "Check the spelling, or try fewer words.",
+  "searchConnectedServices": "Connected services",
+  "searchNotSearched": "Not searched: {sources}",
+  "@searchNotSearched": {
+    "placeholders": {
+      "sources": {
+        "type": "String"
+      }
+    }
+  },
+  "searchSourceNotConnected": "{service} isn't connected.",
+  "@searchSourceNotConnected": {
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "searchNeedsCredentials": "needs setup",
+  "searchNotConnected": "not connected",
+  "searchKindTrack": "Track",
+  "searchKindArtist": "Artist",
+  "searchKindAlbum": "Album",
+  "searchKindPlaylist": "Playlist",
+  "searchLinkTrack": "{provider} track link",
+  "@searchLinkTrack": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "searchLinkPlaylist": "{provider} playlist link",
+  "@searchLinkPlaylist": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "searchLinkAlbum": "{provider} album link",
+  "@searchLinkAlbum": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "searchLinkArtist": "{provider} artist link",
+  "@searchLinkArtist": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "searchLinkGeneric": "{provider} link",
+  "@searchLinkGeneric": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "searchOpenPlaylist": "Open playlist",
+  "searchOpenAlbum": "Open album",
+  "searchOpenArtist": "Open artist",
+  "searchSourceMissing": "{provider} isn't available in this version of Fermata.",
+  "@searchSourceMissing": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "searchLinkNotFound": "This track couldn't be found. It may have been removed or made private.",
+  "exploreSubtitle": "Moods, genres and new music from your services.",
+  "exploreMoods": "Moods",
+  "exploreGenres": "Genres",
+  "exploreNoGenres": "No genres yet. Add music or connect a service.",
+  "exploreGenre": "Genre",
+  "exploreMood": "Mood",
+  "exploreNothingFound": "Nothing playable found right now. Try again later or connect another service.",
+  "libraryTabTracks": "Tracks",
+  "libraryTabAlbums": "Albums",
+  "libraryTabArtists": "Artists",
+  "libraryTabFolders": "Folders",
+  "libraryPermissionNeeded": "Fermata needs access to your music to add a folder.",
+  "libraryOpenSystemSettings": "Open settings",
+  "libraryAddFolder": "Add folder",
+  "libraryFolderAdded": "Added {folder} — scanning now",
+  "@libraryFolderAdded": {
+    "placeholders": {
+      "folder": {
+        "type": "String"
+      }
+    }
+  },
+  "libraryLocalFiles": "Local files",
+  "libraryEmptyTitle": "Your library is empty",
+  "libraryEmptyMessage": "Add a music folder or import a file. Tracks you like or play from services show up here too.",
+  "libraryImportFile": "Import a file",
+  "libraryImportFileFailed": "This file can't be added. Fermata reads MP3, FLAC, M4A, Ogg, Opus, WAV and AIFF.",
+  "libraryImportFileDone": "Added \"{title}\"",
+  "@libraryImportFileDone": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "libraryFilterHint": "Filter your library",
+  "libraryQuickDownloaded": "Downloaded",
+  "librarySortedBy": "Sorted by {field}",
+  "@librarySortedBy": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "librarySortTitle": "Title",
+  "librarySortArtist": "Artist",
+  "librarySortAlbum": "Album",
+  "librarySortYear": "Year",
+  "librarySortDuration": "Duration",
+  "librarySortDateAdded": "Date added",
+  "librarySortPlayCount": "Most played",
+  "librarySortLastPlayed": "Last played",
+  "librarySortGenre": "Genre",
+  "libraryFilterAvailability": "Availability",
+  "libraryFilterDownloaded": "Downloaded",
+  "libraryFilterLocal": "Local files only",
+  "libraryFilterOffline": "Available offline",
+  "libraryFilterFavorites": "Liked songs",
+  "libraryFilterSource": "Source",
+  "libraryFilterGenre": "Genre",
+  "libraryAnyGenre": "Any genre",
+  "libraryFilterYear": "Year",
+  "libraryFrom": "From",
+  "libraryTo": "To",
+  "libraryFilterDuration": "Duration (minutes)",
+  "libraryMinMinutes": "At least",
+  "libraryMaxMinutes": "At most",
+  "libraryFilterAlbums": "Filter albums",
+  "libraryNoAlbums": "No albums yet",
+  "libraryFilterArtists": "Filter artists",
+  "libraryNoArtists": "No artists yet",
+  "libraryFolders": "Music folders",
+  "libraryFoldersHintDesktop": "Watched folders are rescanned automatically when files change.",
+  "libraryFoldersHintAndroid": "Folders are rescanned each time Fermata starts.",
+  "libraryNoFolders": "No music folders yet",
+  "libraryNoFoldersMessage": "Add the folders where you keep music. Files are never moved or uploaded.",
+  "libraryRescanAll": "Rescan",
+  "libraryFullRescan": "Full rescan",
+  "libraryRescanFolder": "Rescan folder",
+  "libraryRemoveFolder": "Remove folder",
+  "libraryRemoveFolderTitle": "Remove this folder?",
+  "libraryRemoveFolderMessage": "Tracks from {path} leave your library. The files themselves aren't deleted.",
+  "@libraryRemoveFolderMessage": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "libraryWatchFolder": "Watch for changes",
+  "libraryNeverScanned": "Not scanned yet",
+  "libraryScannedOn": "Scanned {date}",
+  "@libraryScannedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "libraryScanEnumerating": "Looking for music…",
+  "libraryScanProgress": "Scanning {scanned} of {total} files",
+  "@libraryScanProgress": {
+    "placeholders": {
+      "scanned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryScanDone": "Scan complete",
+  "libraryScanFailed": "The scan stopped",
+  "libraryScanCounts": "{added} added · {updated} updated · {removed} removed",
+  "@libraryScanCounts": {
+    "placeholders": {
+      "added": {
+        "type": "int"
+      },
+      "updated": {
+        "type": "int"
+      },
+      "removed": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryScanErrors": "{count, plural, =1{1 file couldn't be read} other{{count} files couldn't be read}}",
+  "@libraryScanErrors": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryTools": "Tools",
+  "libraryMissingFiles": "Missing files",
+  "libraryMissingFilesHint": "Tracks whose file was moved or deleted outside Fermata. They come back if the file returns.",
+  "libraryNoMissingFiles": "No missing files",
+  "libraryRemoveAllMissing": "Remove all from library",
+  "libraryDuplicates": "Duplicates",
+  "libraryDuplicatesHint": "Tracks that look like copies of each other.",
+  "libraryNoDuplicates": "No duplicates found",
+  "libraryDuplicateSameFile": "Identical files",
+  "libraryDuplicateSameIsrc": "Same recording (ISRC)",
+  "libraryDuplicateSameMetadata": "Same title, artist and length",
+  "libraryRemoveFromLibrary": "Remove from library",
+  "libraryRemoveFromLibraryTitle": "{count, plural, =1{Remove 1 track from your library?} other{Remove {count} tracks from your library?}}",
+  "@libraryRemoveFromLibraryTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryRemoveFromLibraryMessage": "Files on disk aren't deleted.",
+  "libraryRemovedFromLibrary": "{count, plural, =1{1 track removed} other{{count} tracks removed}}",
+  "@libraryRemovedFromLibrary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryTrackDetails": "Details",
+  "libraryDetailDuration": "Length",
+  "libraryDetailFormat": "Format",
+  "libraryDetailBitrate": "Bitrate",
+  "libraryKbps": "{kbps} kbps",
+  "@libraryKbps": {
+    "placeholders": {
+      "kbps": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryDetailSampleRate": "Sample rate",
+  "libraryKhz": "{khz} kHz",
+  "@libraryKhz": {
+    "placeholders": {
+      "khz": {
+        "type": "String"
+      }
+    }
+  },
+  "libraryDetailBitDepth": "Bit depth",
+  "libraryBits": "{bits}-bit",
+  "@libraryBits": {
+    "placeholders": {
+      "bits": {
+        "type": "int"
+      }
+    }
+  },
+  "libraryDetailChannels": "Channels",
+  "libraryDetailSize": "File size",
+  "libraryDetailReplayGain": "ReplayGain",
+  "libraryDetailSource": "Source",
+  "libraryDetailOffline": "Offline",
+  "libraryDetailFile": "File",
+  "libraryEditTags": "Edit tags",
+  "libraryTagTitle": "Title",
+  "libraryTagArtists": "Artists",
+  "libraryTagArtistsHint": "Separate several artists with ;",
+  "libraryTagAlbum": "Album",
+  "libraryTagAlbumArtist": "Album artist",
+  "libraryTagYear": "Year",
+  "libraryTagGenre": "Genre",
+  "libraryTagTrackNumber": "Track no.",
+  "libraryTagDiscNumber": "Disc no.",
+  "libraryTagsFileHint": "Changes are written to the file when its format allows it; otherwise they're kept in your library only.",
+  "libraryTagsOverrideOnly": "On this device the file isn't changed: your edits are saved in Fermata's library.",
+  "libraryTagsSavedToFile": "Tags saved to the file",
+  "libraryTagsSavedAsOverride": "Saved in your library (the file wasn't changed)",
+  "playlistsNewSmart": "Smart playlist",
+  "playlistsImport": "Import",
+  "playlistsImportFromService": "Import from a service",
+  "playlistsImportM3u": "Import M3U file",
+  "playlistsImportM3uEmpty": "No playable files were found in that playlist file.",
+  "playlistsImportedM3u": "{count, plural, =1{Imported 1 track into {name}} other{Imported {count} tracks into {name}}}",
+  "@playlistsImportedM3u": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "playlistsCreated": "Created {name}",
+  "@playlistsCreated": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "playlistsEmptyMessage": "Make one from scratch, let a smart playlist fill itself, or bring one over from another service.",
+  "playlistsFilterYours": "Yours",
+  "playlistsFilterSmart": "Smart",
+  "playlistsFilterImported": "Imported",
+  "playlistsShowList": "Show as list",
+  "playlistsShowGrid": "Show as grid",
+  "playlistKindLocal": "Playlist",
+  "playlistKindSmart": "Smart playlist",
+  "playlistKindImported": "Imported from {provider}",
+  "@playlistKindImported": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "playlistOnProvider": "Playlist on {provider}",
+  "@playlistOnProvider": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "playlistBy": "by {owner}",
+  "@playlistBy": {
+    "placeholders": {
+      "owner": {
+        "type": "String"
+      }
+    }
+  },
+  "playlistDescription": "Description (optional)",
+  "playlistEditDetails": "Edit details",
+  "playlistEditRules": "Edit rules",
+  "playlistChangeArtwork": "Change artwork",
+  "playlistArtworkUpdated": "Artwork updated",
+  "playlistExportM3u": "Export as M3U",
+  "playlistExported": "Saved to {location}",
+  "@playlistExported": {
+    "placeholders": {
+      "location": {
+        "type": "String"
+      }
+    }
+  },
+  "playlistAutoDownload": "Download automatically",
+  "playlistAutoDownloadOn": "Auto-download on",
+  "playlistAutoDownloadTitle": "Download this playlist automatically?",
+  "playlistAutoDownloadExplain": "Fermata only downloads tracks automatically when they're your own files or the provider permits automatic downloads. None of the streaming services allow that today, so their tracks stay online — you can still download single Audius or Jamendo tracks yourself where the artist allows it.",
+  "playlistAutoDownloadConfirm": "Turn on",
+  "playlistDedupe": "Remove duplicates",
+  "playlistNoDuplicates": "No duplicates found",
+  "playlistDuplicatesRemoved": "{count, plural, =1{Removed 1 duplicate} other{Removed {count} duplicates}}",
+  "@playlistDuplicatesRemoved": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "playlistDeleteTitle": "Delete \"{name}\"?",
+  "@playlistDeleteTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "playlistDeleteMessage": "The playlist is removed. Its tracks stay in your library.",
+  "playlistDeleted": "Deleted {name}",
+  "@playlistDeleted": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "playlistNotFound": "This playlist doesn't exist anymore.",
+  "playlistEmpty": "This playlist is empty",
+  "playlistEmptyHint": "Add tracks from search, your library or any track menu.",
+  "playlistSmartEmpty": "Nothing matches the rules yet",
+  "playlistSmartEmptyHint": "Edit the rules, or play and like more music.",
+  "playlistRulesSummary": "{count, plural, =1{1 rule} other{{count} rules}}, {match}",
+  "@playlistRulesSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "match": {
+        "type": "String"
+      }
+    }
+  },
+  "playlistRemoveFromPlaylist": "Remove from playlist",
+  "playlistRemovedTracks": "{count, plural, =1{Removed 1 track} other{Removed {count} tracks}}",
+  "@playlistRemovedTracks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "playlistPlaysVia": "Plays via {provider} — change",
+  "@playlistPlaysVia": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "playlistSaveToLibrary": "Save to library",
+  "playlistSavedToLibrary": "Saved {name} to your library",
+  "@playlistSavedToLibrary": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "smartNewTitle": "New smart playlist",
+  "smartEditTitle": "Edit smart playlist",
+  "smartMatch": "Include tracks that match",
+  "smartMatchAll": "all rules",
+  "smartMatchAny": "any rule",
+  "smartAddRule": "Add rule",
+  "smartRemoveRule": "Remove rule",
+  "smartValue": "Value",
+  "smartPickSource": "Choose a source",
+  "smartUnitMinutes": "min",
+  "smartUnitDays": "days",
+  "smartLimit": "Limit",
+  "smartNoLimit": "No limit",
+  "smartPreviewLoading": "Counting matching tracks…",
+  "smartPreviewCount": "{count, plural, =0{No tracks match} =1{1 track matches} other{{count} tracks match}}",
+  "@smartPreviewCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "smartPreviewApprox": "{count, plural, =1{About 1 track matches} other{About {count} tracks match}}",
+  "@smartPreviewApprox": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "smartFieldTitle": "Title",
+  "smartFieldArtist": "Artist",
+  "smartFieldAlbum": "Album",
+  "smartFieldGenre": "Genre",
+  "smartFieldYear": "Year",
+  "smartFieldDuration": "Length",
+  "smartFieldPlayCount": "Play count",
+  "smartFieldLastPlayed": "Last played",
+  "smartFieldDateAdded": "Date added",
+  "smartFieldSource": "Source",
+  "smartFieldFavorite": "Liked",
+  "smartFieldDownloaded": "Downloaded",
+  "smartOpContains": "contains",
+  "smartOpNotContains": "doesn't contain",
+  "smartOpEquals": "is",
+  "smartOpNotEquals": "isn't",
+  "smartOpStartsWith": "starts with",
+  "smartOpGreaterThan": "is more than",
+  "smartOpLessThan": "is less than",
+  "smartOpInLastDays": "in the last",
+  "smartOpNotInLastDays": "not in the last",
+  "smartOpIsTrue": "yes",
+  "smartOpIsFalse": "no",
+  "alternativesFind": "Find alternatives",
+  "alternativesTitle": "Alternatives",
+  "alternativesLinkedNow": "Linked now",
+  "alternativesSuggested": "Suggested matches",
+  "alternativesSearch": "Search yourself",
+  "alternativesSearchHint": "Title and artist, then press Enter",
+  "alternativesNone": "No matches found.",
+  "alternativesUse": "Use",
+  "alternativesInUse": "In use",
+  "alternativesUnlink": "Unlink",
+  "alternativesLinked": "Linked — plays from {provider}",
+  "@alternativesLinked": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "alternativesScore": "{percent}% · {confidence}",
+  "@alternativesScore": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      },
+      "confidence": {
+        "type": "String"
+      }
+    }
+  },
+  "matchExact": "exact match",
+  "matchHigh": "very likely",
+  "matchMedium": "possible",
+  "matchLow": "unlikely",
+  "matchNone": "no match",
+  "diffRemix": "remix",
+  "diffLive": "live",
+  "diffAcoustic": "acoustic",
+  "diffExtended": "extended",
+  "diffRadioEdit": "radio edit",
+  "diffInstrumental": "instrumental",
+  "diffKaraoke": "karaoke",
+  "diffCover": "cover",
+  "diffRemaster": "remaster",
+  "diffSped": "sped up",
+  "diffSlowed": "slowed",
+  "diffDemo": "demo",
+  "diffExplicit": "explicit differs",
+  "diffDuration": "length differs",
+  "diffAlbum": "other album",
+  "diffYear": "other year",
+  "diffArtist": "other artist",
+  "diffFeatured": "featured artists differ",
+  "diffTitle": "title differs",
+  "diffPreview": "preview only",
+  "artistInLibrary": "Artist in your library",
+  "artistOnProvider": "Artist on {provider}",
+  "@artistOnProvider": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "artistFollowers": "{count} followers",
+  "@artistFollowers": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "artistTopTracks": "Popular tracks",
+  "artistTracks": "Tracks",
+  "artistNoTracks": "No tracks found.",
+  "artistAlbums": "Albums",
+  "artistReleases": "Releases",
+  "artistRelated": "Fans also like",
+  "albumInLibrary": "Album in your library",
+  "albumOnProvider": "Album on {provider}",
+  "@albumOnProvider": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "albumDisc": "Disc {number}",
+  "@albumDisc": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "albumEmpty": "No tracks on this album.",
+  "downloadsPauseAll": "Pause all",
+  "downloadsResumeAll": "Resume all",
+  "downloadsPause": "Pause",
+  "downloadsResume": "Resume",
+  "downloadsProgress": "Download progress",
+  "downloadsFilterActive": "Active",
+  "downloadsFilterCompleted": "Completed",
+  "downloadsFilterFailed": "Failed",
+  "downloadsActive": "Downloading",
+  "downloadsActiveCount": "{count, plural, =1{1 in the queue} other{{count} in the queue}}",
+  "@downloadsActiveCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "downloadsFinished": "Finished",
+  "downloadsNothingHere": "Nothing here right now.",
+  "downloadsEmptyTitle": "No downloads yet",
+  "downloadsEmptyMessage": "Tracks can be downloaded only where the provider allows it — Audius and Jamendo tracks the artist made downloadable. Your own files already play offline.",
+  "downloadsStatusQueued": "Queued",
+  "downloadsStatusWaiting": "Waiting",
+  "downloadsStatusDownloading": "Downloading",
+  "downloadsStatusVerifying": "Checking",
+  "downloadsStatusPaused": "Paused",
+  "downloadsStatusCompleted": "Downloaded",
+  "downloadsStatusFailed": "Failed",
+  "downloadsStatusCanceled": "Canceled",
+  "downloadsSizeOf": "{received} of {total}",
+  "@downloadsSizeOf": {
+    "placeholders": {
+      "received": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "downloadsSpeed": "{speed}/s",
+  "@downloadsSpeed": {
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
+  "downloadsEta": "{time} left",
+  "@downloadsEta": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "downloadsAttempts": "{count} attempts",
+  "@downloadsAttempts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "downloadsWaitingWifiTitle": "Waiting for Wi-Fi",
+  "downloadsWaitingWifi": "Downloads only run on Wi-Fi. They continue by themselves when you connect.",
+  "downloadsDownloadSettings": "Download settings",
+  "downloadsWaitingConnection": "Waiting for an internet connection.",
+  "downloadsWaitingMobileData": "You're on mobile data. Downloads wait until you allow it or connect to Wi-Fi.",
+  "downloadsMobileDataTitle": "Download over mobile data?",
+  "downloadsMobileDataMessage": "This can use a lot of data. You'll be asked again the next time you start Fermata.",
+  "downloadsMobileDataConfirm": "Use mobile data",
+  "downloadsMobileDataWait": "Wait for Wi-Fi",
+  "downloadsMobileDataAllowed": "Downloading over mobile data",
+  "downloadsStorage": "Storage",
+  "downloadsStorageSettings": "Storage settings",
+  "downloadsStorageDownloads": "{count, plural, =1{Downloads (1 track)} other{Downloads ({count} tracks)}}",
+  "@downloadsStorageDownloads": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "downloadsStorageArtwork": "Artwork cache",
+  "downloadsStorageStreamCache": "Stream cache",
+  "downloadsStorageDatabase": "Library database",
+  "downloadsStorageLimit": "Download limit",
+  "downloadsStorageFree": "Free on this device",
+  "downloadsUnlimited": "No limit",
+  "downloadsErrorSourceUnavailable": "The service isn't available right now.",
+  "downloadsErrorAuth": "Reconnect the service to download.",
+  "downloadsErrorNotFound": "The file is gone from the service.",
+  "downloadsErrorForbidden": "The service refused the download.",
+  "downloadsErrorServer": "The service had a problem. Try again later.",
+  "downloadsErrorNotAudio": "The service didn't send an audio file.",
+  "downloadsErrorCorrupt": "The file arrived damaged. Try again.",
+  "downloadsErrorDiskFull": "Not enough free space.",
+  "favoritesEmptyTitle": "Songs you like show up here",
+  "favoritesEmptyMessage": "Tap the heart on any track to keep it close.",
+  "favoritesFilterHint": "Filter liked songs",
+  "favoritesSortRecent": "Recently liked",
+  "historyRecent": "Recently played",
+  "historyStats": "Statistics",
+  "historyClear": "Clear history",
+  "historyClearTitle": "Clear your listening history?",
+  "historyClearMessage": "Recently played and statistics are deleted from this device. Recommendations start over.",
+  "historyCleared": "History cleared",
+  "historyRecordingOff": "Listening history is turned off, so new plays aren't saved.",
+  "historyEmptyTitle": "Nothing played yet",
+  "historyEmptyMessage": "What you listen to shows up here, grouped by day.",
+  "historyStatsEmpty": "Play some music to see your statistics.",
+  "historyStatsPeriod": "Last {days} days, calculated on this device",
+  "@historyStatsPeriod": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "historyStatsPlays": "Plays",
+  "historyStatsTime": "Listening time",
+  "historyStatsPerDay": "Plays per day",
+  "historyStatsTopTracks": "Top tracks",
+  "historyStatsTopArtists": "Top artists",
+  "historyStatsTopGenres": "Top genres",
+  "historyPlays": "{count, plural, =1{1 play} other{{count} plays}}",
+  "@historyPlays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "historyChartLabel": "Plays per day over the last {days} days: {total} in total, at most {peak} in one day",
+  "@historyChartLabel": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "peak": {
+        "type": "int"
+      }
+    }
+  },
   "playerPlay": "Play",
   "playerPause": "Pause",
   "playerNext": "Next",

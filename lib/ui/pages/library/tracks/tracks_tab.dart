@@ -5,7 +5,6 @@ import '../../../../app/providers.dart';
 import '../../../../core/models/library.dart';
 import '../../../design/context_ext.dart';
 import '../../../widgets/controls/search_field.dart';
-import '../../../widgets/feedback/skeleton.dart';
 import '../../../widgets/feedback/states.dart';
 import '../../../widgets/feedback/toast.dart';
 import '../folders/scan_controller.dart';
@@ -150,7 +149,7 @@ class _LibraryTracksTabState extends ConsumerState<LibraryTracksTab> {
         toolbar,
         Expanded(
           child: tracks.when(
-            loading: () => const SkeletonTrackList(),
+            loading: () => const ClippedSkeleton(),
             error: (e, _) => ErrorState(error: e, onRetry: () => ref.invalidate(libraryTracksProvider)),
             data: (list) {
               if (list.isEmpty) {

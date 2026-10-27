@@ -1,0 +1,66 @@
+{
+  "onboardingSkip": "Skip",
+  "onboardingBack": "Back",
+  "onboardingNext": "Next",
+  "onboardingGetStarted": "Get started",
+  "onboardingFinish": "Start listening",
+  "onboardingStepOf": "Step {step} of {total}",
+  "@onboardingStepOf": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingWelcomeTitle": "Welcome to Fermata",
+  "onboardingWelcomeBody": "A calm music player for the music you own and the services you already use.",
+  "onboardingPointFiles": "Your own files come first and always work offline.",
+  "onboardingPointServices": "Search SoundCloud, Audius and more in one place, and bring your playlists with you.",
+  "onboardingPointBackground": "Keeps playing in the background, with your media keys and lock screen.",
+  "onboardingPointPrivacy": "No ads, no tracking. Recommendations are calculated on your device.",
+  "onboardingMusicTitle": "Add your music",
+  "onboardingMusicBody": "Choose the folders where your music files are. Fermata reads them in the background and keeps watching for new files.",
+  "onboardingAudioPermissionRationale": "To play the music stored on your phone, Fermata needs permission to read your audio files. It only reads music — never photos, messages or other files.",
+  "onboardingAllowAudio": "Allow access to music",
+  "onboardingAudioDenied": "Without this permission Fermata can't see your music files. You can allow it later in the system settings.",
+  "onboardingSuggestedFolder": "Your Music folder",
+  "onboardingAdd": "Add",
+  "onboardingChooseFolder": "Choose a folder…",
+  "onboardingFolderMissing": "That folder doesn't exist anymore.",
+  "onboardingScanning": "Fermata is reading your music in the background.",
+  "onboardingMusicLater": "You can add or remove folders any time in Library.",
+  "onboardingServicesTitle": "Connect your services",
+  "onboardingServicesBody": "Optional. Connect an account to search it, stream it and import your playlists. You sign in on the service's own website — Fermata never sees your password.",
+  "onboardingRecommended": "Recommended",
+  "onboardingServiceHint": "Sign in to use your account.",
+  "onboardingNeedsCredentials": "Needs developer credentials first — you can set this up later in Settings.",
+  "onboardingConnectedAs": "Connected as {name}",
+  "@onboardingConnectedAs": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingNoAccountNeeded": "No account needed for: {services}.",
+  "@onboardingNoAccountNeeded": {
+    "placeholders": {
+      "services": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingServicesLater": "You can connect or disconnect services any time in Settings → Connected services.",
+  "onboardingBackgroundTitle": "Music that keeps playing",
+  "onboardingBackgroundAndroid": "Fermata keeps playing when you switch apps or lock your phone. A notification shows the playback controls.",
+  "onboardingNotificationRationale": "Android asks before apps may show notifications. Fermata uses them for the playback controls and for finished downloads — never for advertising.",
+  "onboardingAllowNotifications": "Allow notifications",
+  "onboardingNotificationsAllowed": "Notifications are allowed.",
+  "onboardingBatteryNote": "If music stops in the background on your phone, see Settings → Background playback.",
+  "onboardingBackgroundTray": "Closing the window doesn't stop the music: Fermata stays in the system tray. Quit from the tray menu when you're done.",
+  "onboardingBackgroundNoTray": "Closing the window doesn't stop the music. Your desktop has no system tray, so Fermata minimizes instead.",
+  "onboardingMediaKeys": "Media keys and your desktop's media controls work while Fermata is in the background."
+}

@@ -35,7 +35,9 @@ bool isPlayableInApp(Track t) =>
     t.availability.isPlayableInApp || t.availability.playback == PlaybackRights.unknown;
 
 /// Plays [tracks] (or a shuffled order) respecting the SoundCloud silo: the
-/// queue is built around the first playable track.
+/// queue is built around the first playable track. [canPlay] decides which
+/// tracks are queued (default: playable inside Fermata; imported playlists
+/// also queue tracks with a linked match, which the stream resolver plays).
 Future<void> playCollection(
   BuildContext context,
   WidgetRef ref,
@@ -44,8 +46,10 @@ Future<void> playCollection(
   bool shuffle = false,
   String? origin,
   String? originLabel,
+  bool Function(Track track)? canPlay,
 }) async {
-  final playable = [for (final t in tracks) if (isPlayableInApp(t)) t];
+  final test = canPlay ?? isPlayableInApp;
+  final playable = [for (final t in tracks) if (test(t)) t];
   if (playable.isEmpty) return;
   var start = 0;
   if (!shuffle && startIndex > 0 && startIndex < tracks.length) {
@@ -104,4 +108,33 @@ List<Track> sortAlbumTracks(List<Track> tracks) {
     return a.title.toLowerCase().compareTo(b.title.toLowerCase());
   });
   return list;
+}
+
+/// [siloSafeContext] for every row of a long list, computed once: one
+/// filtered list per playback silo (open queue / SoundCloud), so tapping a
+/// row never mixes SoundCloud streams with other services.
+class SiloPartition {
+  SiloPartition(this.tracks);
+
+  final List<Track> tracks;
+  final _lists = <String?, (List<Track>, Map<int, int>)>{};
+
+  (List<Track>, Map<int, int>) _forSilo(String? silo) => _lists.putIfAbsent(silo, () {
+        final list = <Track>[];
+        final index = <int, int>{};
+        for (var i = 0; i < tracks.length; i++) {
+          if (SourcePolicies.canJoinSilo(silo, tracks[i].sourceId)) {
+            index[i] = list.length;
+            list.add(tracks[i]);
+          }
+        }
+        return (list, index);
+      });
+
+  TrackPlayContext contextFor(int i, {String? origin, String? originLabel}) {
+    final t = tracks[i];
+    final silo = SourcePolicies.of(t.sourceId).siloedPlayback ? t.sourceId : null;
+    final (list, index) = _forSilo(silo);
+    return TrackPlayContext(tracks: list, index: index[i] ?? 0, origin: origin, originLabel: originLabel);
+  }
 }

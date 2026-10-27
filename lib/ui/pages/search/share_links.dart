@@ -120,15 +120,15 @@ class ShareLink {
 
   static ShareLink? _soundcloud(List<String> segs, Uri uri) {
     if (segs.isEmpty || _soundcloudReserved.contains(segs.first)) return null;
-    final link = uri.replace(queryParameters: _keepSecret(uri));
-    String url(Uri u) => u.toString().replaceFirst(RegExp(r'\?$'), '');
+    final link = Uri(scheme: 'https', host: uri.host, path: uri.path, queryParameters: _keepSecret(uri));
+    String url(Uri u) => u.toString();
     if (segs.length >= 3 && segs[1] == 'sets') {
       return ShareLink(sourceId: SourceIds.soundcloud, kind: ShareLinkKind.playlist, id: url(link), uri: link);
     }
     if (segs.length >= 2 && !_soundcloudUserPages.contains(segs[1])) {
       return ShareLink(sourceId: SourceIds.soundcloud, kind: ShareLinkKind.track, id: url(link), uri: link);
     }
-    final profile = uri.replace(pathSegments: [segs.first], queryParameters: const {});
+    final profile = Uri(scheme: 'https', host: uri.host, pathSegments: [segs.first]);
     return ShareLink(sourceId: SourceIds.soundcloud, kind: ShareLinkKind.artist, id: url(profile), uri: profile);
   }
 
@@ -159,8 +159,8 @@ class ShareLink {
 
   static ShareLink? _audius(List<String> segs, Uri uri) {
     if (segs.isEmpty) return null;
-    final link = uri.replace(queryParameters: const {});
-    final url = link.toString().replaceFirst(RegExp(r'\?$'), '');
+    final link = Uri(scheme: 'https', host: uri.host, path: uri.path);
+    final url = link.toString();
     if (segs.length >= 3 && (segs[1] == 'playlist' || segs[1] == 'album')) {
       return ShareLink(sourceId: SourceIds.audius, kind: ShareLinkKind.playlist, id: url, uri: link);
     }
