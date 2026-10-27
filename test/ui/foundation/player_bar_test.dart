@@ -154,7 +154,7 @@ void main() {
 
       await tester.tap(find.byTooltip('Keep on top'));
       await pumpFrames(tester);
-      expect(kit.miniWindow.changes.last, (true, false));
+      expect(kit.miniWindow.pinned, [false]);
 
       await tester.tap(find.byTooltip('Back to full window'));
       // The real window controller restores the previous bounds.

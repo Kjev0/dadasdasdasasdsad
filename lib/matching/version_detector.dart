@@ -229,7 +229,8 @@ class VersionDetector {
       // Version") is an alternative arrangement unless every word is a
       // neutral edition word ("Album Version", "Deluxe Version").
       final v = tokens.indexWhere(_K.versionWords.contains);
-      if (v >= 0) {
+      // "From 'Frozen' / Soundtrack Version" names the release, not a mix.
+      if (v >= 0 && !_fromReference.hasMatch('$key ')) {
         final named = tokens.where((t) => !_K.isNeutralToken(t) && !_K.mixNeutral.contains(t)).toList();
         if (named.isNotEmpty) {
           tags.add(VersionTag.remix);

@@ -7,6 +7,7 @@ import 'package:fermata/ui/widgets/glass/ambient_backdrop.dart';
 import 'package:fermata/ui/widgets/glass/glass_preview.dart';
 import 'package:fermata/ui/widgets/glass/glass_spec.dart';
 import 'package:fermata/ui/widgets/glass/glass_surface.dart';
+import 'package:fermata/ui/widgets/tracks/track_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -194,5 +195,13 @@ void main() {
         findsOneWidget,
       );
     });
+  });
+
+  testWidgets('sheets use glass when enabled', (tester) async {
+    final kit = FakeKit(settings: _settings(glass: true), tracks: testTracks(1));
+    await pumpInApp(tester, TrackTile(track: kit.tracks.all.single), kit: kit, size: TestSizes.compact);
+    await tester.longPress(find.text('Song 1'));
+    await pumpFrames(tester);
+    expect(find.descendant(of: find.byType(BottomSheet), matching: find.byType(BackdropFilter)), findsOneWidget);
   });
 }

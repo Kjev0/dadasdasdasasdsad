@@ -13,6 +13,7 @@ export 'controls/search_field.dart';
 export 'controls/section_header.dart';
 export 'controls/segmented_tabs.dart';
 export 'dialogs/dialogs.dart';
+export 'dialogs/sheet.dart';
 export 'feedback/messages.dart';
 export 'feedback/skeleton.dart';
 export 'feedback/states.dart';

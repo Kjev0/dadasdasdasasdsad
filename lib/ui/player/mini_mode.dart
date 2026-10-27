@@ -18,7 +18,12 @@ final _log = Logger('ui.player.mini');
 /// window-bounds persistence while mini). The default is a direct
 /// `window_manager` fallback.
 abstract class MiniWindowController {
+  /// Enter (compact always-on-top window of [size]) or leave mini mode
+  /// (restore the previous bounds).
   Future<void> setMiniMode(bool enabled, {Size size = miniWindowSize, bool alwaysOnTop = true});
+
+  /// Pin / unpin the window while in mini mode.
+  Future<void> setAlwaysOnTop(bool value);
 }
 
 /// Mini player window size.
@@ -47,6 +52,15 @@ class WindowManagerMiniWindow implements MiniWindowController {
       }
     } catch (e, st) {
       _log.warning('Mini mode window change failed', e, st);
+    }
+  }
+
+  @override
+  Future<void> setAlwaysOnTop(bool value) async {
+    try {
+      await windowManager.setAlwaysOnTop(value);
+    } catch (e, st) {
+      _log.warning('setAlwaysOnTop failed', e, st);
     }
   }
 }
@@ -94,7 +108,7 @@ class MiniModeNotifier extends Notifier<MiniModeState> {
   Future<void> setAlwaysOnTop(bool value) async {
     state = state.copyWith(alwaysOnTop: value);
     final window = ref.read(miniWindowControllerProvider);
-    if (state.active) await window?.setMiniMode(true, alwaysOnTop: value);
+    if (state.active) await window?.setAlwaysOnTop(value);
   }
 }
 

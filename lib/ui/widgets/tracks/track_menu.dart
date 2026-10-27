@@ -9,6 +9,7 @@ import '../../actions/routes.dart';
 import '../../actions/track_actions.dart';
 import '../../design/context_ext.dart';
 import '../chips/badges.dart';
+import '../dialogs/sheet.dart';
 
 /// Actions offered for a single track (context menu / long-press sheet).
 enum TrackMenuAction {
@@ -159,10 +160,8 @@ Future<void> showTrackMenu(
       ],
     );
   } else {
-    chosen = await showModalBottomSheet<TrackMenuAction>(
-      context: context,
-      useSafeArea: true,
-      isScrollControlled: true,
+    chosen = await showFermataSheet<TrackMenuAction>(
+      context,
       builder: (sheetContext) => _TrackMenuSheet(track: track, entries: entries),
     );
   }

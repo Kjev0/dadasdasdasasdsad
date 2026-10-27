@@ -115,7 +115,7 @@ abstract final class VersionKeywords {
     'dirty', 'edited', 'censored', 'uncensored', 'uncut', 'unedited', 'full', 'complete', 'final', 'vocal', 'video',
     'music', 'official', 'us', 'uk', 'usa', 'international', 'intl', 'european', 'japan', 'soundtrack', 'ost',
     'film', 'movie', 'motion', 'picture', 'score', 'series', 'musical', 'theme', 'collectors', 'reissue', 'legacy',
-    'remastered', 'remaster', 'mono', 'stereo', 'lyric', 'lyrics', 'audio', 'visualizer', 'visualiser',
+    'remastered', 'remaster', 'mono', 'stereo', 'lyric', 'lyrics', 'audio', 'visualizer', 'visualiser', 'studio',
   };
 
   /// Glue words that never decide anything on their own.

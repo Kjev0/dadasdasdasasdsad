@@ -6,6 +6,7 @@ import '../../../core/models/catalog.dart';
 import '../../design/context_ext.dart';
 import '../artwork/artwork_image.dart';
 import '../dialogs/dialogs.dart';
+import '../dialogs/sheet.dart';
 import '../feedback/states.dart';
 import 'playlist_providers.dart';
 
@@ -15,13 +16,8 @@ import 'playlist_providers.dart';
 class AddToPlaylistSheet extends ConsumerWidget {
   const AddToPlaylistSheet({super.key});
 
-  static Future<Playlist?> pick(BuildContext context) => showModalBottomSheet<Playlist>(
-        context: context,
-        isScrollControlled: true,
-        useSafeArea: true,
-        constraints: const BoxConstraints(maxWidth: 560),
-        builder: (_) => const AddToPlaylistSheet(),
-      );
+  static Future<Playlist?> pick(BuildContext context) =>
+      showFermataSheet<Playlist>(context, maxWidth: 560, builder: (_) => const AddToPlaylistSheet());
 
   Future<void> _create(BuildContext context, WidgetRef ref) async {
     final l10n = context.l10n;

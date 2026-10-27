@@ -22,12 +22,30 @@ void main() {
       'Tiësto Mix': {VersionTag.remix},
       '8D Audio': {VersionTag.remix},
       'Remixed by Kygo': {VersionTag.remix},
+      'Re-Mix': {VersionTag.remix},
+      'Lo-Fi Version': {VersionTag.remix},
+      'Lofi': {VersionTag.remix},
+      'Bass Boosted': {VersionTag.remix},
+      'Dance Version': {VersionTag.remix},
+      'Jersey Club': {VersionTag.remix},
+      // Any other "X Version" is an alternative arrangement ...
+      'Jay-Z Version': {VersionTag.remix},
+      'Duet Version': {VersionTag.remix},
+      // ... unless it only names the edition or release.
+      'Studio Version': {},
+      'Video Version': {},
+      '2011 Version': {},
+      'From "Frozen" / Soundtrack Version': {},
       // Live.
       'Live': {VersionTag.live},
       'Live at Wembley 1986': {VersionTag.live},
       'En Vivo': {VersionTag.live},
       'Ao Vivo': {VersionTag.live},
       'Live fra Roskilde': {VersionTag.live},
+      'Koncertversion': {VersionTag.live},
+      'Liveversion': {VersionTag.live},
+      'Liveoptagelse': {VersionTag.live},
+      'From THE FIRST TAKE': {VersionTag.live},
       'MTV Unplugged': {VersionTag.live, VersionTag.acoustic},
       // Acoustic.
       'Acoustic': {VersionTag.acoustic},
@@ -71,11 +89,24 @@ void main() {
       'Demo': {VersionTag.demo},
       'Demo Version': {VersionTag.demo},
       'Take 3': {VersionTag.demo},
+      'Take Two': {VersionTag.demo},
       'Alternate Take': {VersionTag.demo},
       // Re-recordings.
       "Taylor's Version": {VersionTag.reRecorded},
       'Re-Recorded': {VersionTag.reRecorded},
       "Taylor's Version (From The Vault)": {VersionTag.reRecorded},
+      'Nyindspilning': {VersionTag.reRecorded},
+      'New Version': {VersionTag.reRecorded},
+      // Language versions (a different vocal recording).
+      'Spanish Version': {VersionTag.language},
+      'Versión en Español': {VersionTag.language},
+      'En Español': {VersionTag.language},
+      'På Dansk': {VersionTag.language},
+      'Dansk Version': {VersionTag.language},
+      'English Lyrics': {},
+      'Sub Español': {},
+      // Radio edits named after the 7" single.
+      '7" Version': {VersionTag.radioEdit},
       // Neutral.
       'Original Mix': {},
       'Album Version': {},
@@ -88,6 +119,22 @@ void main() {
       test('"$segment" → ${tags.map((t) => t.name).join(', ')}', () {
         expect(detector.detectSegment(segment).tags, tags);
       });
+    });
+
+    test('neutral qualifiers name the release, not the song or the version', () {
+      for (final q in ['Original Mix', 'Album Version', 'Bonus Track', 'Deluxe', '2011', 'From "Frozen"',
+          'From the Motion Picture Soundtrack', 'Japan Bonus Track', 'Explicit']) {
+        expect(detector.isNeutralQualifier(q), isTrue, reason: q);
+      }
+      for (final q in ['Pt. 1', 'Interlude', "I Can't Get No", 'Kygo Remix', 'Monstercat Release']) {
+        expect(detector.isNeutralQualifier(q), isFalse, reason: q);
+      }
+    });
+
+    test('the language of a language version is extracted', () {
+      expect(detector.detectSegment('Spanish Version').language, 'es');
+      expect(detector.detectSegment('Versión en Español').language, 'es');
+      expect(detector.detectSegment('På Dansk').language, 'da');
     });
 
     test('remixer, remaster year and live venue are extracted', () {
@@ -156,6 +203,13 @@ void main() {
 
     test('different concerts are different live recordings', () {
       expect(detector.compare(v('Song (Live at Wembley)'), v('Song (Live in Tokyo)')), {MatchDifference.live});
+    });
+
+    test('language versions: same language is the same version, another language is a cover', () {
+      expect(detector.compare(v('Song (Spanish Version)'), v('Song (Versión en Español)')), isEmpty);
+      expect(detector.compare(v('Song (Spanish Version)'), v('Song (English Version)')), {MatchDifference.cover});
+      expect(detector.compare(v('Song (Spanish Version)'), v('Song')), {MatchDifference.cover});
+      expect(v('Song (Spanish Version)').isSignificant, isTrue);
     });
 
     test('remaster vs original is a non-significant difference', () {

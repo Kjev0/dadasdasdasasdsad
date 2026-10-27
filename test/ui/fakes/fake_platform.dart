@@ -115,7 +115,13 @@ class FakeSystemNotifier implements SystemNotifier {
 class FakeMiniWindow implements MiniWindowController {
   final changes = <(bool enabled, bool alwaysOnTop)>[];
 
+  /// Always-on-top changes made while in mini mode.
+  final pinned = <bool>[];
+
   @override
   Future<void> setMiniMode(bool enabled, {Size size = miniWindowSize, bool alwaysOnTop = true}) async =>
       changes.add((enabled, alwaysOnTop));
+
+  @override
+  Future<void> setAlwaysOnTop(bool value) async => pinned.add(value);
 }
