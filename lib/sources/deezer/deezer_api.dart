@@ -25,8 +25,8 @@ class DeezerApi {
     TokenBucketRateLimiter? limiter,
     this.quotaBackoff = const Duration(seconds: 5),
     this.maxQuotaRetries = 2,
-  })  : baseUri = baseUri ?? Uri.parse('https://api.deezer.com'),
-        limiter = limiter ?? TokenBucketRateLimiter(capacity: 50, period: const Duration(seconds: 5));
+  }) : baseUri = baseUri ?? Uri.parse('https://api.deezer.com'),
+       limiter = limiter ?? TokenBucketRateLimiter(capacity: 50, period: const Duration(seconds: 5));
 
   final FermataHttp _http;
   final Uri baseUri;
@@ -61,7 +61,7 @@ class DeezerApi {
   Future<Map<String, Object?>> get(String path, {Map<String, Object?> query = const {}, CancelToken? cancel}) async {
     final target = uri(path, query);
     var busyRetried = false;
-    for (var attempt = 0;; attempt++) {
+    for (var attempt = 0; ; attempt++) {
       await limiter.acquire(cancel: cancel);
       final json = await _http.getJson(target, cancel: cancel);
       final map = asJsonMapOrNull(json);
@@ -87,7 +87,11 @@ class DeezerApi {
   }
 
   /// Like [get] but returns null for "no data" (code 800 / HTTP 404).
-  Future<Map<String, Object?>?> getOrNull(String path, {Map<String, Object?> query = const {}, CancelToken? cancel}) async {
+  Future<Map<String, Object?>?> getOrNull(
+    String path, {
+    Map<String, Object?> query = const {},
+    CancelToken? cancel,
+  }) async {
     try {
       return await get(path, query: query, cancel: cancel);
     } on ApiException catch (e) {
@@ -97,10 +101,10 @@ class DeezerApi {
   }
 
   static int _statusFor(int? code) => switch (code) {
-        codeNotFound => 404,
-        codePermission || codeTokenInvalid => 401,
-        codeServiceBusy => 503,
-        codeParameter || codeParameterMissing || codeQueryInvalid || codeItemsLimit => 400,
-        _ => 502,
-      };
+    codeNotFound => 404,
+    codePermission || codeTokenInvalid => 401,
+    codeServiceBusy => 503,
+    codeParameter || codeParameterMissing || codeQueryInvalid || codeItemsLimit => 400,
+    _ => 502,
+  };
 }

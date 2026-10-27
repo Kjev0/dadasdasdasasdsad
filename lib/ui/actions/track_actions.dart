@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show ProviderListenable;
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 
@@ -22,18 +23,24 @@ import 'routes.dart';
 
 final _log = Logger('ui.actions');
 
+/// `ref.read` / `container.read`.
+typedef ProviderReader = T Function<T>(ProviderListenable<T> provider);
+
 /// UI-side wrappers around playback, favorites, downloads and playlist
 /// calls: they catch [FermataException]s, show localized toasts and enforce
 /// the provider compliance rules (SoundCloud queue silo, download policy).
 ///
 /// Create per use: `TrackActions(context, ref).playNext([track])`. The
 /// [context] must stay mounted for toasts (use the tile's/page's context,
-/// not a menu's).
+/// not a menu's). Code that outlives its widget (commands, shortcuts) uses
+/// [TrackActions.fromContainer].
 class TrackActions {
-  TrackActions(this.context, this.ref);
+  TrackActions(this.context, WidgetRef ref) : _read = ref.read;
+
+  TrackActions.fromContainer(this.context, ProviderContainer container) : _read = container.read;
 
   final BuildContext context;
-  final WidgetRef ref;
+  final ProviderReader _read;
 
   /// Error code thrown by the playback controller when tracks can't join
   /// the current queue's silo (SoundCloud terms).
@@ -49,7 +56,7 @@ class TrackActions {
     bool shuffle = false,
   }) async {
     if (tracks.isEmpty) return;
-    await _guard(() => ref.read(playbackProvider).playTracks(
+    await _guard(() => _read(playbackProvider).playTracks(
           tracks,
           startIndex: startIndex.clamp(0, tracks.length - 1),
           origin: origin,
@@ -66,7 +73,7 @@ class TrackActions {
 
   Future<void> _enqueue(List<Track> tracks, {String? origin, required bool next}) async {
     if (tracks.isEmpty) return;
-    final playback = ref.read(playbackProvider);
+    final playback = _read(playbackProvider);
     try {
       if (next) {
         await playback.playNext(tracks, origin: origin);
@@ -99,15 +106,21 @@ class TrackActions {
   // ---- Favorites --------------------------------------------------------
 
   Future<void> setFavorite(Track track, bool favorite) async {
-    final ok = await _guard(() => ref.read(favoritesRepositoryProvider).setFavorite(track, favorite));
+    final ok = await _guard(() => _read(favoritesRepositoryProvider).setFavorite(track, favorite));
     if (ok) {
       _toast((l) => favorite ? l.shellLiked : l.shellUnliked, favorite ? Icons.favorite_rounded : Icons.favorite_border_rounded);
     }
   }
 
-  Future<void> toggleFavorite(Track track) {
-    final ids = ref.read(favoriteIdsProvider).value ?? const <String>{};
-    return setFavorite(track, !ids.contains(track.id));
+  Future<void> toggleFavorite(Track track) async {
+    bool current;
+    try {
+      current = await _read(favoritesRepositoryProvider).isFavorite(track.id);
+    } catch (e) {
+      _error(e);
+      return;
+    }
+    await setFavorite(track, !current);
   }
 
   // ---- Downloads --------------------------------------------------------
@@ -121,7 +134,7 @@ class TrackActions {
   Future<DownloadEligibility?> eligibility(Track track) async {
     if (!policyAllowsDownload(track)) return null;
     try {
-      return await ref.read(downloadManagerProvider).checkEligibility(track);
+      return await _read(downloadManagerProvider).checkEligibility(track);
     } catch (e) {
       _log.fine('Eligibility check failed for ${track.id}: $e');
       return null;
@@ -133,7 +146,7 @@ class TrackActions {
       _toast((l) => l.shellErrorDownloadNotPermitted, Icons.block_rounded, isError: true);
       return;
     }
-    final ok = await _guard(() => ref.read(downloadManagerProvider).enqueue(track));
+    final ok = await _guard(() => _read(downloadManagerProvider).enqueue(track));
     if (ok) _toast((l) => l.shellDownloadQueued, Icons.download_rounded);
   }
 
@@ -146,7 +159,7 @@ class TrackActions {
     if (allowed.isNotEmpty) {
       Map<String, DownloadEligibility>? result;
       final ok = await _guard(() async {
-        result = await ref.read(downloadManagerProvider).enqueueAll(allowed, origin: origin);
+        result = await _read(downloadManagerProvider).enqueueAll(allowed, origin: origin);
       });
       if (!ok) return;
       rejected += result?.length ?? 0;
@@ -163,7 +176,7 @@ class TrackActions {
   }
 
   Future<void> removeDownload(Track track) async {
-    final ok = await _guard(() => ref.read(downloadManagerProvider).deleteDownload(track.id));
+    final ok = await _guard(() => _read(downloadManagerProvider).deleteDownload(track.id));
     if (ok) _toast((l) => l.shellDownloadRemoved, Icons.delete_outline_rounded);
   }
 
@@ -175,8 +188,8 @@ class TrackActions {
     final target = playlist ?? await AddToPlaylistSheet.pick(context);
     if (target == null) return;
     final ok = await _guard(() async {
-      await ref.read(trackRepositoryProvider).upsertTracks(tracks);
-      await ref.read(playlistRepositoryProvider).addTracks(target.id, [for (final t in tracks) t.id]);
+      await _read(trackRepositoryProvider).upsertTracks(tracks);
+      await _read(playlistRepositoryProvider).addTracks(target.id, [for (final t in tracks) t.id]);
     });
     if (ok) {
       _toast(
@@ -193,7 +206,7 @@ class TrackActions {
   Uri? externalUri(Track track) {
     if (track.isLocal) return null;
     try {
-      return ref.read(sourceRegistryProvider).byId(track.sourceId)?.externalPlaybackUri(track) ?? track.permalink;
+      return _read(sourceRegistryProvider).byId(track.sourceId)?.externalPlaybackUri(track) ?? track.permalink;
     } catch (_) {
       return track.permalink;
     }
@@ -211,7 +224,7 @@ class TrackActions {
   Future<void> openLink(Uri uri) async {
     var ok = false;
     try {
-      ok = await ref.read(externalLinkLauncherProvider)(uri);
+      ok = await _read(externalLinkLauncherProvider)(uri);
     } catch (e) {
       _log.warning('Could not open $uri: $e');
     }
@@ -250,7 +263,7 @@ class TrackActions {
 
   void _error(Object e) {
     if (!context.mounted) return;
-    final registry = ref.read(sourceRegistryProvider);
+    final registry = _read(sourceRegistryProvider);
     final message = errorMessageFor(context.l10n, e, sourceName: (id) => registry.byId(id)?.displayName ?? id);
     if (message != null) _toast((_) => message, null, isError: true);
   }

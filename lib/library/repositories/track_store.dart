@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:sqflite/sqflite.dart';
 
 import '../../core/models/track.dart';
+import '../../core/sources/source_ids.dart';
 import '../db/sql_utils.dart';
 import '../text/fold.dart';
 import 'track_codec.dart';
@@ -14,19 +15,35 @@ abstract final class TrackStore {
   /// Insert or update [tracks] by id, keeping `date_added`, `override_json`
   /// and file columns of existing rows. [dateAdded] (ms) is used for new
   /// rows when given (backup restore), otherwise "now".
-  static Future<void> upsert(DatabaseExecutor ex, List<Track> tracks, {Map<String, int>? dateAdded}) async {
+  ///
+  /// With [preserveScanned], existing local rows that the scanner owns (they
+  /// have a file hash) are left untouched: a `Track` object held by the UI or
+  /// the play queue may be older than the last scan and must not overwrite
+  /// tags read from the file.
+  static Future<void> upsert(
+    DatabaseExecutor ex,
+    List<Track> tracks, {
+    Map<String, int>? dateAdded,
+    bool preserveScanned = false,
+  }) async {
     if (tracks.isEmpty) return;
     final now = nowMs();
     final unique = <String, Track>{for (final t in tracks) t.id: t};
     final existing = <String, String?>{};
+    final scanned = <String>{};
     for (final chunk in chunked(unique.keys.toList())) {
-      final rows = await ex.rawQuery('SELECT id, override_json FROM tracks WHERE id IN (${placeholders(chunk.length)})', chunk);
+      final rows = await ex.rawQuery(
+        'SELECT id, override_json, file_hash, source_id FROM tracks WHERE id IN (${placeholders(chunk.length)})',
+        chunk,
+      );
       for (final r in rows) {
         existing[r['id'] as String] = r['override_json'] as String?;
+        if (r['file_hash'] != null && r['source_id'] == SourceIds.local) scanned.add(r['id'] as String);
       }
     }
     final batch = ex.batch();
     for (final t in unique.values) {
+      if (preserveScanned && scanned.contains(t.id)) continue;
       final json = t.toJson();
       final exists = existing.containsKey(t.id);
       final ovRaw = existing[t.id];

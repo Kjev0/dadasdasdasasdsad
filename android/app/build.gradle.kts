@@ -71,7 +71,10 @@ val releaseSigning = loadReleaseSigning()
 val isReleaseBuildRequested =
     gradle.startParameter.taskNames.any { it.contains("release", ignoreCase = true) }
 if (releaseSigning == null && isReleaseBuildRequested) {
-    logger.warn(
+    // logger.error rather than logger.warn: `flutter build` runs Gradle with -q,
+    // which hides warn/lifecycle output (the Flutter Gradle plugin reports its own
+    // configuration warnings the same way). It does not fail the build.
+    logger.error(
         """
         |WARNING: No release signing configuration found (android/key.properties or
         |FERMATA_KEYSTORE_* environment variables). The release build will be signed

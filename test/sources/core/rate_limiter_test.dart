@@ -20,7 +20,11 @@ void main() {
   test('allows a burst of capacity, then paces at capacity/period', () async {
     final t = _FakeTime();
     final limiter = TokenBucketRateLimiter(
-        capacity: 50, period: const Duration(seconds: 5), clock: t.clock, sleep: t.sleep);
+      capacity: 50,
+      period: const Duration(seconds: 5),
+      clock: t.clock,
+      sleep: t.sleep,
+    );
     final start = t.now;
     for (var i = 0; i < 50; i++) {
       await limiter.acquire();
@@ -38,7 +42,12 @@ void main() {
 
   test('never exceeds capacity within any period window', () async {
     final t = _FakeTime();
-    final limiter = TokenBucketRateLimiter(capacity: 5, period: const Duration(seconds: 1), clock: t.clock, sleep: t.sleep);
+    final limiter = TokenBucketRateLimiter(
+      capacity: 5,
+      period: const Duration(seconds: 1),
+      clock: t.clock,
+      sleep: t.sleep,
+    );
     final stamps = <DateTime>[];
     for (var i = 0; i < 40; i++) {
       await limiter.acquire();
@@ -57,7 +66,12 @@ void main() {
 
   test('penalize blocks for the backoff', () async {
     final t = _FakeTime();
-    final limiter = TokenBucketRateLimiter(capacity: 50, period: const Duration(seconds: 5), clock: t.clock, sleep: t.sleep);
+    final limiter = TokenBucketRateLimiter(
+      capacity: 50,
+      period: const Duration(seconds: 5),
+      clock: t.clock,
+      sleep: t.sleep,
+    );
     await limiter.acquire();
     limiter.penalize(const Duration(seconds: 5));
     final before = t.now;

@@ -29,8 +29,8 @@ class CredentialsStoreImpl implements CredentialsStore {
     required this._configFile,
     required SecureKeyValueStore secureStorage,
     Map<String, SourceCredentials>? buildTime,
-  })  : _secure = secureStorage,
-        _buildTime = Map.unmodifiable(buildTime ?? BuildTimeCredentials.all());
+  }) : _secure = secureStorage,
+       _buildTime = Map.unmodifiable(buildTime ?? BuildTimeCredentials.all());
 
   static const keyPrefix = 'fermata.credentials.';
 
@@ -121,7 +121,11 @@ class CredentialsStoreImpl implements CredentialsStore {
   static SourceCredentials _clean(SourceCredentials c) {
     String? t(String? s) => (s == null || s.trim().isEmpty) ? null : s.trim();
     return SourceCredentials(
-        clientId: t(c.clientId), clientSecret: t(c.clientSecret), apiKey: t(c.apiKey), redirectUri: t(c.redirectUri));
+      clientId: t(c.clientId),
+      clientSecret: t(c.clientSecret),
+      apiKey: t(c.apiKey),
+      redirectUri: t(c.redirectUri),
+    );
   }
 
   static SourceCredentials? _decode(String raw) {
@@ -135,11 +139,11 @@ class CredentialsStoreImpl implements CredentialsStore {
 
   /// Accepts camelCase (documented) and snake_case keys.
   static SourceCredentials _fromLooseJson(Map<String, Object?> j) => SourceCredentials(
-        clientId: jsonString(j['clientId'] ?? j['client_id']),
-        clientSecret: jsonString(j['clientSecret'] ?? j['client_secret']),
-        apiKey: jsonString(j['apiKey'] ?? j['api_key']),
-        redirectUri: jsonString(j['redirectUri'] ?? j['redirect_uri']),
-      );
+    clientId: jsonString(j['clientId'] ?? j['client_id']),
+    clientSecret: jsonString(j['clientSecret'] ?? j['client_secret']),
+    apiKey: jsonString(j['apiKey'] ?? j['api_key']),
+    redirectUri: jsonString(j['redirectUri'] ?? j['redirect_uri']),
+  );
 
   Future<Map<String, SourceCredentials>> _readConfigFile() async {
     try {

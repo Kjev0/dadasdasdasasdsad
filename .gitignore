@@ -58,3 +58,6 @@ dart_defines*.json
 
 # Kotlin incremental build cache
 .kotlin/
+
+# Build/release artifacts (published as GitHub Release assets, not committed)
+/dist/

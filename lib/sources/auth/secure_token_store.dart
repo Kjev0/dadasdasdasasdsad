@@ -49,8 +49,7 @@ class SecureTokenStore implements TokenStore {
   }
 
   @override
-  Future<void> write(String sourceId, OAuthToken token) =>
-      _storage.write(keyFor(sourceId), jsonEncode(token.toJson()));
+  Future<void> write(String sourceId, OAuthToken token) => _storage.write(keyFor(sourceId), jsonEncode(token.toJson()));
 
   @override
   Future<void> delete(String sourceId) => _storage.delete(keyFor(sourceId));

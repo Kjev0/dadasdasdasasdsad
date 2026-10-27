@@ -24,7 +24,7 @@ class SqlFavoritesRepository implements FavoritesRepository {
   @override
   Future<void> setFavorite(Track track, bool favorite) async {
     await _db.db.transaction((txn) async {
-      await TrackStore.upsert(txn, [track]);
+      await TrackStore.upsert(txn, [track], preserveScanned: true);
       if (favorite) {
         await txn.rawInsert('INSERT OR IGNORE INTO favorites(track_id, added_at) VALUES (?, ?)', [track.id, nowMs()]);
       } else {

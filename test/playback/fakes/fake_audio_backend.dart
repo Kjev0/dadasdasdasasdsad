@@ -23,6 +23,7 @@ class FakeAudioBackend implements AudioBackend {
     this.defaultDuration = const Duration(seconds: 180),
     this.gapless = true,
     this.outputSelection = true,
+    this.loudness = true,
     List<AudioOutputDevice>? devices,
   })  : durations = durations ?? {},
         devices = devices ??
@@ -36,6 +37,7 @@ class FakeAudioBackend implements AudioBackend {
   final Duration defaultDuration;
   final bool gapless;
   final bool outputSelection;
+  final bool loudness;
   List<AudioOutputDevice> devices;
 
   final decks = <FakeAudioDeck>[];
@@ -91,7 +93,7 @@ class FakeAudioBackend implements AudioBackend {
   bool get supportsOutputDeviceSelection => outputSelection;
 
   @override
-  bool get supportsLoudnessNormalization => true;
+  bool get supportsLoudnessNormalization => loudness;
 
   @override
   Future<List<AudioOutputDevice>> outputDevices() async => devices;
@@ -142,6 +144,10 @@ class FakeAudioDeck implements AudioDeck {
   double speed = 1.0;
   bool disposed = false;
   Timer? _clock;
+
+  /// Simulates real backends that report a new position only a little
+  /// after a seek/open.
+  Duration positionLag = Duration.zero;
 
   final opens = <OpenCall>[];
   final volumes = <double>[];
@@ -264,7 +270,11 @@ class FakeAudioDeck implements AudioDeck {
   @override
   Future<void> seek(Duration position) async {
     seeks.add(position);
-    _position = position;
+    if (positionLag > Duration.zero) {
+      Timer(positionLag, () => _position = position);
+    } else {
+      _position = position;
+    }
     if (_state == DeckState.completed) _setState(DeckState.ready);
   }
 

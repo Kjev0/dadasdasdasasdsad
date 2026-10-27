@@ -1,9 +1,10 @@
 import 'dart:async';
-import 'dart:ui' show Rect, Size;
+import 'dart:ui' show Locale, Rect, Size;
 
 import 'package:fermata/core/contracts/playback.dart';
 import 'package:fermata/core/models/playback.dart';
 import 'package:fermata/core/models/track.dart';
+import 'package:fermata/l10n/gen/app_localizations.dart';
 import 'package:fermata/platform/desktop/hotkeys/accelerator.dart';
 import 'package:fermata/platform/desktop/hotkeys/global_hotkey_service.dart';
 import 'package:fermata/platform/desktop/tray/tray_availability.dart';
@@ -11,6 +12,7 @@ import 'package:fermata/platform/desktop/tray/tray_backend.dart';
 import 'package:fermata/platform/desktop/tray/tray_menu.dart';
 import 'package:fermata/platform/desktop/window/window_backend.dart';
 import 'package:fermata/platform/windows/smtc_port.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 Track track(String id, {String? title, String artist = 'Artist', String? album, Duration? duration, Uri? art, String? path}) =>
     Track(
@@ -417,6 +419,22 @@ class FakeSmtcPort implements SmtcPort {
   Stream<RepeatMode> get repeatRequests => repeatCtl.stream;
   @override
   Future<void> dispose() async => disposed = true;
+}
+
+AppLocalizations desktopTestStrings([String code = 'en']) => lookupAppLocalizations(Locale(code));
+
+/// Retries [body] (which uses `expect`) until it passes or [timeout].
+Future<void> eventually(FutureOr<void> Function() body, {Duration timeout = const Duration(seconds: 5)}) async {
+  final end = DateTime.now().add(timeout);
+  while (true) {
+    try {
+      await body();
+      return;
+    } on TestFailure {
+      if (DateTime.now().isAfter(end)) rethrow;
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+    }
+  }
 }
 
 /// Lets queued microtasks and zero-delay timers run.

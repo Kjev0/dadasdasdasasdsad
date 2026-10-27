@@ -94,10 +94,12 @@ Limitations to communicate honestly:
 
 * **Resuming from headphones or the car after a long pause (Android 12+).**
   Android 12+ restricts starting a foreground service from the background.
-  If the paused service was already demoted and the process killed, a media
-  button press may fail to restart playback
-  (`ForegroundServiceStartNotAllowedException`). Remedies, both user choices
-  in Settings: keep the notification while paused (sets
+  User actions (notification buttons, lock screen, media buttons dispatched
+  by the system) normally get a temporary exemption, but the audio_service
+  README warns that returning a demoted service to the foreground can still
+  throw `ForegroundServiceStartNotAllowedException` on some devices, and
+  non-user triggers such as headset auto-resume are not exempt. Remedies,
+  both user choices in Settings: keep the notification while paused (sets
   `androidStopForegroundOnPause = false`, takes effect after restarting the
   app), or allow unrestricted battery use (the opt-in permission above).
   Tapping the notification or opening the app always works.
@@ -157,6 +159,36 @@ because notification icons (`drawable/ic_stat_fermata`) are referenced only
 by name from Dart. The R8 mapping for deobfuscating Java stack traces is at
 `build/app/outputs/mapping/release/mapping.txt`; keep it with every release.
 
+### APK size
+
+Measured on 2026-10-27 (universal APKs: arm64-v8a, armeabi-v7a, x86_64;
+native libraries are stored uncompressed and page-aligned, so the APK size
+is close to the installed size):
+
+| Build | Size |
+|---|---|
+| `app-debug.apk` | 195.6 MB (JIT engine + Vulkan validation layers) |
+| `app-release.apk` | 74.8 MB |
+
+Release native libraries per ABI (arm64-v8a): `libflutter.so` 11.8 MB,
+`libapp.so` (Dart AOT) 3.3 MB, and about 9.7 MB that Android never uses:
+
+* `libmpv.so` 6.2 MB + `libmediakitandroidhelper.so` 0.4 MB, from
+  `media_kit_libs_audio` (Android uses just_audio, not media_kit). Fix in
+  `pubspec.yaml`: depend on `media_kit_libs_linux` and
+  `media_kit_libs_windows_audio` instead of the all-platform
+  `media_kit_libs_audio`. That saves about 20 MB on the universal APK; the
+  Dart side must then never call `MediaKit.ensureInitialized()` on Android.
+* `libcnativeapi.so` 1.3 MB: `tray_manager` 0.8's native code, which its
+  build hook also compiles for Android. There is no opt-out today.
+* `libsqlite3.so` 1.75 MB: package `sqlite3`'s bundled SQLite (sqflite uses
+  the system SQLite on Android). Only needed if `sqlite3` /
+  `sqflite_common_ffi` is used on Android.
+
+`flutter build apk --split-per-abi` produces one APK per ABI (about a third of
+the universal size each) for sideloading; Play serves per-ABI splits from an
+`.aab` automatically.
+
 ## Signing
 
 Release signing is configured in `android/app/build.gradle.kts` and resolved
@@ -166,7 +198,9 @@ in this order:
    `android/key.properties.example`):
 
    ```properties
-   storeFile=/home/you/fermata-release.jks   # absolute, or relative to android/
+   # storeFile: absolute, or relative to the android/ directory.
+   # (.properties files have no inline comments: keep comments on their own line.)
+   storeFile=/home/you/fermata-release.jks
    storePassword=...
    keyAlias=fermata
    keyPassword=...

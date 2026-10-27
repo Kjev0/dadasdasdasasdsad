@@ -17,10 +17,10 @@ String fixture(String name) => File('test/sources/core/fixtures/$name').readAsSt
 Object? fixtureJson(String name) => jsonDecode(fixture(name));
 
 http.Response jsonResponse(String body, {int status = 200, Map<String, String>? headers}) => http.Response.bytes(
-      utf8.encode(body),
-      status,
-      headers: {'content-type': 'application/json; charset=utf-8', ...?headers},
-    );
+  utf8.encode(body),
+  status,
+  headers: {'content-type': 'application/json; charset=utf-8', ...?headers},
+);
 
 /// A MockClient-backed [FermataHttp] that records every request.
 class RecordingHttp {

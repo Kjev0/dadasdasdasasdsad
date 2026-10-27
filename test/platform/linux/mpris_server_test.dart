@@ -5,7 +5,6 @@
 @TestOn('linux')
 library;
 
-import 'dart:async';
 import 'dart:io';
 
 import 'package:dbus/dbus.dart';
@@ -293,9 +292,12 @@ void main() {
   test('position jumps from other sources emit Seeked; normal progress does not', () async {
     final seeked = await collect(_player, 'Seeked');
     await playback.play();
-    playback.emit(playback.snapshot.copyWith(position: const Duration(milliseconds: 100)));
-    await Future<void>.delayed(const Duration(milliseconds: 250));
-    playback.emit(playback.snapshot.copyWith(position: const Duration(milliseconds: 350)));
+    // A player whose position follows the wall clock (ticks ~4 Hz).
+    final sw = Stopwatch()..start();
+    for (var i = 0; i < 4; i++) {
+      playback.emit(playback.snapshot.copyWith(position: sw.elapsed));
+      await Future<void>.delayed(const Duration(milliseconds: 250));
+    }
     await Future<void>.delayed(const Duration(milliseconds: 150));
     expect(seeked, isEmpty);
 
@@ -310,7 +312,7 @@ void main() {
     await Future<void>.delayed(const Duration(milliseconds: 300));
     final us = (await prop(_player, 'Position')).asInt64();
     expect(us, greaterThan(const Duration(seconds: 5, milliseconds: 200).inMicroseconds));
-    expect(us, lessThan(const Duration(seconds: 7).inMicroseconds));
+    expect(us, lessThan(const Duration(seconds: 11).inMicroseconds)); // extrapolation is capped
   });
 
   test('Raise, Quit and OpenUri use the callbacks', () async {

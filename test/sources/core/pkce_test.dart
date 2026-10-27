@@ -15,8 +15,10 @@ void main() {
       expect(pair.verifier, 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk');
       expect(pair.challenge, 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM');
       expect(pair.method, 'S256');
-      expect(PkcePair.challengeFor('dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk'),
-          'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM');
+      expect(
+        PkcePair.challengeFor('dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk'),
+        'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM',
+      );
     });
 
     test('generated verifiers use 64 random bytes and the unreserved alphabet', () {

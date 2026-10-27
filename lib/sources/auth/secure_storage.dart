@@ -22,12 +22,9 @@ abstract class SecureKeyValueStore {
 /// (libsecret).
 class FlutterSecureKeyValueStore implements SecureKeyValueStore {
   FlutterSecureKeyValueStore([FlutterSecureStorage? storage])
-      : _storage = storage ??
-            const FlutterSecureStorage(
-              aOptions: AndroidOptions(),
-              lOptions: LinuxOptions(),
-              wOptions: WindowsOptions(),
-            );
+    : _storage =
+          storage ??
+          const FlutterSecureStorage(aOptions: AndroidOptions(), lOptions: LinuxOptions(), wOptions: WindowsOptions());
 
   final FlutterSecureStorage _storage;
 
@@ -87,8 +84,10 @@ class ProbedSecureStorage implements SecureKeyValueStore {
     final store = backend ?? FlutterSecureKeyValueStore();
     final ok = await probe(store, timeout: probeTimeout, random: random);
     if (!ok) {
-      _log.warning('Secure storage is unavailable (no Secret Service / keyring?). '
-          'Tokens and credentials are kept in memory for this session only.');
+      _log.warning(
+        'Secure storage is unavailable (no Secret Service / keyring?). '
+        'Tokens and credentials are kept in memory for this session only.',
+      );
     }
     return ProbedSecureStorage._(store, ok);
   }
@@ -98,7 +97,11 @@ class ProbedSecureStorage implements SecureKeyValueStore {
 
   /// Write → read → delete round trip; false on any error, mismatch or
   /// timeout (the Secret Service can hang when no keyring daemon answers).
-  static Future<bool> probe(SecureKeyValueStore store, {Duration timeout = const Duration(seconds: 4), Random? random}) async {
+  static Future<bool> probe(
+    SecureKeyValueStore store, {
+    Duration timeout = const Duration(seconds: 4),
+    Random? random,
+  }) async {
     final value = 'probe-${(random ?? Random()).nextInt(1 << 30)}';
     try {
       return await () async {
@@ -106,8 +109,7 @@ class ProbedSecureStorage implements SecureKeyValueStore {
         final read = await store.read(probeKey);
         await store.delete(probeKey);
         return read == value;
-      }()
-          .timeout(timeout);
+      }().timeout(timeout);
     } catch (e) {
       _log.fine('Secure storage probe failed: $e');
       return false;

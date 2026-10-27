@@ -190,6 +190,11 @@ class GlobalHotkeyServiceImpl implements GlobalHotkeyService {
         _errors[action] = l10n.desktopHotkeyErrorDuplicate(binding);
         continue;
       }
+      if (_platform.isWindows && accel.isMediaKey) {
+        // Windows delivers hardware media keys through SMTC; grabbing them
+        // as hotkeys too would trigger the action twice.
+        continue;
+      }
       try {
         final run = _actions[action]!;
         await _backend.register(action, accel, () => _invoke(action, run));

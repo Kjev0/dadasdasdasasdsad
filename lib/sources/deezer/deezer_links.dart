@@ -32,8 +32,10 @@ class DeezerLink {
 /// * short links `https://link.deezer.com/s/<code>` and the legacy
 ///   `https://deezer.page.link/<code>` → resolved by following redirects.
 abstract final class DeezerLinks {
-  static final _path = RegExp(r'^/(?:[a-z]{2}(?:-[a-z]{2})?/)?(track|album|artist|playlist|profile|user)/(\d+)/?',
-      caseSensitive: false);
+  static final _path = RegExp(
+    r'^/(?:[a-z]{2}(?:-[a-z]{2})?/)?(track|album|artist|playlist|profile|user)/(\d+)/?',
+    caseSensitive: false,
+  );
 
   static bool isShortLink(Uri uri) {
     final host = uri.host.toLowerCase();
@@ -76,7 +78,12 @@ abstract final class DeezerLinks {
     final uri = _toUri(input);
     if (uri == null) return null;
     if (!isShortLink(uri)) return parse(input);
-    final target = await resolveRedirects(http, uri, cancel: cancel);
+    final target = await resolveRedirects(
+      http,
+      uri,
+      cancel: cancel,
+      stopWhen: (u) => !isShortLink(u) && parse(u.toString()) != null,
+    );
     return parse(target.toString());
   }
 

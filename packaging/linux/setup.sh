@@ -138,7 +138,7 @@ cleanup() {
   local rc=$?
   if ((INSTALL_STARTED && !INSTALL_DONE)); then
     # Record what was already written so --uninstall can still remove it.
-    write_manifest merged >/dev/null 2>&1 || true
+    if ((${#NEW_ENTRIES[@]})); then write_manifest merged >/dev/null 2>&1 || true; fi
     error "Installation did not complete. Run this installer again, or remove the partial installation with: $0 --uninstall$( ((SYSTEM)) && printf ' --system')"
   fi
   if [[ -n "$WORK" && -d "$WORK" ]]; then rm -rf -- "$WORK"; fi
@@ -222,7 +222,7 @@ detect_distro() {
       debian|ubuntu|linuxmint|pop|elementary|zorin|kali|raspbian|neon|deepin|pureos|devuan|mx|tuxedo)
         FAMILY="debian"; PKG_TOOL="apt-get" ;;
       fedora|rhel|centos|rocky|almalinux|ol|nobara|ultramarine)
-        FAMILY="fedora"; PKG_TOOL="dnf"; have dnf || PKG_TOOL="yum" ;;
+        FAMILY="fedora"; PKG_TOOL="dnf"; if ! have dnf && have yum; then PKG_TOOL="yum"; fi ;;
       arch|manjaro|endeavouros|garuda|cachyos|artix|arcolinux)
         FAMILY="arch"; PKG_TOOL="pacman" ;;
       suse|opensuse|opensuse-*|sles|sled)
@@ -307,6 +307,18 @@ have_soname() {
   return 1
 }
 
+# have_dep SONAME "ALTERNATIVES": prints the soname found. A soname faked
+# missing (FERMATA_SETUP_FAKE_MISSING) hides its alternatives too.
+have_dep() {
+  local a
+  if have_soname "$1"; then printf '%s\n' "$1"; return 0; fi
+  is_fake_missing "$1" && return 1
+  for a in $2; do
+    if have_soname "$a"; then printf '%s\n' "$a"; return 0; fi
+  done
+  return 1
+}
+
 # Look up a table row by soname: sets ROW_* variables; 1 if unknown.
 ROW_KIND=""; ROW_SO=""; ROW_ALTS=""; ROW_DEB=""; ROW_FED=""; ROW_ARCH=""; ROW_SUSE=""
 find_row() {
@@ -316,6 +328,7 @@ find_row() {
     IFS='|' read -r ROW_KIND ROW_SO ROW_ALTS _ ROW_DEB ROW_FED ROW_ARCH ROW_SUSE <<<"$line"
     [[ "$ROW_SO" == "$1" ]] && return 0
   done <<<"$DEPS_TABLE"
+  ROW_KIND=""; ROW_SO=""; ROW_ALTS=""; ROW_DEB=""; ROW_FED=""; ROW_ARCH=""; ROW_SUSE=""
   return 1
 }
 
@@ -397,7 +410,7 @@ scan_bundle_with_ldd() {
 
 # Prints the report; returns 0 if every required library is present.
 check_runtime_deps() {
-  local bundle_dir="${1:-}" line kind so alts label a found
+  local bundle_dir="${1:-}" line kind so alts label found
   MISSING_REQ=(); MISSING_OPT=(); GLIBC_NEEDED=""
   detect_distro
   step "Checking runtime libraries ($OS_NAME)"
@@ -405,12 +418,7 @@ check_runtime_deps() {
     [[ -n "$line" ]] || continue
     IFS='|' read -r kind so alts label _ <<<"$line"
     [[ "$kind" == map ]] && continue
-    found=""
-    if have_soname "$so"; then found="$so"
-    elif ! is_fake_missing "$so"; then
-      for a in $alts; do if have_soname "$a"; then found="$a"; break; fi; done
-    fi
-    if [[ -n "$found" ]]; then
+    if found="$(have_dep "$so" "$alts")"; then
       ok "$label ${C_DIM}($found)${C_OFF}"
     elif [[ "$kind" == opt ]]; then
       warn "optional: $label: $so not found"
@@ -538,14 +546,8 @@ resolve_missing_deps() {
   LDCACHE_LOADED=0
   local still=()
   for so in ${MISSING_REQ[@]+"${MISSING_REQ[@]}"}; do
-    if ! have_soname "$so"; then
-      if find_row "$so" && [[ -n "$ROW_ALTS" ]]; then
-        local a hit=0
-        for a in $ROW_ALTS; do if have_soname "$a"; then hit=1; break; fi; done
-        ((hit)) && continue
-      fi
-      still+=("$so")
-    fi
+    find_row "$so" || true
+    have_dep "$so" "$ROW_ALTS" >/dev/null || still+=("$so")
   done
   if ((${#still[@]})); then
     warn "Still missing after installing packages: ${still[*]}"
@@ -689,7 +691,11 @@ do_install() {
     if ! check_runtime_deps "$PAYLOAD_DIR"; then
       if ! resolve_missing_deps; then
         if [[ -n "$GLIBC_NEEDED" ]]; then die "Fermata cannot run on this system (glibc too old)." "$EXIT_MISSING_DEPS"; fi
-        warn "Fermata will not start until the missing libraries above are installed."
+        if [[ "${MISSING_REQ[*]}" == libmpv.so.2 ]]; then
+          warn "Fermata starts, but cannot play audio until libmpv is installed."
+        else
+          warn "Fermata will not start until the missing libraries above are installed."
+        fi
         confirm "Install Fermata anyway?" || exit "$EXIT_MISSING_DEPS"
       fi
     elif ((${#MISSING_OPT[@]})); then

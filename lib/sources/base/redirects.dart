@@ -14,16 +14,22 @@ import '../../core/util/cancel_token.dart';
 /// the final URL, so this helper uses the same underlying client
 /// (`FermataHttp.raw`, same User-Agent) with redirects disabled, plus a
 /// per-hop timeout and cancellation. Only GET is used; bodies are drained.
+///
+/// [stopWhen] ends the walk early once a URL is good enough (e.g. it already
+/// contains the id we need), so the final — often large — page is never
+/// requested.
 Future<Uri> resolveRedirects(
   FermataHttp http0,
   Uri uri, {
   int maxHops = 6,
   CancelToken? cancel,
   Duration timeout = const Duration(seconds: 15),
+  bool Function(Uri uri)? stopWhen,
 }) async {
   var current = uri;
   for (var hop = 0; hop <= maxHops; hop++) {
     cancel?.throwIfCanceled();
+    if (hop > 0 && stopWhen != null && stopWhen(current)) return current;
     final request = http.Request('GET', current)
       ..followRedirects = false
       ..headers['User-Agent'] = http0.userAgent;

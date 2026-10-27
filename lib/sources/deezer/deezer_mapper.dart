@@ -98,11 +98,7 @@ abstract final class DeezerMapper {
       artworkUrl: coverOf(alb.isEmpty ? t : alb),
       permalink: jsonHttpUri(t['link']) ?? trackLink(id),
       availability: availabilityOf(t, checkedAt: checkedAt),
-      extra: {
-        if (preview != null) extraPreview: preview.toString(),
-        extraArtistId: ?artistId,
-        extraAlbumId: ?albumId,
-      },
+      extra: {if (preview != null) extraPreview: preview.toString(), extraArtistId: ?artistId, extraAlbumId: ?albumId},
     );
   }
 
@@ -179,7 +175,7 @@ abstract final class DeezerMapper {
 
   /// Genre names from `/genre`, without the catch-all "All" (id 0).
   static Map<String, String> genreIds(Object? data) => {
-        for (final g in asJsonMapList(data))
-          if (jsonInt(g['id']) != 0 && jsonString(g['name']) != null) jsonString(g['name'])!: jsonString(g['id'])!,
-      };
+    for (final g in asJsonMapList(data))
+      if (jsonInt(g['id']) != 0 && jsonString(g['name']) != null) jsonString(g['name'])!: jsonString(g['id'])!,
+  };
 }

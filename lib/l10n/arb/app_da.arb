@@ -267,5 +267,10 @@
   "shellGlassModeSolid": "Massive flader",
   "shellGlassModeTranslucent": "Gennemsigtig uden sløring",
   "shellGlassModeBlurred": "Gennemsigtig med sløring",
-  "shellFileYourFile": "Lokal fil"
+  "shellFileYourFile": "Lokal fil",
+  "shellCloseTitle": "Vil du lukke Fermata?",
+  "shellCloseMessage": "Fermata kan spille videre i systembakken eller lukke helt ned.",
+  "shellCloseMinimize": "Spil videre i systembakken",
+  "shellCloseQuit": "Afslut",
+  "shellCloseRemember": "Husk mit valg"
 }

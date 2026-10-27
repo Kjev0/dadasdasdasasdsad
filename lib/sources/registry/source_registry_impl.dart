@@ -26,10 +26,8 @@ final _log = Logger('sources.registry');
 /// * [searchAll] queries ready, enabled sources concurrently with a
 ///   per-source timeout and emits each source's results as they arrive.
 class SourceRegistryImpl implements SourceRegistry {
-  SourceRegistryImpl({
-    required SettingsStore settings,
-    this.searchTimeout = const Duration(seconds: 10),
-  }) : _settings = settings {
+  SourceRegistryImpl({required SettingsStore settings, this.searchTimeout = const Duration(seconds: 10)})
+    : _settings = settings {
     _lastServices = settings.current.services;
     _settingsSub = settings.changes.listen((s) {
       final prev = _lastServices;
@@ -104,9 +102,12 @@ class SourceRegistryImpl implements SourceRegistry {
       throw ArgumentError.value(source.id, 'source', 'A source with this id is already registered');
     }
     _sources.add(source);
-    _authSubs[source.id] = source.authStateChanges.listen((_) => _emitChange(), onError: (Object e) {
-      _log.warning('Auth state stream of ${source.id} failed', e);
-    });
+    _authSubs[source.id] = source.authStateChanges.listen(
+      (_) => _emitChange(),
+      onError: (Object e) {
+        _log.warning('Auth state stream of ${source.id} failed', e);
+      },
+    );
     _emitChange();
   }
 
@@ -126,13 +127,15 @@ class SourceRegistryImpl implements SourceRegistry {
   /// Calls `init()` on every source; one failing source does not stop the
   /// others (sources must not throw for missing credentials anyway).
   Future<void> initAll() async {
-    await Future.wait(_sources.map((s) async {
-      try {
-        await s.init();
-      } catch (e, st) {
-        _log.severe('Initialising source ${s.id} failed', e, st);
-      }
-    }));
+    await Future.wait(
+      _sources.map((s) async {
+        try {
+          await s.init();
+        } catch (e, st) {
+          _log.severe('Initialising source ${s.id} failed', e, st);
+        }
+      }),
+    );
     _emitChange();
   }
 
@@ -181,22 +184,27 @@ class SourceRegistryImpl implements SourceRegistry {
   }
 
   static Set<SearchType> _searchTypesOf(MusicSource s, Set<SearchType> types) => {
-        for (final t in types)
-          if (s.supports(switch (t) {
-            SearchType.tracks => SourceCapability.searchTracks,
-            SearchType.artists => SourceCapability.searchArtists,
-            SearchType.albums => SourceCapability.searchAlbums,
-            SearchType.playlists => SourceCapability.searchPlaylists,
-          }))
-            t,
-      };
+    for (final t in types)
+      if (s.supports(switch (t) {
+        SearchType.tracks => SourceCapability.searchTracks,
+        SearchType.artists => SourceCapability.searchArtists,
+        SearchType.albums => SourceCapability.searchAlbums,
+        SearchType.playlists => SourceCapability.searchPlaylists,
+      }))
+        t,
+  };
 
   /// Runs all requested search types of one source in parallel within
   /// [searchTimeout]. Never throws: failures end up in `error`. When some
   /// types succeed and others fail, the successful pages are returned and
   /// the failures are only logged; `error` is set when nothing succeeded
   /// (a timeout becomes a [NetworkException] with `isTimeout`).
-  Future<SourceSearchResults> _searchOne(MusicSource source, String q, Set<SearchType> types, CancelToken cancel) async {
+  Future<SourceSearchResults> _searchOne(
+    MusicSource source,
+    String q,
+    Set<SearchType> types,
+    CancelToken cancel,
+  ) async {
     var timedOut = false;
     final timer = Timer(searchTimeout, () {
       timedOut = true;
@@ -238,8 +246,10 @@ class SourceRegistryImpl implements SourceRegistry {
     Object? error;
     if (succeeded == 0) {
       error = timedOut
-          ? NetworkException('${source.displayName} did not answer within ${searchTimeout.inSeconds} s',
-              isTimeout: true)
+          ? NetworkException(
+              '${source.displayName} did not answer within ${searchTimeout.inSeconds} s',
+              isTimeout: true,
+            )
           : (errors.isNotEmpty ? errors.first : const OperationCanceledException());
       _log.info('Search on ${source.id} failed: $error');
     } else if (errors.isNotEmpty || timedOut) {

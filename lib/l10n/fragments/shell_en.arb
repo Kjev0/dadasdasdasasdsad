@@ -72,16 +72,43 @@
   "shellAddedToQueue": "Added to queue",
   "shellPlayingNext": "Plays next",
   "shellAddedToPlaylist": "Added to {playlist}",
-  "@shellAddedToPlaylist": {"placeholders": {"playlist": {"type": "String"}}},
+  "@shellAddedToPlaylist": {
+    "placeholders": {
+      "playlist": {
+        "type": "String"
+      }
+    }
+  },
   "shellTracksAddedToPlaylist": "{count, plural, =1{1 track added to {playlist}} other{{count} tracks added to {playlist}}}",
-  "@shellTracksAddedToPlaylist": {"placeholders": {"count": {"type": "int"}, "playlist": {"type": "String"}}},
+  "@shellTracksAddedToPlaylist": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "playlist": {
+        "type": "String"
+      }
+    }
+  },
   "shellLiked": "Added to Liked songs",
   "shellUnliked": "Removed from Liked songs",
   "shellDownloadQueued": "Download added",
   "shellDownloadsQueued": "{count, plural, =1{1 download added} other{{count} downloads added}}",
-  "@shellDownloadsQueued": {"placeholders": {"count": {"type": "int"}}},
+  "@shellDownloadsQueued": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "shellDownloadsRejected": "{count, plural, =1{1 track can't be downloaded} other{{count} tracks can't be downloaded}}",
-  "@shellDownloadsRejected": {"placeholders": {"count": {"type": "int"}}},
+  "@shellDownloadsRejected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "shellDownloadRemoved": "Download removed",
   "shellLinkCopied": "Link copied",
   "shellCouldNotOpenLink": "Couldn't open the link.",
@@ -92,9 +119,21 @@
   "shellAddToPlaylistTitle": "Add to playlist",
   "shellAddToPlaylistEmpty": "Create your first playlist to add tracks to it.",
   "shellTypeToConfirm": "Type {word} to confirm",
-  "@shellTypeToConfirm": {"placeholders": {"word": {"type": "String"}}},
+  "@shellTypeToConfirm": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
   "shellSelectedCount": "{count, plural, =1{1 selected} other{{count} selected}}",
-  "@shellSelectedCount": {"placeholders": {"count": {"type": "int"}}},
+  "@shellSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "shellSelectAll": "Select all",
   "shellClearSelection": "Clear selection",
   "shellSelect": "Select",
@@ -105,7 +144,13 @@
   "shellClearSearch": "Clear search",
   "shellBadgePreview": "Preview",
   "shellBadgeExternal": "Plays on {provider}",
-  "@shellBadgeExternal": {"placeholders": {"provider": {"type": "String"}}},
+  "@shellBadgeExternal": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
   "shellBadgeDownloaded": "Downloaded",
   "shellBadgeUnavailable": "Unavailable",
   "shellBadgeExplicit": "Explicit",
@@ -120,7 +165,13 @@
   "shellMenuGoToArtist": "Go to artist",
   "shellMenuGoToAlbum": "Go to album",
   "shellMenuOpenOn": "Open on {provider}",
-  "@shellMenuOpenOn": {"placeholders": {"provider": {"type": "String"}}},
+  "@shellMenuOpenOn": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
   "shellMenuCopyLink": "Copy link",
   "shellMoreOptions": "More options",
   "shellNowPlayingIndicator": "Now playing",
@@ -129,5 +180,10 @@
   "shellGlassModeSolid": "Solid surfaces",
   "shellGlassModeTranslucent": "Translucent, no blur",
   "shellGlassModeBlurred": "Translucent with blur",
-  "shellFileYourFile": "Local file"
+  "shellFileYourFile": "Local file",
+  "shellCloseTitle": "Close Fermata?",
+  "shellCloseMessage": "Fermata can keep playing in the system tray, or quit completely.",
+  "shellCloseMinimize": "Keep playing in tray",
+  "shellCloseQuit": "Quit",
+  "shellCloseRemember": "Remember my choice"
 }

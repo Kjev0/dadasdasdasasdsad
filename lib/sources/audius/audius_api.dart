@@ -15,8 +15,8 @@ import '../base/json_utils.dart';
 ///   lists only `https://api.audius.co` and the docs say to always use it.
 class AudiusApi {
   AudiusApi(this._http, {String? Function()? apiKey, Uri? baseUri, this.appName = 'Fermata'})
-      : _apiKey = apiKey ?? (() => null),
-        baseUri = baseUri ?? Uri.parse('https://api.audius.co/v1');
+    : _apiKey = apiKey ?? (() => null),
+      baseUri = baseUri ?? Uri.parse('https://api.audius.co/v1');
 
   final FermataHttp _http;
   final String? Function() _apiKey;
@@ -65,10 +65,8 @@ class AudiusApi {
   }
 
   /// Stream endpoint; the player follows the 302 to a content node.
-  Uri streamUri(String trackId, {bool preview = false}) => uri('tracks/$trackId/stream', {
-        if (preview) 'preview': 'true',
-        'api_key': apiKey,
-      });
+  Uri streamUri(String trackId, {bool preview = false}) =>
+      uri('tracks/$trackId/stream', {if (preview) 'preview': 'true', 'api_key': apiKey});
 
   /// Official download endpoint (302 to the original or MP3 file; 403 for
   /// download-gated tracks).

@@ -3,7 +3,6 @@
 @TestOn('linux')
 library;
 
-import 'dart:async';
 
 import 'package:dbus/dbus.dart';
 import 'package:fermata/core/models/playback.dart';

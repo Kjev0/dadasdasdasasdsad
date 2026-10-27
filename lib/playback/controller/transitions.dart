@@ -89,6 +89,7 @@ extension _Transitions on PlaybackControllerImpl {
     _finishCrossfade();
     _dropPrefetch();
     _loaded = null;
+    _seekTarget = null;
     _pendingPosition = position;
     _playIntent = false;
     _status = status;
@@ -222,6 +223,7 @@ extension _Transitions on PlaybackControllerImpl {
     }
     _loaded = loaded;
     _activeDeck = deckIndex;
+    _expectPosition(start);
     _status = deck.state == DeckState.idle || deck.state == DeckState.completed
         ? PlayerStatus.ready
         : _statusOf(deck.state);
@@ -311,7 +313,7 @@ extension _Transitions on PlaybackControllerImpl {
 
   Future<void> _onItemFailed(QueueItem item, Object error) async {
     _failureStreak++;
-    _error = PlaybackControllerImpl._errorCode(error);
+    _error = _errorCode(error);
     final settings = _settings.current.playback;
     final hasNext = _queue.peekNextIndex(manual: true) != null;
     // Guard against endless loops: stop after one full pass of failures.
@@ -370,6 +372,7 @@ extension _Transitions on PlaybackControllerImpl {
     _emitQueue();
     if (next.uid != pf.item.uid) return _loadCurrent(autoplay: true);
     _loaded = _Loaded(item: next, resolved: pf.resolved!, deck: deckIndex, clock: ListenClock(_now));
+    _seekTarget = null;
     final state = _deckAt(deckIndex).state;
     _status = state == DeckState.idle || state == DeckState.completed ? PlayerStatus.ready : _statusOf(state);
     if (_playIntent) _markStarted();

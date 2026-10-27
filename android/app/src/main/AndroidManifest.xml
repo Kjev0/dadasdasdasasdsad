@@ -56,12 +56,16 @@
         usesCleartextTraffic / networkSecurityConfig: every provider is HTTPS-only.
         The only cleartext traffic allowed is to 127.0.0.1 / localhost, which
         just_audio's local proxy needs (request headers, caching, stream sources).
+
+        roundIcon: TEMPORARY @mipmap/ic_launcher until the branding work adds
+        @mipmap/ic_launcher_round; switch it then (the build fails if it points
+        at a resource that does not exist).
     -->
     <application
         android:name="${applicationName}"
         android:label="Fermata"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:usesCleartextTraffic="false"

@@ -157,6 +157,22 @@ void main() {
     });
   });
 
+  test('periodic saves of a large queue reuse the encoded track list', () {
+    fake((async) {
+      final h = Harness(async, trackLength: const Duration(minutes: 5))..init();
+      final store = h.memoryStore!;
+      h.playAll(h.tracks(2000));
+      h.elapse(const Duration(seconds: 25));
+      final docs = store.documents;
+      expect(docs.length, greaterThanOrEqualTo(3));
+      String listsOf(String doc) => doc.substring(doc.indexOf('"items"'), doc.indexOf(',"index"'));
+      expect(listsOf(docs.last), listsOf(docs[docs.length - 2]));
+      final restored = jsonDecode(docs.last) as Map<String, Object?>;
+      expect(((restored['queue'] as Map)['items'] as List), hasLength(2000));
+      expect(restored['positionMs'], greaterThan(15000));
+    });
+  });
+
   test('settings with defaults restore the queue (sanity of defaults)', () {
     expect(const AppSettings().playback.restoreQueueOnStartup, isTrue);
     expect(const AppSettings().playback.autoPlayOnStartup, isFalse);

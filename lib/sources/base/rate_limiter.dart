@@ -15,15 +15,11 @@ typedef Sleeper = Future<void> Function(Duration duration);
 /// a token is available. [penalize] empties the bucket and blocks for a
 /// while (used when the provider signals "quota exceeded").
 class TokenBucketRateLimiter {
-  TokenBucketRateLimiter({
-    required this.capacity,
-    required this.period,
-    Clock? clock,
-    Sleeper? sleep,
-  })  : assert(capacity > 0),
-        _clock = clock ?? DateTime.now,
-        _sleep = sleep ?? ((d) => Future<void>.delayed(d)),
-        _tokens = capacity.toDouble() {
+  TokenBucketRateLimiter({required this.capacity, required this.period, Clock? clock, Sleeper? sleep})
+    : assert(capacity > 0),
+      _clock = clock ?? DateTime.now,
+      _sleep = sleep ?? ((d) => Future<void>.delayed(d)),
+      _tokens = capacity.toDouble() {
     _last = _clock();
   }
 

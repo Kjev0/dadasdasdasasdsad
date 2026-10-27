@@ -927,4 +927,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shellFileYourFile => 'Local file';
+
+  @override
+  String get shellCloseTitle => 'Close Fermata?';
+
+  @override
+  String get shellCloseMessage =>
+      'Fermata can keep playing in the system tray, or quit completely.';
+
+  @override
+  String get shellCloseMinimize => 'Keep playing in tray';
+
+  @override
+  String get shellCloseQuit => 'Quit';
+
+  @override
+  String get shellCloseRemember => 'Remember my choice';
 }

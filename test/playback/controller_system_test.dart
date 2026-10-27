@@ -149,12 +149,16 @@ void main() {
     });
   });
 
-  test('loudness mode falls back to track ReplayGain when unsupported', () {
+  test('loudness mode is passed through, or falls back to track ReplayGain when unsupported', () {
     fake((async) {
-      final h = Harness(async,
-          settings: withPlayback((p) => p.copyWith(normalizeVolume: true, normalizationMode: NormalizationMode.loudness)))
-        ..init();
-      expect(h.backend.normalization.mode, NormalizationMode.loudness, reason: 'fake supports loudness');
+      final settings =
+          withPlayback((p) => p.copyWith(normalizeVolume: true, normalizationMode: NormalizationMode.loudness));
+      final desktop = Harness(async, settings: settings)..init();
+      expect(desktop.backend.normalization.mode, NormalizationMode.loudness);
+
+      final android = Harness(async, settings: settings, loudness: false, os: HostOs.android)..init();
+      expect(android.backend.normalization.mode, NormalizationMode.replayGainTrack);
+      expect(android.backend.normalization.enabled, isTrue);
     });
   });
 }

@@ -48,14 +48,22 @@ abstract final class AppRoutes {
     return null;
   }
 
-  /// Album route for [track] (`extra['albumId']` for remote tracks, the
-  /// album title for local files), if one can be built.
+  /// Album route for [track] (`extra['albumId']` or
+  /// `extra['<sourceId>.albumId']` for remote tracks, the album title for
+  /// local files), if one can be built.
   static String? albumForTrack(Track track) {
-    final albumId = track.extra['albumId'];
+    final albumId = track.extra['albumId'] ?? track.extra['${track.sourceId}.albumId'];
     if (albumId != null && albumId.isNotEmpty) return album(track.sourceId, albumId);
     if (track.isLocal && (track.album ?? '').isNotEmpty) return album(SourceIds.local, track.album!);
     return null;
   }
+}
+
+/// The uploader's page on the provider (`extra['uploaderUrl']` or
+/// `extra['<sourceId>.uploaderUrl']`), used for SoundCloud attribution.
+Uri? uploaderUriOf(Track track) {
+  final raw = track.extra['uploaderUrl'] ?? track.extra['${track.sourceId}.uploaderUrl'];
+  return raw == null ? null : Uri.tryParse(raw);
 }
 
 /// Section ids for `/settings/:section`. The Settings page (ui-settings)

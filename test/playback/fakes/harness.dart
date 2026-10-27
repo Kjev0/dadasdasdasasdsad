@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
 
@@ -22,13 +21,14 @@ class Harness {
     AppSettings settings = const AppSettings(),
     Duration trackLength = const Duration(seconds: 10),
     bool gapless = true,
+    bool loudness = true,
     HostOs os = HostOs.linux,
     this.smartQueue,
     QueueStateStore? store,
     PlaybackTuning tuning = const PlaybackTuning(),
   }) : memoryStore = store == null ? MemoryQueueStateStore() : null {
     now = async.getClock(DateTime(2026, 3, 1, 12)).now;
-    backend = FakeAudioBackend(defaultDuration: trackLength, gapless: gapless);
+    backend = FakeAudioBackend(defaultDuration: trackLength, gapless: gapless, loudness: loudness);
     resolver = FakeStreamResolver();
     settingsStore = SettingsStore.inMemory(settings);
     controller = PlaybackControllerImpl(

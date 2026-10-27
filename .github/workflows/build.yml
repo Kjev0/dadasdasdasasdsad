@@ -1,0 +1,334 @@
+# Fermata CI: analyze + test, build the Linux/Windows/Android packages, and
+# publish a GitHub Release for v* tags. See docs/BUILDING.md and docs/RELEASING.md.
+#
+# Optional repository secrets (everything builds without them):
+#   FERMATA_DART_DEFINES_JSON   contents of dart_defines.json (developer client IDs)
+#   FERMATA_KEYSTORE_BASE64     base64 of the Android release keystore (.jks)
+#   FERMATA_KEYSTORE_PASSWORD, FERMATA_KEY_ALIAS, FERMATA_KEY_PASSWORD
+#   WINDOWS_CERT_PFX_BASE64     base64 of an Authenticode code-signing certificate (.pfx)
+#   WINDOWS_CERT_PASSWORD
+name: Build
+
+on:
+  push:
+    branches: ['**']
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # Never cancel a release build.
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
+
+env:
+  FLUTTER_VERSION: '3.47.8'
+
+jobs:
+  test:
+    name: Analyze and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Check that the tag matches pubspec.yaml
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          version="$(sed -n -E 's/^version:[[:space:]]*([^[:space:]+#]+).*/\1/p' pubspec.yaml | head -n1)"
+          if [[ "v$version" != "$GITHUB_REF_NAME" ]]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match pubspec.yaml version $version (expected v$version)"
+            exit 1
+          fi
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libgtk-3-dev libmpv-dev libayatana-appindicator3-dev libsecret-1-dev \
+            libkeybinder-3.0-dev libx11-dev libxi-dev ninja-build clang cmake pkg-config \
+            ffmpeg dbus-x11 xvfb desktop-file-utils appstream shellcheck
+
+      - name: Validate packaging files
+        run: |
+          shellcheck -x -P SCRIPTDIR packaging/linux/setup.sh packaging/linux/uninstall.sh \
+            packaging/linux/lib/common.sh
+          shellcheck tool/package_linux.sh tool/build_android.sh
+          desktop-file-validate packaging/linux/app.fermata.player.desktop
+          # Warnings (e.g. url-homepage-missing) are allowed; errors are not.
+          out="$(appstreamcli validate --no-net packaging/linux/app.fermata.player.metainfo.xml || true)"
+          echo "$out"
+          if grep -q '^E:' <<<"$out"; then exit 1; fi
+
+      - run: flutter pub get
+      - name: Merge ARB fragments
+        run: dart run tool/merge_arb.dart
+      - run: flutter gen-l10n
+      - run: flutter analyze
+      - run: flutter test
+
+  linux:
+    name: Linux installer
+    needs: test
+    # Built on the oldest supported Ubuntu so the binary only needs glibc 2.35:
+    # an executable runs on systems with the glibc it was linked against or newer
+    # (Ubuntu 22.04+, Debian 12+, Fedora 36+, current Arch/openSUSE). Building
+    # on ubuntu-latest (24.04, glibc 2.39) would lock out 22.04 and Debian 12.
+    # When GitHub retires this image, build in a ubuntu:22.04 container instead.
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            clang cmake ninja-build pkg-config libgtk-3-dev libx11-dev libxi-dev \
+            libsecret-1-dev libkeybinder-3.0-dev libmpv-dev \
+            desktop-file-utils appstream shellcheck xvfb
+
+      - name: Developer credentials (optional)
+        env:
+          FERMATA_DART_DEFINES_JSON: ${{ secrets.FERMATA_DART_DEFINES_JSON }}
+        run: |
+          if [[ -n "$FERMATA_DART_DEFINES_JSON" ]]; then
+            printf '%s' "$FERMATA_DART_DEFINES_JSON" > "$RUNNER_TEMP/dart_defines.json"
+            echo "FERMATA_DART_DEFINES_FILE=$RUNNER_TEMP/dart_defines.json" >> "$GITHUB_ENV"
+          else
+            echo "No FERMATA_DART_DEFINES_JSON secret: building without compiled-in credentials."
+          fi
+
+      - name: Generate localizations
+        run: |
+          flutter pub get
+          dart run tool/merge_arb.dart
+          flutter gen-l10n
+
+      - name: Build and package
+        run: tool/package_linux.sh
+
+      - name: Smoke-test the installer
+        run: |
+          HOME="$(mktemp -d)"
+          export HOME
+          ./dist/setup.sh --check
+          ./dist/setup.sh --yes --no-deps
+          test -x "$HOME/.local/bin/fermata"
+          if ldd "$HOME/.local/lib/fermata/current/fermata" | grep 'not found'; then exit 1; fi
+          launcher=()
+          if command -v dbus-run-session >/dev/null; then launcher=(dbus-run-session --); fi
+          set +e
+          timeout 15 "${launcher[@]}" xvfb-run -a "$HOME/.local/bin/fermata"
+          rc=$?
+          set -e
+          echo "fermata exited with $rc after up to 15 s (124 = still running, expected)"
+          test "$rc" -eq 124
+          ./dist/setup.sh --uninstall
+          test ! -e "$HOME/.local/lib/fermata"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: linux
+          path: |
+            dist/setup.sh
+            dist/fermata-*-linux-x64.tar.gz
+          if-no-files-found: error
+
+  windows:
+    name: Windows installer
+    needs: test
+    runs-on: windows-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      # smtc_windows builds its Rust code through cargokit.
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Inno Setup
+        run: |
+          $iscc = Join-Path ${env:ProgramFiles(x86)} 'Inno Setup 6\ISCC.exe'
+          if (-not (Test-Path $iscc)) { choco install innosetup -y --no-progress }
+
+      - name: Developer credentials (optional)
+        env:
+          FERMATA_DART_DEFINES_JSON: ${{ secrets.FERMATA_DART_DEFINES_JSON }}
+        run: |
+          if ($env:FERMATA_DART_DEFINES_JSON) {
+            $file = Join-Path $env:RUNNER_TEMP 'dart_defines.json'
+            [IO.File]::WriteAllText($file, $env:FERMATA_DART_DEFINES_JSON)
+            "FERMATA_DART_DEFINES_FILE=$file" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          } else {
+            Write-Host 'No FERMATA_DART_DEFINES_JSON secret: building without compiled-in credentials.'
+          }
+
+      - name: Generate localizations
+        run: |
+          flutter pub get
+          dart run tool/merge_arb.dart
+          flutter gen-l10n
+
+      - name: Build and package
+        env:
+          WINDOWS_CERT_PFX_BASE64: ${{ secrets.WINDOWS_CERT_PFX_BASE64 }}
+          WINDOWS_CERT_PASSWORD: ${{ secrets.WINDOWS_CERT_PASSWORD }}
+        run: |
+          if ($env:WINDOWS_CERT_PFX_BASE64) {
+            $pfx = Join-Path $env:RUNNER_TEMP 'fermata-codesign.pfx'
+            [IO.File]::WriteAllBytes($pfx, [Convert]::FromBase64String($env:WINDOWS_CERT_PFX_BASE64))
+            $signtool = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin\*\x64\signtool.exe" |
+              Sort-Object FullName -Descending | Select-Object -First 1
+            if (-not $signtool) { throw 'signtool.exe not found' }
+            # Inno Setup sign tool syntax: $q = quote, $f = file to sign, $$ = literal $.
+            $password = $env:WINDOWS_CERT_PASSWORD.Replace('$', '$$')
+            $env:FERMATA_SIGN_COMMAND = "`$q$($signtool.FullName)`$q sign /fd sha256 /tr http://timestamp.digicert.com /td sha256 /f `$q$pfx`$q /p `$q$password`$q `$f"
+          }
+          ./tool/package_windows.ps1
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: windows
+          path: dist/setup.exe
+          if-no-files-found: error
+
+  android:
+    name: Android APK
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Release keystore (optional)
+        env:
+          FERMATA_KEYSTORE_BASE64: ${{ secrets.FERMATA_KEYSTORE_BASE64 }}
+        run: |
+          if [[ -n "$FERMATA_KEYSTORE_BASE64" ]]; then
+            printf '%s' "$FERMATA_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/fermata-release.jks"
+            echo "FERMATA_KEYSTORE_PATH=$RUNNER_TEMP/fermata-release.jks" >> "$GITHUB_ENV"
+          else
+            echo "No FERMATA_KEYSTORE_BASE64 secret: the APK will be debug-signed."
+          fi
+
+      # A release must never ship a debug-signed APK, unless the repository
+      # variable FERMATA_ALLOW_DEBUG_SIGNED_APK is set to 'true' (before a
+      # keystore exists). docs/RELEASING.md
+      - name: Require release signing for tags
+        if: startsWith(github.ref, 'refs/tags/v') && vars.FERMATA_ALLOW_DEBUG_SIGNED_APK != 'true'
+        run: echo "FERMATA_REQUIRE_RELEASE_SIGNING=1" >> "$GITHUB_ENV"
+
+      - name: Developer credentials (optional)
+        env:
+          FERMATA_DART_DEFINES_JSON: ${{ secrets.FERMATA_DART_DEFINES_JSON }}
+        run: |
+          if [[ -n "$FERMATA_DART_DEFINES_JSON" ]]; then
+            printf '%s' "$FERMATA_DART_DEFINES_JSON" > "$RUNNER_TEMP/dart_defines.json"
+            echo "FERMATA_DART_DEFINES_FILE=$RUNNER_TEMP/dart_defines.json" >> "$GITHUB_ENV"
+          else
+            echo "No FERMATA_DART_DEFINES_JSON secret: building without compiled-in credentials."
+          fi
+
+      - name: Generate localizations
+        run: |
+          flutter pub get
+          dart run tool/merge_arb.dart
+          flutter gen-l10n
+
+      - name: Build APK
+        env:
+          FERMATA_KEYSTORE_PASSWORD: ${{ secrets.FERMATA_KEYSTORE_PASSWORD }}
+          FERMATA_KEY_ALIAS: ${{ secrets.FERMATA_KEY_ALIAS }}
+          FERMATA_KEY_PASSWORD: ${{ secrets.FERMATA_KEY_PASSWORD }}
+        run: tool/build_android.sh
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: android
+          path: dist/app.apk
+          if-no-files-found: error
+
+      # R8 mapping for deobfuscating stack traces; keep it, never publish it.
+      - uses: actions/upload-artifact@v7
+        with:
+          name: android-r8-mapping
+          path: build/app/outputs/mapping/release/mapping.txt
+          if-no-files-found: warn
+          retention-days: 90
+
+  release:
+    name: GitHub Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [linux, windows, android]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          path: release
+          merge-multiple: true
+
+      - name: Checksums
+        working-directory: release
+        run: |
+          ls -l
+          sha256sum setup.exe setup.sh fermata-*-linux-x64.tar.gz app.apk > SHA256SUMS
+          cat SHA256SUMS
+
+      - uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            release/setup.exe
+            release/setup.sh
+            release/fermata-*-linux-x64.tar.gz
+            release/app.apk
+            release/SHA256SUMS
+          fail_on_unmatched_files: true
+          generate_release_notes: true
+          prerelease: ${{ contains(github.ref_name, '-') }}

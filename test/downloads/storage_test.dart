@@ -210,7 +210,7 @@ void main() {
 
   test('directorySize and removeEmptyParents', () async {
     final dir = Directory(p.join(h.root.path, 'tree', 'a', 'b'))..createSync(recursive: true);
-    File(p.join(dir.path, 'f'))..writeAsBytesSync(List.filled(10, 0));
+    File(p.join(dir.path, 'f')).writeAsBytesSync(List.filled(10, 0));
     expect(await directorySize(Directory(p.join(h.root.path, 'tree'))), 10);
     File(p.join(dir.path, 'f')).deleteSync();
     await removeEmptyParents(dir.path, p.join(h.root.path, 'tree'));

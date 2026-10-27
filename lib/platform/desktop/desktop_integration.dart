@@ -17,6 +17,7 @@ import '../linux/mpris_server.dart';
 import '../linux/panel_theme_probe.dart';
 import '../linux/status_notifier_probe.dart';
 import '../windows/smtc_adapter.dart';
+import '../windows/smtc_port.dart';
 import 'desktop_l10n.dart';
 import 'hotkeys/global_hotkey_service.dart';
 import 'lifecycle_controller.dart';
@@ -28,6 +29,7 @@ import 'tray/tray_availability.dart';
 import 'tray/tray_backend.dart';
 import 'tray/tray_controller.dart';
 import 'tray/tray_icon_locator.dart';
+import 'window/window_backend.dart';
 
 final _log = Logger('desktop');
 
@@ -80,15 +82,25 @@ class DesktopIntegration {
     SingleInstance? singleInstance,
     List<String> args = const [],
     Future<void> Function(String path)? openFile,
+    // Overrides, mainly for tests:
+    DBusClient? sessionBus,
+    WindowBackend? window,
+    TrayBackend? trayBackend,
+    String? trayAssetsRoot,
+    HotkeyBackend? hotkeyBackend,
+    Future<SmtcPort> Function()? smtcPortFactory,
+    Map<String, String>? environment,
+    void Function(int code)? exitProcess,
   }) async {
     if (!platform.isLinux && !platform.isWindows) return DesktopIntegration.noop();
 
+    final env = environment ?? Platform.environment;
     final strings = desktopStringsFor(settings);
     final open = openFile ?? (path) => playLocalFile(playback, path);
 
     // One session-bus connection shared by MPRIS, notifications and the
     // tray probe (connects lazily; failures surface per feature).
-    final DBusClient? bus = platform.isLinux ? DBusClient.session() : null;
+    final DBusClient? bus = platform.isLinux ? (sessionBus ?? DBusClient.session()) : null;
 
     // Notifications (Linux).
     SystemNotifier notifier = const NoopSystemNotifier();
@@ -100,14 +112,15 @@ class DesktopIntegration {
 
     // Tray.
     final TrayAvailabilityProbe probe = bus != null
-        ? StatusNotifierProbe(client: bus, environment: Platform.environment)
+        ? StatusNotifierProbe(client: bus, environment: env)
         : const AlwaysAvailableTrayProbe();
     final locator = TrayIconLocator(
       platform: platform,
+      assetsRoot: trayAssetsRoot,
       prefersDarkPanel: bus == null ? null : () => portalPrefersDark(bus),
     );
     final tray = TrayController(
-      backend: NativeTrayBackend(),
+      backend: trayBackend ?? NativeTrayBackend(),
       probe: probe,
       settings: settings,
       playback: playback,
@@ -123,15 +136,17 @@ class DesktopIntegration {
       platform: platform,
       disposeAll: disposeAll,
       tray: tray,
+      window: window,
       args: args,
       instanceCommands: singleInstance?.commands,
       launchCommands: singleInstance?.launchCommands ?? const [],
       openFile: open,
+      exitProcess: exitProcess,
     );
 
     // Global hotkeys.
     final hotkeys = GlobalHotkeyServiceImpl(
-      backend: HotkeyManagerBackend(platform: platform),
+      backend: hotkeyBackend ?? HotkeyManagerBackend(platform: platform),
       actions: defaultGlobalHotkeyActions(
         playPause: playback.togglePlayPause,
         next: playback.next,
@@ -140,7 +155,7 @@ class DesktopIntegration {
       ),
       platform: platform,
       strings: strings,
-      environment: Platform.environment,
+      environment: env,
     );
     lifecycle.addShutdownHook('hotkeys', hotkeys.dispose);
 
@@ -168,7 +183,7 @@ class DesktopIntegration {
     // SMTC (Windows).
     SmtcAdapter? smtc;
     if (platform.isWindows) {
-      final adapter = SmtcAdapter(playback: playback, platform: platform);
+      final adapter = SmtcAdapter(playback: playback, platform: platform, portFactory: smtcPortFactory);
       await adapter.start();
       smtc = adapter;
       lifecycle.addShutdownHook('smtc', adapter.stop);
@@ -184,7 +199,8 @@ class DesktopIntegration {
     lifecycle.addShutdownHook('track notifications', trackNotifier.dispose);
 
     if (singleInstance != null) lifecycle.addShutdownHook('single instance', singleInstance.close);
-    if (bus != null) lifecycle.addShutdownHook('session bus', bus.close);
+    // An injected bus belongs to the caller.
+    if (bus != null && sessionBus == null) lifecycle.addShutdownHook('session bus', bus.close);
 
     await lifecycle.init();
     await hotkeys.bindToSettings(settings);

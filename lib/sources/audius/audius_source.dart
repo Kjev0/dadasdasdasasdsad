@@ -50,21 +50,21 @@ class AudiusSource extends MusicSourceBase {
 
   @override
   Set<SourceCapability> get capabilities => const {
-        SourceCapability.searchTracks,
-        SourceCapability.searchArtists,
-        SourceCapability.searchAlbums,
-        SourceCapability.searchPlaylists,
-        SourceCapability.stream,
-        SourceCapability.download,
-        SourceCapability.playlistImport,
-        SourceCapability.isrcLookup,
-        SourceCapability.relatedTracks,
-        SourceCapability.trending,
-        SourceCapability.artistPages,
-        SourceCapability.albumPages,
-        SourceCapability.genres,
-        SourceCapability.newReleases,
-      };
+    SourceCapability.searchTracks,
+    SourceCapability.searchArtists,
+    SourceCapability.searchAlbums,
+    SourceCapability.searchPlaylists,
+    SourceCapability.stream,
+    SourceCapability.download,
+    SourceCapability.playlistImport,
+    SourceCapability.isrcLookup,
+    SourceCapability.relatedTracks,
+    SourceCapability.trending,
+    SourceCapability.artistPages,
+    SourceCapability.albumPages,
+    SourceCapability.genres,
+    SourceCapability.newReleases,
+  };
 
   @override
   String get limitationsNote =>
@@ -79,11 +79,7 @@ class AudiusSource extends MusicSourceBase {
   @override
   CredentialStatus get credentialStatus {
     final origin = _credentials?.originOf(id) ?? CredentialOrigin.none;
-    return CredentialStatus(
-      configured: true,
-      origin: origin,
-      helpUrl: Uri.parse('https://api.audius.co/plans'),
-    );
+    return CredentialStatus(configured: true, origin: origin, helpUrl: Uri.parse('https://api.audius.co/plans'));
   }
 
   // ---- Search -------------------------------------------------------------
@@ -91,8 +87,11 @@ class AudiusSource extends MusicSourceBase {
   @override
   Future<Page<Track>> searchTracks(String query, {String? cursor, int limit = 30, CancelToken? cancel}) async {
     final offset = PageCursor.decodeOffset(cursor);
-    final data = await api.getData('tracks/search',
-        query: {'query': query.trim(), 'limit': limit, 'offset': offset}, cancel: cancel);
+    final data = await api.getData(
+      'tracks/search',
+      query: {'query': query.trim(), 'limit': limit, 'offset': offset},
+      cancel: cancel,
+    );
     final raw = asJsonMapList(data);
     return PageCursor.offsetPage(AudiusMapper.tracks(raw), offset: offset, limit: limit, consumed: raw.length);
   }
@@ -100,8 +99,11 @@ class AudiusSource extends MusicSourceBase {
   @override
   Future<Page<Artist>> searchArtists(String query, {String? cursor, int limit = 20, CancelToken? cancel}) async {
     final offset = PageCursor.decodeOffset(cursor);
-    final data = await api.getData('users/search',
-        query: {'query': query.trim(), 'limit': limit, 'offset': offset}, cancel: cancel);
+    final data = await api.getData(
+      'users/search',
+      query: {'query': query.trim(), 'limit': limit, 'offset': offset},
+      cancel: cancel,
+    );
     final raw = asJsonMapList(data);
     return PageCursor.offsetPage(AudiusMapper.artists(raw), offset: offset, limit: limit, consumed: raw.length);
   }
@@ -110,8 +112,11 @@ class AudiusSource extends MusicSourceBase {
   @override
   Future<Page<Album>> searchAlbums(String query, {String? cursor, int limit = 20, CancelToken? cancel}) async {
     final offset = PageCursor.decodeOffset(cursor);
-    final data = await api.getData('search/full',
-        query: {'query': query.trim(), 'kind': 'albums', 'limit': limit, 'offset': offset}, cancel: cancel);
+    final data = await api.getData(
+      'search/full',
+      query: {'query': query.trim(), 'kind': 'albums', 'limit': limit, 'offset': offset},
+      cancel: cancel,
+    );
     final raw = asJsonMapList(asJsonMap(data)['albums']);
     return PageCursor.offsetPage(AudiusMapper.albums(raw), offset: offset, limit: limit, consumed: raw.length);
   }
@@ -119,8 +124,11 @@ class AudiusSource extends MusicSourceBase {
   @override
   Future<Page<Playlist>> searchPlaylists(String query, {String? cursor, int limit = 20, CancelToken? cancel}) async {
     final offset = PageCursor.decodeOffset(cursor);
-    final data = await api.getData('playlists/search',
-        query: {'query': query.trim(), 'limit': limit, 'offset': offset}, cancel: cancel);
+    final data = await api.getData(
+      'playlists/search',
+      query: {'query': query.trim(), 'limit': limit, 'offset': offset},
+      cancel: cancel,
+    );
     final raw = asJsonMapList(data);
     return PageCursor.offsetPage(AudiusMapper.playlists(raw), offset: offset, limit: limit, consumed: raw.length);
   }
@@ -141,18 +149,29 @@ class AudiusSource extends MusicSourceBase {
 
   /// The artist's tracks, most played first.
   @override
-  Future<Page<Track>> artistTopTracks(String sourceArtistId, {String? cursor, int limit = 30, CancelToken? cancel}) async {
+  Future<Page<Track>> artistTopTracks(
+    String sourceArtistId, {
+    String? cursor,
+    int limit = 30,
+    CancelToken? cancel,
+  }) async {
     final offset = PageCursor.decodeOffset(cursor);
-    final data = await api.getData('users/${Uri.encodeComponent(sourceArtistId)}/tracks',
-        query: {'sort': 'plays', 'limit': limit, 'offset': offset}, cancel: cancel);
+    final data = await api.getData(
+      'users/${Uri.encodeComponent(sourceArtistId)}/tracks',
+      query: {'sort': 'plays', 'limit': limit, 'offset': offset},
+      cancel: cancel,
+    );
     final raw = asJsonMapList(data);
     return PageCursor.offsetPage(AudiusMapper.tracks(raw), offset: offset, limit: limit, consumed: raw.length);
   }
 
   @override
   Future<List<Artist>> relatedArtists(String sourceArtistId, {int limit = 12, CancelToken? cancel}) async {
-    final data = await api.getData('users/${Uri.encodeComponent(sourceArtistId)}/related',
-        query: {'limit': limit}, cancel: cancel);
+    final data = await api.getData(
+      'users/${Uri.encodeComponent(sourceArtistId)}/related',
+      query: {'limit': limit},
+      cancel: cancel,
+    );
     return AudiusMapper.artists(data).take(limit).toList();
   }
 
@@ -184,7 +203,10 @@ class AudiusSource extends MusicSourceBase {
     final tracks = embedded is List && embedded.isNotEmpty
         ? AudiusMapper.tracks(embedded)
         : await _playlistTracks(playlist.sourcePlaylistId!, cancel: cancel);
-    return PlaylistDetail(playlist: playlist, tracks: Page(tracks, total: tracks.length));
+    return PlaylistDetail(
+      playlist: playlist,
+      tracks: Page(tracks, total: tracks.length),
+    );
   }
 
   Future<List<Track>> _playlistTracks(String playlistId, {CancelToken? cancel}) async {
@@ -194,7 +216,8 @@ class AudiusSource extends MusicSourceBase {
 
   static bool _looksLikeUrl(String s) => s.contains('audius.co') || s.startsWith('http') || s.contains('/');
 
-  static String _normaliseUrl(String s) => s.startsWith('http') ? s : 'https://${s.startsWith('/') ? 'audius.co$s' : s}';
+  static String _normaliseUrl(String s) =>
+      s.startsWith('http') ? s : 'https://${s.startsWith('/') ? 'audius.co$s' : s}';
 
   /// Audius has no related-tracks endpoint (docs/COMPLIANCE.md): uses the
   /// most played tracks of artists related to the track's artist.
@@ -206,15 +229,17 @@ class AudiusSource extends MusicSourceBase {
     final related = await relatedArtists(artistId, limit: 4, cancel: cancel);
     if (related.isEmpty) return const [];
     final perArtist = (limit / related.length).ceil().clamp(1, 10);
-    final lists = await Future.wait(related.map((a) async {
-      try {
-        return (await artistTopTracks(a.sourceArtistId, limit: perArtist, cancel: cancel)).items;
-      } on FermataException catch (e) {
-        if (e is OperationCanceledException) rethrow;
-        _log.fine('Related tracks: skipping ${a.sourceArtistId}: ${e.code}');
-        return const <Track>[];
-      }
-    }));
+    final lists = await Future.wait(
+      related.map((a) async {
+        try {
+          return (await artistTopTracks(a.sourceArtistId, limit: perArtist, cancel: cancel)).items;
+        } on FermataException catch (e) {
+          if (e is OperationCanceledException) rethrow;
+          _log.fine('Related tracks: skipping ${a.sourceArtistId}: ${e.code}');
+          return const <Track>[];
+        }
+      }),
+    );
     // Interleave so one artist does not dominate.
     final result = <Track>[];
     for (var i = 0; result.length < limit; i++) {
@@ -233,8 +258,11 @@ class AudiusSource extends MusicSourceBase {
 
   @override
   Future<List<Track>> trending({String? genre, int limit = 30, CancelToken? cancel}) async {
-    final data = await api.getData('tracks/trending',
-        query: {'limit': limit, if (genre != null && genre.trim().isNotEmpty) 'genre': genre.trim()}, cancel: cancel);
+    final data = await api.getData(
+      'tracks/trending',
+      query: {'limit': limit, if (genre != null && genre.trim().isNotEmpty) 'genre': genre.trim()},
+      cancel: cancel,
+    );
     return AudiusMapper.tracks(data);
   }
 
@@ -268,7 +296,11 @@ class AudiusSource extends MusicSourceBase {
   }
 
   @override
-  Future<PlayableSource> resolveStream(Track track, {AudioQuality quality = AudioQuality.high, CancelToken? cancel}) async {
+  Future<PlayableSource> resolveStream(
+    Track track, {
+    AudioQuality quality = AudioQuality.high,
+    CancelToken? cancel,
+  }) async {
     checkOwnTrack(track);
     final fresh = await _fresh(track, cancel);
     if (fresh == null) throw UnplayableTrackException(track.id, AvailabilityReason.deleted);

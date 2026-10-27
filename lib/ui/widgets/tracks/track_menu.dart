@@ -139,8 +139,7 @@ Future<void> showTrackMenu(
   if (!context.mounted || entries.isEmpty) return;
   TrackMenuAction? chosen;
   if (position != null) {
-    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox?;
-    final size = overlay?.size ?? MediaQuery.sizeOf(context);
+    final size = MediaQuery.sizeOf(context);
     chosen = await showMenu<TrackMenuAction>(
       context: context,
       position: RelativeRect.fromRect(position & const Size(1, 1), Offset.zero & size),

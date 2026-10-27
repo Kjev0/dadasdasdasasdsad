@@ -37,6 +37,8 @@ import 'transfer/http_transfer.dart';
 import 'transfer/speed_meter.dart';
 
 part 'src/engine.dart';
+part 'src/enqueue.dart';
+part 'src/state.dart';
 part 'src/storage_ops.dart';
 
 final _log = Logger('downloads.manager');
@@ -331,67 +333,6 @@ class DownloadManagerImpl implements DownloadManager {
     return rejected;
   }
 
-  /// Returns the (new or reused) task, or null when not permitted.
-  Future<(DownloadTask?, DownloadEligibility)> _enqueue(Track track, {String? origin}) async {
-    _ensureInit();
-    const allowed = DownloadEligibility(DownloadEligibilityKind.allowed);
-    final reuse = await _reuseExisting(track.id);
-    if (reuse != null) return reuse;
-    final eligibility = await checkEligibility(track);
-    if (!eligibility.canDownload) {
-      return (_completedFor(track.id)?.task, eligibility);
-    }
-    // Re-check after the await: another enqueue may have raced us.
-    final existing = _recordFor(track.id);
-    if (existing != null) {
-      if (existing.task.isActive || existing.status == DownloadStatus.completed) return (existing.task, allowed);
-      _requeue(existing, track: track);
-      return (_records[existing.id]!.task, allowed);
-    }
-    final now = DateTime.now();
-    final task = DownloadTask(
-      id: const Uuid().v4(),
-      track: track,
-      status: DownloadStatus.queued,
-      createdAt: now,
-      totalBytes: track.format?.fileSizeBytes,
-      origin: origin,
-    );
-    _records[task.id] = DownloadRecord(task: task);
-    _log.fine('Enqueued ${track.id} (${task.id})');
-    _changed();
-    _pump();
-    try {
-      await _tracks.upsertTracks([track]);
-    } catch (e) {
-      _log.fine('Could not upsert ${track.id} into the library', e);
-    }
-    return (_records[task.id]?.task ?? task, allowed);
-  }
-
-  /// "Same track id → reuse": completed, active and paused tasks are reused.
-  Future<(DownloadTask?, DownloadEligibility)?> _reuseExisting(String trackId) async {
-    final existing = _recordFor(trackId);
-    if (existing == null) return null;
-    switch (existing.status) {
-      case DownloadStatus.completed:
-        final path = existing.task.filePath;
-        if (path != null && await File(path).exists()) {
-          return (existing.task, const DownloadEligibility(DownloadEligibilityKind.alreadyDownloaded));
-        }
-        _markBroken(existing.id, DownloadErrorCode.fileMissing);
-        return null;
-      case DownloadStatus.queued || DownloadStatus.waitingForNetwork || DownloadStatus.downloading ||
-            DownloadStatus.verifying:
-        return (existing.task, const DownloadEligibility(DownloadEligibilityKind.allowed));
-      case DownloadStatus.paused:
-        await resume(existing.id);
-        return (_records[existing.id]!.task, const DownloadEligibility(DownloadEligibilityKind.allowed));
-      case DownloadStatus.failed || DownloadStatus.canceled:
-        return null;
-    }
-  }
-
   // ---------------------------------------------------------------------------
   // Controls
   // ---------------------------------------------------------------------------
@@ -479,6 +420,10 @@ class DownloadManagerImpl implements DownloadManager {
     _pump();
   }
 
+  /// Removes a task (stopping it first). With [deleteFile] the downloaded
+  /// file is deleted unless another task shares it; throws
+  /// [StorageException] (`download_delete_failed`, task kept) when the file
+  /// cannot be deleted, e.g. while another app holds it open on Windows.
   @override
   Future<void> remove(String taskId, {bool deleteFile = true}) async {
     final run = _active[taskId];
@@ -487,10 +432,13 @@ class DownloadManagerImpl implements DownloadManager {
       await run.done;
     }
     await _withFsLock(() async {
-      final r = _records.remove(taskId);
+      final r = _records[taskId];
       if (r == null) return;
+      // Throws (keeping the task) when the file is locked, e.g. by a player.
+      if (deleteFile && r.task.filePath != null) await _deleteFileIfUnshared(r, throwOnError: true);
+      _records.remove(taskId);
+      _tasksCache = null;
       await _deletePartial(r);
-      if (deleteFile && r.task.filePath != null) await _deleteFileIfUnshared(r);
       await _unpinArtworkIfUnused(r.task.track);
     });
     _changed();
@@ -549,117 +497,5 @@ class DownloadManagerImpl implements DownloadManager {
   Future<void> syncAutoDownloads() {
     if (!_initialized || _disposed) return Future.value();
     return _syncing ??= _syncAutoDownloads().whenComplete(() => _syncing = null);
-  }
-
-  // ---------------------------------------------------------------------------
-  // Internal state helpers
-  // ---------------------------------------------------------------------------
-
-  void _ensureInit() {
-    if (!_initialized) throw StateError('DownloadManagerImpl.init() has not completed');
-    if (_disposed) throw StateError('DownloadManagerImpl was disposed');
-  }
-
-  String get _downloadDir {
-    final configured = _settings.current.downloads.directory;
-    return (configured != null && configured.trim().isNotEmpty) ? configured : _paths.defaultDownloadDir.path;
-  }
-
-  int? get _limitBytes {
-    final mb = _settings.current.storage.downloadLimitMb;
-    return mb <= 0 ? null : mb * 1024 * 1024;
-  }
-
-  String _partialPathFor(String id) => p.join(_paths.tempDownloadDir.path, '$id.part');
-
-  DownloadRecord? _recordFor(String trackId) => _records.values.firstWhereOrNull((r) => r.task.trackId == trackId);
-
-  DownloadRecord? _completedFor(String trackId) => _records.values
-      .firstWhereOrNull((r) => r.task.trackId == trackId && r.status == DownloadStatus.completed);
-
-  List<DownloadRecord> _snapshot() => _records.values.toList();
-
-  void _put(DownloadRecord r) {
-    if (!_records.containsKey(r.id)) return; // removed meanwhile
-    _records[r.id] = r;
-    _tasksCache = null;
-  }
-
-  void _requeue(DownloadRecord r, {Track? track}) {
-    _put(r.copyWith(
-      task: rebuildTask(r.task,
-          track: track,
-          status: DownloadStatus.queued,
-          attempts: 0,
-          error: null,
-          bytesPerSecond: 0,
-          filePath: null,
-          completedAt: null,
-          sha256: null),
-      fileSize: null,
-      nextAttemptAt: null,
-    ));
-    _changed();
-    _pump();
-  }
-
-  void _markBroken(String id, String code) {
-    final r = _records[id];
-    if (r == null || r.status != DownloadStatus.completed) return;
-    _log.warning('Download $id is broken: $code');
-    _put(r.copyWith(task: rebuildTask(r.task, status: DownloadStatus.failed, error: code)));
-    _changed();
-  }
-
-  /// Persist + notify listeners. Status changes are emitted immediately,
-  /// progress at most every `options.progressInterval` (≤ 4 Hz by default).
-  void _changed({bool immediate = true}) {
-    _tasksCache = null;
-    if (immediate) _index.scheduleSave(_snapshot);
-    if (immediate) {
-      _emitNow();
-    } else {
-      _emitThrottled();
-    }
-  }
-
-  void _emitThrottled() {
-    if (_emitTimer != null) return;
-    final since = _uptime.elapsed - _lastEmit;
-    if (since >= _options.progressInterval) {
-      _emitNow();
-    } else {
-      _emitTimer = Timer(_options.progressInterval - since, _emitNow);
-    }
-  }
-
-  void _emitNow() {
-    _emitTimer?.cancel();
-    _emitTimer = null;
-    _lastEmit = _uptime.elapsed;
-    if (!_tasksController.isClosed) _tasksController.add(tasks);
-    final ids = {
-      for (final r in _records.values)
-        if (r.status == DownloadStatus.completed) r.task.trackId,
-    };
-    if (!const SetEquality<String>().equals(ids, _downloadedIds)) {
-      _downloadedIds = Set.unmodifiable(ids);
-      if (!_idsController.isClosed) _idsController.add(_downloadedIds);
-    }
-  }
-
-  /// Serializes file-system mutations (finalize, move, delete, evict).
-  Future<T> _withFsLock<T>(Future<T> Function() action) {
-    final result = _fsLock.then((_) => action());
-    _fsLock = result.then((_) {}, onError: (Object _) {});
-    return result;
-  }
-
-  void _track(Future<void> work) {
-    late final Future<void> tracked;
-    tracked = work.catchError((Object e, StackTrace st) {
-      _log.warning('Background download work failed', e, st);
-    }).whenComplete(() => _pending.remove(tracked));
-    _pending.add(tracked);
   }
 }

@@ -81,14 +81,15 @@ TagWriteResult writeTagsSafely(String path, Track edited, Set<String> fields, St
     return TagWriteResult(TagWriteStatus.failed, message: e.message);
   }
 
+  var keepBackup = false;
   void restore() {
     try {
       backup.copySync('$path.restore');
       File('$path.restore').renameSync(path);
       File(path).setLastModifiedSync(stat.modified);
     } on FileSystemException {
-      // The backup is kept on failure so nothing is lost.
-      return;
+      // Keep the backup so the original tags can be recovered by hand.
+      keepBackup = true;
     }
   }
 
@@ -106,15 +107,21 @@ TagWriteResult writeTagsSafely(String path, Track edited, Set<String> fields, St
     final roundTrip = toWrite.every((f) => _sameValue(f, reread, edited));
     if (!roundTrip || !_eq.equals(beforePrint, afterPrint)) {
       restore();
-      return const TagWriteResult(TagWriteStatus.wouldLoseData);
+      return TagWriteResult(
+        keepBackup ? TagWriteStatus.failed : TagWriteStatus.wouldLoseData,
+        message: keepBackup ? 'Could not restore the original; backup kept at ${backup.path}' : null,
+      );
     }
     return TagWriteResult(TagWriteStatus.written, writtenFields: toWrite);
   } catch (e) {
     restore();
-    return TagWriteResult(TagWriteStatus.failed, message: e.toString());
+    return TagWriteResult(
+      TagWriteStatus.failed,
+      message: keepBackup ? '$e; backup kept at ${backup.path}' : e.toString(),
+    );
   } finally {
     try {
-      if (backup.existsSync() && File(path).existsSync()) backup.deleteSync();
+      if (!keepBackup && backup.existsSync()) backup.deleteSync();
     } on FileSystemException {
       // leave it
     }

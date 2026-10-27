@@ -28,8 +28,8 @@ import 'deezer_mapper.dart';
 /// [publicUserPlaylists].
 class DeezerSource extends MusicSourceBase {
   DeezerSource({required FermataHttp http, Uri? baseUri, TokenBucketRateLimiter? limiter, DateTime Function()? clock})
-      : _http = http,
-        _clock = clock ?? DateTime.now {
+    : _http = http,
+      _clock = clock ?? DateTime.now {
     api = DeezerApi(http, baseUri: baseUri, limiter: limiter);
   }
 
@@ -52,21 +52,21 @@ class DeezerSource extends MusicSourceBase {
 
   @override
   Set<SourceCapability> get capabilities => const {
-        SourceCapability.searchTracks,
-        SourceCapability.searchArtists,
-        SourceCapability.searchAlbums,
-        SourceCapability.searchPlaylists,
-        SourceCapability.previewOnly,
-        SourceCapability.externalPlayback,
-        SourceCapability.playlistImport,
-        SourceCapability.isrcLookup,
-        SourceCapability.relatedTracks,
-        SourceCapability.trending,
-        SourceCapability.artistPages,
-        SourceCapability.albumPages,
-        SourceCapability.genres,
-        SourceCapability.newReleases,
-      };
+    SourceCapability.searchTracks,
+    SourceCapability.searchArtists,
+    SourceCapability.searchAlbums,
+    SourceCapability.searchPlaylists,
+    SourceCapability.previewOnly,
+    SourceCapability.externalPlayback,
+    SourceCapability.playlistImport,
+    SourceCapability.isrcLookup,
+    SourceCapability.relatedTracks,
+    SourceCapability.trending,
+    SourceCapability.artistPages,
+    SourceCapability.albumPages,
+    SourceCapability.genres,
+    SourceCapability.newReleases,
+  };
 
   @override
   String get limitationsNote =>
@@ -95,14 +95,20 @@ class DeezerSource extends MusicSourceBase {
     return _page(json, offset: offset, limit: limit, map: map);
   }
 
-  Page<T> _page<T>(Map<String, Object?> json, {required int offset, required int limit, required List<T> Function(Object?) map}) {
+  Page<T> _page<T>(
+    Map<String, Object?> json, {
+    required int offset,
+    required int limit,
+    required List<T> Function(Object?) map,
+  }) {
     final raw = asJsonMapList(json['data']);
     return PageCursor.offsetPage(
       map(raw),
       offset: offset,
       limit: limit,
       total: jsonInt(json['total']),
-      hasMore: json.containsKey('next') ? jsonString(json['next']) != null : null,
+      // Deezer includes `next` exactly when another page exists.
+      hasMore: jsonString(json['next']) != null,
       consumed: raw.length,
     );
   }
@@ -144,11 +150,24 @@ class DeezerSource extends MusicSourceBase {
   }
 
   @override
-  Future<Page<Track>> artistTopTracks(String sourceArtistId, {String? cursor, int limit = 30, CancelToken? cancel}) async {
+  Future<Page<Track>> artistTopTracks(
+    String sourceArtistId, {
+    String? cursor,
+    int limit = 30,
+    CancelToken? cancel,
+  }) async {
     final offset = PageCursor.decodeOffset(cursor);
-    final json = await api.get('artist/${_id(sourceArtistId)}/top',
-        query: {'index': offset, 'limit': limit}, cancel: cancel);
-    return _page(json, offset: offset, limit: limit, map: (d) => DeezerMapper.tracks(d, checkedAt: _clock()));
+    final json = await api.get(
+      'artist/${_id(sourceArtistId)}/top',
+      query: {'index': offset, 'limit': limit},
+      cancel: cancel,
+    );
+    return _page(
+      json,
+      offset: offset,
+      limit: limit,
+      map: (d) => DeezerMapper.tracks(d, checkedAt: _clock()),
+    );
   }
 
   @override
@@ -166,8 +185,12 @@ class DeezerSource extends MusicSourceBase {
       api.get('album/$id/tracks', query: {'index': offset, 'limit': _pageSize}, cancel: cancel),
     ]);
     final album = results[0];
-    return _page(results[1],
-        offset: offset, limit: _pageSize, map: (d) => DeezerMapper.tracks(d, album: album, checkedAt: _clock()));
+    return _page(
+      results[1],
+      offset: offset,
+      limit: _pageSize,
+      map: (d) => DeezerMapper.tracks(d, album: album, checkedAt: _clock()),
+    );
   }
 
   /// [idOrUrl]: numeric id, `deezer.com/<lang>/playlist/<id>`, or a short
@@ -183,8 +206,12 @@ class DeezerSource extends MusicSourceBase {
     ]);
     final playlist = DeezerMapper.playlist(results[0]);
     if (playlist == null) throw ApiException(404, 'Deezer playlist $id not found');
-    final tracks = _page(results[1],
-        offset: offset, limit: _pageSize, map: (d) => DeezerMapper.tracks(d, checkedAt: _clock()));
+    final tracks = _page(
+      results[1],
+      offset: offset,
+      limit: _pageSize,
+      map: (d) => DeezerMapper.tracks(d, checkedAt: _clock()),
+    );
     return PlaylistDetail(playlist: playlist, tracks: tracks);
   }
 
@@ -214,7 +241,11 @@ class DeezerSource extends MusicSourceBase {
     final result = <Playlist>[];
     var offset = 0;
     while (result.length < max) {
-      final json = await api.get('user/$userId/playlists', query: {'index': offset, 'limit': _pageSize}, cancel: cancel);
+      final json = await api.get(
+        'user/$userId/playlists',
+        query: {'index': offset, 'limit': _pageSize},
+        cancel: cancel,
+      );
       final raw = asJsonMapList(json['data']);
       result.addAll(DeezerMapper.playlists(raw));
       offset += raw.length;
@@ -231,10 +262,10 @@ class DeezerSource extends MusicSourceBase {
     final artistId = track?.extra[DeezerMapper.extraArtistId];
     if (artistId == null) return const [];
     final json = await api.get('artist/$artistId/radio', query: {'limit': limit + 1}, cancel: cancel);
-    return DeezerMapper.tracks(json['data'], checkedAt: _clock())
-        .where((t) => t.sourceTrackId != sourceTrackId)
-        .take(limit)
-        .toList();
+    return DeezerMapper.tracks(
+      json['data'],
+      checkedAt: _clock(),
+    ).where((t) => t.sourceTrackId != sourceTrackId).take(limit).toList();
   }
 
   /// The Deezer chart, optionally for a genre (name from [genres] or a
@@ -244,7 +275,9 @@ class DeezerSource extends MusicSourceBase {
     var genreId = '0';
     final g = genre?.trim();
     if (g != null && g.isNotEmpty) {
-      genreId = DeezerLinks.numericId(g) ?? await _genreIdFor(g, cancel) ??
+      genreId =
+          DeezerLinks.numericId(g) ??
+          await _genreIdFor(g, cancel) ??
           (throw UnsupportedSourceOperation(id, 'trending', 'Deezer has no genre "$g"'));
     }
     final json = await api.get('chart/$genreId/tracks', query: {'limit': limit}, cancel: cancel);
@@ -294,7 +327,11 @@ class DeezerSource extends MusicSourceBase {
   /// follows `SourcePolicies.of(deezer).previewUrlTtl` (or the URL's own
   /// expiry when earlier).
   @override
-  Future<PlayableSource> resolveStream(Track track, {AudioQuality quality = AudioQuality.high, CancelToken? cancel}) async {
+  Future<PlayableSource> resolveStream(
+    Track track, {
+    AudioQuality quality = AudioQuality.high,
+    CancelToken? cancel,
+  }) async {
     checkOwnTrack(track);
     final fresh = await getTrack(track.sourceTrackId, cancel: cancel);
     if (fresh == null) throw UnplayableTrackException(track.id, AvailabilityReason.deleted);
@@ -314,7 +351,7 @@ class DeezerSource extends MusicSourceBase {
     final byPolicy = _clock().add(ttl);
     final m = RegExp(r'exp=(\d{9,11})').firstMatch(uri.query);
     if (m == null) return byPolicy;
-    final signed = DateTime.fromMillisecondsSinceEpoch(int.parse(m.group(1)!) * 1000);
+    final signed = DateTime.fromMillisecondsSinceEpoch(int.parse(m.group(1)!) * 1000, isUtc: true);
     return signed.isBefore(byPolicy) ? signed : byPolicy;
   }
 
@@ -331,7 +368,7 @@ class DeezerSource extends MusicSourceBase {
 class _MetaCache {
   static const _max = 32;
   static const _ttl = Duration(minutes: 10);
-  final _entries = <String, (DateTime, Future<Map<String, Object?>>)>{};  // insertion-ordered
+  final _entries = <String, (DateTime, Future<Map<String, Object?>>)>{}; // insertion-ordered
 
   Future<Map<String, Object?>> get(String key, Future<Map<String, Object?>> Function() load) {
     final hit = _entries.remove(key);

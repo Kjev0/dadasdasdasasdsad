@@ -45,6 +45,7 @@ class DesktopLifecycleController implements AppLifecycleController {
     this.quitStepTimeout = const Duration(seconds: 4),
     this.exitGracePeriod = const Duration(seconds: 3),
     this.boundsSaveDebounce = const Duration(milliseconds: 500),
+    this.startHiddenGrace = const Duration(milliseconds: 2500),
   })  : _window = window ?? WindowManagerBackend(),
         _exit = exitProcess ?? exit,
         _boundsStore = WindowStateStore(paths.windowStateFile) {
@@ -71,6 +72,11 @@ class DesktopLifecycleController implements AppLifecycleController {
   final Duration exitGracePeriod;
   final Duration boundsSaveDebounce;
 
+  /// The stock Flutter runners show the window when the first frame is
+  /// rendered, i.e. after [init]. When starting hidden/minimized, a show or
+  /// restore within this period re-applies the start state.
+  final Duration startHiddenGrace;
+
   final _shutdownHooks = <(String, Future<void> Function())>[];
   final _subs = <StreamSubscription<Object?>>[];
   Future<(CloseChoice, bool remember)> Function()? _closeDelegate;
@@ -83,6 +89,8 @@ class DesktopLifecycleController implements AppLifecycleController {
   bool _miniMode = false;
   Rect? _boundsBeforeMini;
   bool _maximizedBeforeMini = false;
+  bool _keepStartHidden = false;
+  Timer? _startHiddenTimer;
 
   @override
   bool get trayAvailable => _tray.isActive;
@@ -124,7 +132,14 @@ class DesktopLifecycleController implements AppLifecycleController {
     final startHidden = _settings.current.desktop.startMinimized || _args.contains(minimizedFlag);
     if (startHidden) {
       _log.info('Starting ${trayAvailable ? 'hidden to tray' : 'minimized'}');
-      await hideWindow();
+      if (trayAvailable) {
+        await hideWindow();
+      } else {
+        // Not shown yet: iconify before the runner maps the window.
+        await _safe('minimize', _window.minimize);
+      }
+      _keepStartHidden = true;
+      _startHiddenTimer = Timer(startHiddenGrace, () => _keepStartHidden = false);
     } else {
       await _safe('show', _window.show);
       await _safe('focus', _window.focus);
@@ -154,8 +169,15 @@ class DesktopLifecycleController implements AppLifecycleController {
             WindowEventKind.maximized ||
             WindowEventKind.unmaximized:
         _scheduleBoundsSave();
-      case WindowEventKind.shown || WindowEventKind.restored || WindowEventKind.focused:
+      case WindowEventKind.shown || WindowEventKind.restored:
+        if (_keepStartHidden) {
+          // The runner showed the window on its first frame.
+          unawaited(hideWindow());
+          return;
+        }
         _hiddenToTray = false;
+      case WindowEventKind.focused:
+        if (!_keepStartHidden) _hiddenToTray = false;
       case WindowEventKind.minimized || WindowEventKind.hidden:
         break;
     }
@@ -245,6 +267,7 @@ class DesktopLifecycleController implements AppLifecycleController {
 
   @override
   Future<void> showWindow() async {
+    _cancelStartHidden();
     _hiddenToTray = false;
     if (await _safeValue('isMinimized', _window.isMinimized, false)) {
       await _safe('restore', _window.restore);
@@ -292,6 +315,12 @@ class DesktopLifecycleController implements AppLifecycleController {
     }
   }
 
+  void _cancelStartHidden() {
+    _keepStartHidden = false;
+    _startHiddenTimer?.cancel();
+    _startHiddenTimer = null;
+  }
+
   void _scheduleBoundsSave() {
     if (_miniMode || isQuitting) return;
     _boundsTimer?.cancel();
@@ -327,6 +356,7 @@ class DesktopLifecycleController implements AppLifecycleController {
 
   Future<void> _quit() async {
     _log.info('Quitting Fermata');
+    _cancelStartHidden();
     await _step('window state', _flushBoundsSave);
     await _step('playback', _playback.dispose);
     await _step('settings', _settings.flush);

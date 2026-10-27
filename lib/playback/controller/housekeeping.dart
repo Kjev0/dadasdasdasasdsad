@@ -41,7 +41,22 @@ extension _Housekeeping on PlaybackControllerImpl {
     _persistTimer?.cancel();
     _persistTimer = null;
     _lastPersistAt = _now();
-    return _store.write(PersistedPlaybackState(queue: _queue.toJson(), position: _positionNow, savedAt: _now()));
+    return _store.write(_persistedState(_positionNow));
+  }
+
+  /// The state to persist; the item lists are re-encoded only when they
+  /// changed (big queues make periodic position saves otherwise costly).
+  PersistedPlaybackState _persistedState(Duration position) {
+    if (_encodedListsRevision != _queue.listsRevision || _encodedLists == null) {
+      _encodedListsRevision = _queue.listsRevision;
+      _encodedLists = {for (final e in _queue.listsJson().entries) e.key: jsonEncode(e.value)};
+    }
+    return PersistedPlaybackState(
+      queue: _queue.toJson(includeLists: false),
+      encodedQueueFields: _encodedLists!,
+      position: position,
+      savedAt: _now(),
+    );
   }
 
   Future<void> _restoreState() async {

@@ -14,7 +14,10 @@ Map<String, Object?>? asJsonMapOrNull(Object? value) => value is Map ? value.cas
 
 /// Returns [value] as a list of JSON objects (non-object entries are skipped).
 List<Map<String, Object?>> asJsonMapList(Object? value) => value is List
-    ? [for (final e in value) if (e is Map) e.cast<String, Object?>()]
+    ? [
+        for (final e in value)
+          if (e is Map) e.cast<String, Object?>(),
+      ]
     : const <Map<String, Object?>>[];
 
 /// A non-empty trimmed string, or null.

@@ -7,30 +7,26 @@ abstract final class Availabilities {
   /// Full in-app streaming. [downloadable] only when the provider explicitly
   /// permits downloading this track.
   static TrackAvailability stream({bool downloadable = false, DateTime? checkedAt}) => TrackAvailability(
-        playback: PlaybackRights.full,
-        offline: downloadable ? OfflineRights.downloadable : OfflineRights.streamOnly,
-        checkedAt: checkedAt ?? DateTime.now(),
-      );
+    playback: PlaybackRights.full,
+    offline: downloadable ? OfflineRights.downloadable : OfflineRights.streamOnly,
+    checkedAt: checkedAt ?? DateTime.now(),
+  );
 
   /// Only a preview may be played in-app (e.g. Deezer 30 s extracts).
   static TrackAvailability preview(
     Duration duration, {
     String reason = AvailabilityReason.previewOnly,
     DateTime? checkedAt,
-  }) =>
-      TrackAvailability(
-        playback: PlaybackRights.preview,
-        offline: OfflineRights.unavailable,
-        reason: reason,
-        previewDuration: duration,
-        checkedAt: checkedAt ?? DateTime.now(),
-      );
+  }) => TrackAvailability(
+    playback: PlaybackRights.preview,
+    offline: OfflineRights.unavailable,
+    reason: reason,
+    previewDuration: duration,
+    checkedAt: checkedAt ?? DateTime.now(),
+  );
 
   /// Playback only in the provider's own app/site.
-  static TrackAvailability externalOnly({
-    String reason = AvailabilityReason.externalOnly,
-    DateTime? checkedAt,
-  }) =>
+  static TrackAvailability externalOnly({String reason = AvailabilityReason.externalOnly, DateTime? checkedAt}) =>
       TrackAvailability(
         playback: PlaybackRights.externalOnly,
         offline: OfflineRights.unavailable,
@@ -57,7 +53,8 @@ abstract final class Availabilities {
   static void ensurePlayable(Track track) {
     final a = track.availability;
     if (a.isPlayableInApp) return;
-    final reason = a.reason ??
+    final reason =
+        a.reason ??
         switch (a.playback) {
           PlaybackRights.externalOnly => AvailabilityReason.externalOnly,
           PlaybackRights.unavailable => AvailabilityReason.notStreamable,

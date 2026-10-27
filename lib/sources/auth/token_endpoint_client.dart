@@ -51,8 +51,12 @@ class TokenEndpointClient {
   Future<OAuthToken> refresh(OAuthConfig config, OAuthToken token, {CancelToken? cancel}) async {
     final refreshToken = token.refreshToken;
     if (refreshToken == null || refreshToken.isEmpty) {
-      throw OAuthFlowException(config.sourceId, OAuthFailure.tokenRequestFailed, 'No refresh token available',
-          providerError: 'invalid_grant');
+      throw OAuthFlowException(
+        config.sourceId,
+        OAuthFailure.tokenRequestFailed,
+        'No refresh token available',
+        providerError: 'invalid_grant',
+      );
     }
     final fields = <String, String>{'grant_type': 'refresh_token', 'refresh_token': refreshToken};
     final json = await _post(config, config.tokenEndpoint, fields, cancel: cancel);
@@ -100,8 +104,14 @@ class TokenEndpointClient {
       fields['client_id'] = config.clientId;
       if (hasSecret) fields['client_secret'] = secret;
     }
-    final response = await _http.send('POST', endpoint,
-        headers: headers, body: fields, retry: RetryPolicy.none, cancel: cancel);
+    final response = await _http.send(
+      'POST',
+      endpoint,
+      headers: headers,
+      body: fields,
+      retry: RetryPolicy.none,
+      cancel: cancel,
+    );
     final status = response.statusCode;
     Object? json;
     if (response.body.isNotEmpty) {
@@ -118,8 +128,10 @@ class TokenEndpointClient {
     if (status >= 400 || error != null) {
       final description = jsonString(asJsonMap(json)['error_description']);
       // Never log the request body (codes, refresh tokens, secrets).
-      _log.warning('Token request to ${endpoint.host} for ${config.sourceId} failed: '
-          'HTTP $status ${error ?? ''} ${description ?? ''}');
+      _log.warning(
+        'Token request to ${endpoint.host} for ${config.sourceId} failed: '
+        'HTTP $status ${error ?? ''} ${description ?? ''}',
+      );
       throw OAuthFlowException(
         config.sourceId,
         OAuthFailure.tokenRequestFailed,
@@ -128,8 +140,11 @@ class TokenEndpointClient {
       );
     }
     if (expectJson && json is! Map) {
-      throw OAuthFlowException(config.sourceId, OAuthFailure.tokenRequestFailed,
-          'Token endpoint ${endpoint.host} did not return JSON');
+      throw OAuthFlowException(
+        config.sourceId,
+        OAuthFailure.tokenRequestFailed,
+        'Token endpoint ${endpoint.host} did not return JSON',
+      );
     }
     return json;
   }

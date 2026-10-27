@@ -85,7 +85,7 @@ class FermataArtworkCache extends CacheManager with ImageCacheManager implements
       maxNrOfCacheObjects: maxObjects,
       repo: repository,
       fileSystem: _DirectoryFileSystem(filesDir.path),
-      fileService: HttpFileService(httpClient: http.raw),
+      fileService: _FermataFileService(http),
     );
     return FermataArtworkCache._(config, root: root, repository: repository, pins: pins, http: http);
   }
@@ -97,6 +97,11 @@ class FermataArtworkCache extends CacheManager with ImageCacheManager implements
   final _BoundedJsonRepository _repository;
   final _PinSet _pins;
   final FermataHttp _http;
+  Future<bool>? _opened;
+
+  /// The index must be loaded before bulk operations (otherwise every file
+  /// would look orphaned).
+  Future<void> _ensureOpen() => _opened ??= _repository.open();
 
   @override
   bool isPinned(Uri url) => _pins.contains(url.toString());
@@ -133,6 +138,7 @@ class FermataArtworkCache extends CacheManager with ImageCacheManager implements
 
   @override
   Future<int> clearUnpinned() async {
+    await _ensureOpen();
     final before = await sizeBytes();
     final objects = await _repository.getAllObjects();
     for (final o in objects) {
@@ -145,6 +151,7 @@ class FermataArtworkCache extends CacheManager with ImageCacheManager implements
 
   @override
   Future<int> trimToLimit() async {
+    await _ensureOpen();
     final over = await _repository.getObjectsOverCapacity(config.maxNrOfCacheObjects);
     var freed = 0;
     for (final o in over) {
@@ -202,6 +209,18 @@ class FermataArtworkCache extends CacheManager with ImageCacheManager implements
     await _pins.flush();
     await super.dispose();
   }
+}
+
+/// Image fetches for `cached_network_image` over FermataHttp's client with
+/// Fermata's User-Agent.
+class _FermataFileService extends HttpFileService {
+  _FermataFileService(this._http) : super(httpClient: _http.raw);
+
+  final FermataHttp _http;
+
+  @override
+  Future<FileServiceResponse> get(String url, {Map<String, String>? headers}) =>
+      super.get(url, headers: {'User-Agent': _http.userAgent, ...?headers});
 }
 
 /// Places cache files in a fixed directory (instead of the platform temp dir

@@ -1705,6 +1705,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Local file'**
   String get shellFileYourFile;
+
+  /// No description provided for @shellCloseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Close Fermata?'**
+  String get shellCloseTitle;
+
+  /// No description provided for @shellCloseMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Fermata can keep playing in the system tray, or quit completely.'**
+  String get shellCloseMessage;
+
+  /// No description provided for @shellCloseMinimize.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep playing in tray'**
+  String get shellCloseMinimize;
+
+  /// No description provided for @shellCloseQuit.
+  ///
+  /// In en, this message translates to:
+  /// **'Quit'**
+  String get shellCloseQuit;
+
+  /// No description provided for @shellCloseRemember.
+  ///
+  /// In en, this message translates to:
+  /// **'Remember my choice'**
+  String get shellCloseRemember;
 }
 
 class _AppLocalizationsDelegate

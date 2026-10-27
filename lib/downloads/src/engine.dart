@@ -21,8 +21,11 @@ extension _Engine on DownloadManagerImpl {
     _wakeTimer?.cancel();
     _wakeTimer = null;
     if (wait != null) {
+      // Only transfers need the network; verification/finalizing continue.
       for (final run in _active.values) {
-        if (run.intent == null) run.stop(_StopIntent.network);
+        if (run.intent == null && _records[run.id]?.status == DownloadStatus.downloading) {
+          run.stop(_StopIntent.network);
+        }
       }
     } else {
       final now = DateTime.now();

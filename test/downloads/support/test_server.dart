@@ -150,6 +150,7 @@ class TestAudioServer {
       }
 
       response.statusCode = status;
+      response.bufferOutput = file.chunkDelay == Duration.zero;
       headers.forEach(response.headers.set);
       if (!file.sendContentLength) response.headers.chunkedTransferEncoding = true;
       var offset = start;

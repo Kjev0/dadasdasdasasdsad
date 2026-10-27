@@ -33,23 +33,28 @@ extension _StorageOps on DownloadManagerImpl {
     );
   }
 
+  bool _isShared(DownloadRecord r) => _records.values.any((o) =>
+      o.id != r.id &&
+      o.task.filePath == r.task.filePath &&
+      (o.status == DownloadStatus.completed || o.status == DownloadStatus.failed));
+
   /// Deletes [r]'s file unless another task still references it or the
-  /// track is a user-owned local file. Returns true when deleted.
-  Future<bool> _deleteFileIfUnshared(DownloadRecord r) async {
+  /// track is a user-owned local file. Returns true when deleted. A file
+  /// that cannot be deleted (locked on Windows while playing) returns false,
+  /// or throws [StorageException] (`download_delete_failed`) with
+  /// [throwOnError].
+  Future<bool> _deleteFileIfUnshared(DownloadRecord r, {bool throwOnError = false}) async {
     final path = r.task.filePath;
     if (path == null) return false;
     if (r.task.track.isLocal || r.task.track.availability.offline == OfflineRights.userOwned) return false;
-    final shared = _records.values.any((o) =>
-        o.id != r.id &&
-        o.task.filePath == path &&
-        (o.status == DownloadStatus.completed || o.status == DownloadStatus.failed));
-    if (shared) return false;
+    if (_isShared(r)) return false;
     final file = File(path);
     try {
       if (!await file.exists()) return false;
       await file.delete();
     } on FileSystemException catch (e) {
       _log.warning('Could not delete $path', e);
+      if (throwOnError) throw StorageException('download_delete_failed', 'Could not delete $path', cause: e);
       return false;
     }
     final root = _downloadDir;
@@ -81,7 +86,9 @@ extension _StorageOps on DownloadManagerImpl {
           final record = _records[task.id];
           if (record == null) continue;
           final size = await fileSize(task.filePath);
+          final shared = _isShared(record);
           final deleted = await _deleteFileIfUnshared(record);
+          if (!deleted && !shared && await File(task.filePath!).exists()) continue; // locked / in use
           _records.remove(task.id);
           _tasksCache = null;
           await _unpinArtworkIfUnused(task.track);

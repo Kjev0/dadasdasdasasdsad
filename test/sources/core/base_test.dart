@@ -62,9 +62,11 @@ void main() {
       for (final entry in calls.entries) {
         await expectLater(
           entry.value(),
-          throwsA(isA<UnsupportedSourceOperation>()
-              .having((e) => e.operation, 'operation', entry.key)
-              .having((e) => e.sourceId, 'sourceId', 'minimal')),
+          throwsA(
+            isA<UnsupportedSourceOperation>()
+                .having((e) => e.operation, 'operation', entry.key)
+                .having((e) => e.sourceId, 'sourceId', 'minimal'),
+          ),
           reason: entry.key,
         );
       }
@@ -131,7 +133,8 @@ void main() {
       final c = {150: 'https://a/150.jpg', 480: 'https://a/480.jpg', 1000: 'https://a/1000.jpg'};
       expect(ArtworkSizing.pick(c, targetPx: 100).toString(), 'https://a/150.jpg');
       expect(ArtworkSizing.pick(c, targetPx: 480).toString(), 'https://a/480.jpg');
-      expect(ArtworkSizing.pick(c, targetPx: 500).toString(), 'https://a/1000.jpg');
+      expect(ArtworkSizing.pick(c, targetPx: 500).toString(), 'https://a/480.jpg', reason: 'within 10 %');
+      expect(ArtworkSizing.pick(c, targetPx: 600).toString(), 'https://a/1000.jpg');
       expect(ArtworkSizing.pick(c, targetPx: 3000).toString(), 'https://a/1000.jpg');
       expect(ArtworkSizing.pick({150: '', 480: null}), isNull);
     });
@@ -149,8 +152,10 @@ void main() {
 
     test('replaceSizeToken swaps the last occurrence', () {
       final u = Uri.parse('https://i1.sndcdn.com/artworks-abc-large.jpg');
-      expect(ArtworkSizing.replaceSizeToken(u, '-large', '-t500x500').toString(),
-          'https://i1.sndcdn.com/artworks-abc-t500x500.jpg');
+      expect(
+        ArtworkSizing.replaceSizeToken(u, '-large', '-t500x500').toString(),
+        'https://i1.sndcdn.com/artworks-abc-t500x500.jpg',
+      );
     });
   });
 
@@ -167,10 +172,11 @@ void main() {
     });
 
     test('ensurePlayable throws with the reason', () {
-      final t = Track(
-          sourceId: 's', sourceTrackId: '1', title: 't', availability: Availabilities.externalOnly());
-      expect(() => Availabilities.ensurePlayable(t),
-          throwsA(isA<UnplayableTrackException>().having((e) => e.reason, 'reason', AvailabilityReason.externalOnly)));
+      final t = Track(sourceId: 's', sourceTrackId: '1', title: 't', availability: Availabilities.externalOnly());
+      expect(
+        () => Availabilities.ensurePlayable(t),
+        throwsA(isA<UnplayableTrackException>().having((e) => e.reason, 'reason', AvailabilityReason.externalOnly)),
+      );
       Availabilities.ensurePlayable(t.copyWith(availability: Availabilities.stream()));
     });
 
@@ -178,8 +184,9 @@ void main() {
       expect(Availabilities.isStale(const TrackAvailability.unknown()), isTrue);
       expect(Availabilities.isStale(Availabilities.stream()), isFalse);
       expect(
-          Availabilities.isStale(Availabilities.stream(checkedAt: DateTime.now().subtract(const Duration(hours: 1)))),
-          isTrue);
+        Availabilities.isStale(Availabilities.stream(checkedAt: DateTime.now().subtract(const Duration(hours: 1)))),
+        isTrue,
+      );
     });
   });
 
@@ -196,9 +203,16 @@ void main() {
       expect(jsonYear('2001-03-12'), 2001);
       expect(jsonYear('2026-10-26T12:04:51.367029Z'), 2026);
       expect(jsonDate('2020-01-01 10:00:00')?.hour, 10);
-      expect(asJsonMapList([1, {'a': 1}, 'x']), [
-        {'a': 1}
-      ]);
+      expect(
+        asJsonMapList([
+          1,
+          {'a': 1},
+          'x',
+        ]),
+        [
+          {'a': 1},
+        ],
+      );
     });
   });
 }

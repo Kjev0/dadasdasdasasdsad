@@ -32,6 +32,8 @@ Options:
 Environment:
   ANDROID_HOME / ANDROID_SDK_ROOT  Android SDK (apksigner/aapt2 are taken from
                                    the newest build-tools there).
+  FERMATA_DART_DEFINES_FILE        Default for --dart-define-from-file.
+  FERMATA_REQUIRE_RELEASE_SIGNING=1  Same as --require-release-signing.
   FERMATA_KEYSTORE_PATH, FERMATA_KEYSTORE_PASSWORD, FERMATA_KEY_ALIAS,
   FERMATA_KEY_PASSWORD             Release signing (when android/key.properties
                                    does not exist).
@@ -62,9 +64,10 @@ die() {
 
 SPLIT=0
 SKIP_BUILD=0
-REQUIRE_RELEASE=0
+REQUIRE_RELEASE="${FERMATA_REQUIRE_RELEASE_SIGNING:-0}"
+[[ "$REQUIRE_RELEASE" == 1 ]] || REQUIRE_RELEASE=0
 OUT_DIR="dist"
-DEFINES_FILE=""
+DEFINES_FILE="${FERMATA_DART_DEFINES_FILE:-}"
 EXTRA_ARGS=()
 while (($#)); do
   case "$1" in

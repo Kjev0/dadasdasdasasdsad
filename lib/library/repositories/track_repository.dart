@@ -14,7 +14,9 @@ import 'track_store.dart';
 
 /// SQLite implementation of [TrackRepository].
 ///
-/// Upserts keep `date_added` and user tag overrides; reads return the
+/// Upserts keep `date_added` and user tag overrides; local tracks owned by
+/// the scanner are not overwritten by upserts (the file is the source of
+/// truth — edit them with `LocalLibraryService.editTags`). Reads return the
 /// effective track (overrides applied). Local tracks whose file is known to
 /// be missing are returned with `AvailabilityReason.fileMissing`.
 class SqlTrackRepository implements TrackRepository {
@@ -26,7 +28,7 @@ class SqlTrackRepository implements TrackRepository {
   @override
   Future<void> upsertTracks(List<Track> tracks) async {
     if (tracks.isEmpty) return;
-    await _db.db.transaction((txn) => TrackStore.upsert(txn, tracks));
+    await _db.db.transaction((txn) => TrackStore.upsert(txn, tracks, preserveScanned: true));
     notifyLibrary(_bus, {LibraryTopic.tracks});
   }
 

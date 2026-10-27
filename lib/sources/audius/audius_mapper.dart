@@ -52,7 +52,8 @@ abstract final class AudiusMapper {
         jsonBool(t['is_available']) == false) {
       return Availabilities.unavailable(AvailabilityReason.deleted, checkedAt: at);
     }
-    final downloadable = jsonBool(t['is_downloadable']) == true &&
+    final downloadable =
+        jsonBool(t['is_downloadable']) == true &&
         (access == null ? jsonBool(t['is_download_gated']) != true : jsonBool(access['download']) == true);
     final streamGated = jsonBool(t['is_stream_gated']) == true;
     final canStream = access == null ? !streamGated : jsonBool(access['stream']) == true;

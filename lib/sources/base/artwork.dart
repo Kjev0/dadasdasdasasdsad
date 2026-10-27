@@ -14,8 +14,10 @@ abstract final class ArtworkSizing {
   /// Now-playing / full-screen artwork.
   static const int large = 1000;
 
-  /// Returns the smallest candidate whose size is at least [targetPx];
-  /// falls back to the largest available. Null/empty URLs are ignored.
+  /// Returns the smallest candidate whose size is at least [targetPx]
+  /// (sizes within 10 % below the target count, so Audius' 480 px serves a
+  /// 500 px request); falls back to the largest available. Null/empty URLs
+  /// are ignored.
   static Uri? pick(Map<int, Object?> candidates, {int targetPx = standard}) {
     final valid = <int, Uri>{};
     candidates.forEach((size, raw) {
@@ -24,8 +26,9 @@ abstract final class ArtworkSizing {
     });
     if (valid.isEmpty) return null;
     final sizes = valid.keys.toList()..sort();
+    final threshold = targetPx * 0.9;
     for (final s in sizes) {
-      if (s >= targetPx) return valid[s];
+      if (s >= threshold) return valid[s];
     }
     return valid[sizes.last];
   }

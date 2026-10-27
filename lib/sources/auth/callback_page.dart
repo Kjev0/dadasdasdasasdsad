@@ -7,20 +7,20 @@ import 'dart:convert';
 /// unknown to us here.
 abstract final class OAuthCallbackPage {
   static String success(String providerName) => _page(
-        ok: true,
-        titleEn: 'Connected to ${_esc(providerName)}',
-        titleDa: 'Forbundet til ${_esc(providerName)}',
-        bodyEn: 'You can close this tab and return to Fermata.',
-        bodyDa: 'Du kan lukke denne fane og vende tilbage til Fermata.',
-      );
+    ok: true,
+    titleEn: 'Connected to ${_esc(providerName)}',
+    titleDa: 'Forbundet til ${_esc(providerName)}',
+    bodyEn: 'You can close this tab and return to Fermata.',
+    bodyDa: 'Du kan lukke denne fane og vende tilbage til Fermata.',
+  );
 
   static String failure(String providerName, String detail) => _page(
-        ok: false,
-        titleEn: 'Could not connect to ${_esc(providerName)}',
-        titleDa: 'Kunne ikke forbinde til ${_esc(providerName)}',
-        bodyEn: 'Return to Fermata and try again. Details: ${_esc(detail)}',
-        bodyDa: 'Gå tilbage til Fermata og prøv igen. Detaljer: ${_esc(detail)}',
-      );
+    ok: false,
+    titleEn: 'Could not connect to ${_esc(providerName)}',
+    titleDa: 'Kunne ikke forbinde til ${_esc(providerName)}',
+    bodyEn: 'Return to Fermata and try again. Details: ${_esc(detail)}',
+    bodyDa: 'Gå tilbage til Fermata og prøv igen. Detaljer: ${_esc(detail)}',
+  );
 
   static String _esc(String s) => const HtmlEscape().convert(s);
 

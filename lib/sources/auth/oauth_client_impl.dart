@@ -43,12 +43,12 @@ class OAuthClientImpl implements OAuthClient {
     this.customScheme = 'fermata',
     String Function(String sourceId)? providerName,
     Random? random,
-  })  : _platform = platform ?? PlatformInfo.current(),
-        _tokens = TokenEndpointClient(http),
-        _launcherOverride = launcher,
-        _deepLinks = deepLinks ?? appLinksDeepLinks,
-        _providerName = providerName ?? _defaultName,
-        _random = random ?? Random.secure();
+  }) : _platform = platform ?? PlatformInfo.current(),
+       _tokens = TokenEndpointClient(http),
+       _launcherOverride = launcher,
+       _deepLinks = deepLinks ?? appLinksDeepLinks,
+       _providerName = providerName ?? _defaultName,
+       _random = random ?? Random.secure();
 
   final PlatformInfo _platform;
   final TokenEndpointClient _tokens;
@@ -67,7 +67,16 @@ class OAuthClientImpl implements OAuthClient {
 
   BrowserLauncher get _launcher => _launcherOverride ?? systemBrowserLauncher(_platform);
 
-  static String _defaultName(String id) => id.isEmpty ? id : id[0].toUpperCase() + id.substring(1);
+  static const _knownNames = {
+    'soundcloud': 'SoundCloud',
+    'spotify': 'Spotify',
+    'youtube': 'YouTube',
+    'jamendo': 'Jamendo',
+    'deezer': 'Deezer',
+    'audius': 'Audius',
+  };
+
+  static String _defaultName(String id) => _knownNames[id] ?? (id.isEmpty ? id : id[0].toUpperCase() + id.substring(1));
 
   /// The token-endpoint client (exchange/refresh/revoke/client credentials).
   TokenEndpointClient get tokenEndpoint => _tokens;
@@ -176,8 +185,14 @@ class OAuthClientImpl implements OAuthClient {
       return token;
     } on Object catch (e) {
       if (callback != null) {
-        await _respond(callback, HttpStatus.badRequest,
-            OAuthCallbackPage.failure(_providerName(config.sourceId), e is FermataException ? e.message : 'unexpected error'));
+        await _respond(
+          callback,
+          HttpStatus.badRequest,
+          OAuthCallbackPage.failure(
+            _providerName(config.sourceId),
+            e is FermataException ? e.message : 'unexpected error',
+          ),
+        );
       }
       rethrow;
     } finally {
@@ -235,8 +250,11 @@ class OAuthClientImpl implements OAuthClient {
     try {
       await _launcher(url);
     } catch (e) {
-      throw OAuthFlowException(config.sourceId, OAuthFailure.browserUnavailable,
-          'Could not open the browser for signing in: $e');
+      throw OAuthFlowException(
+        config.sourceId,
+        OAuthFailure.browserUnavailable,
+        'Could not open the browser for signing in: $e',
+      );
     }
   }
 
@@ -244,19 +262,27 @@ class OAuthClientImpl implements OAuthClient {
     final result = Completer<T>();
     final timer = Timer(timeout, () {
       if (!result.isCompleted) {
-        result.completeError(OAuthFlowException(config.sourceId, OAuthFailure.timeout,
-            'Sign-in was not completed within ${timeout.inMinutes} minutes.'));
+        result.completeError(
+          OAuthFlowException(
+            config.sourceId,
+            OAuthFailure.timeout,
+            'Sign-in was not completed within ${timeout.inMinutes} minutes.',
+          ),
+        );
       }
     });
     flow.onCancel = () {
       if (!result.isCompleted) result.completeError(_cancelled(config));
     };
     if (flow.isCancelled) flow.onCancel!();
-    callback.then((v) {
-      if (!result.isCompleted) result.complete(v);
-    }, onError: (Object e, StackTrace st) {
-      if (!result.isCompleted) result.completeError(e, st);
-    });
+    callback.then(
+      (v) {
+        if (!result.isCompleted) result.complete(v);
+      },
+      onError: (Object e, StackTrace st) {
+        if (!result.isCompleted) result.completeError(e, st);
+      },
+    );
     return result.future.whenComplete(() {
       timer.cancel();
       flow.onCancel = null;
@@ -276,8 +302,11 @@ class OAuthClientImpl implements OAuthClient {
   ) async {
     if (params['state'] != expectedState) {
       _log.warning('Rejected ${config.sourceId} redirect with mismatching state');
-      throw OAuthFlowException(config.sourceId, OAuthFailure.stateMismatch,
-          'The sign-in response did not match this request (state mismatch). Please try again.');
+      throw OAuthFlowException(
+        config.sourceId,
+        OAuthFailure.stateMismatch,
+        'The sign-in response did not match this request (state mismatch). Please try again.',
+      );
     }
     final error = params['error'];
     if (error != null && error.isNotEmpty) {
@@ -293,7 +322,11 @@ class OAuthClientImpl implements OAuthClient {
     }
     final code = params['code'];
     if (code == null || code.isEmpty) {
-      throw OAuthFlowException(config.sourceId, OAuthFailure.missingCode, 'The sign-in response had no authorization code.');
+      throw OAuthFlowException(
+        config.sourceId,
+        OAuthFailure.missingCode,
+        'The sign-in response had no authorization code.',
+      );
     }
     return _tokens.exchangeCode(config, code: code, redirectUri: redirectUri, codeVerifier: pkce?.verifier);
   }
@@ -329,7 +362,11 @@ class _LoopbackTarget {
       );
     }
     return _LoopbackTarget(
-        InternetAddress.loopbackIPv4, config.loopbackPort, '/callback/${config.sourceId}', '127.0.0.1');
+      InternetAddress.loopbackIPv4,
+      config.loopbackPort,
+      '/callback/${config.sourceId}',
+      '127.0.0.1',
+    );
   }
 
   final InternetAddress address;

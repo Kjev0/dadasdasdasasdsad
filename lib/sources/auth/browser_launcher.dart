@@ -16,13 +16,13 @@ typedef DeepLinkStream = Stream<Uri> Function();
 /// (`LaunchMode.externalApplication`), a Custom Tab on Android
 /// (`LaunchMode.inAppBrowserView`). Never an embedded webview.
 BrowserLauncher systemBrowserLauncher(PlatformInfo platform) => (Uri url) async {
-      final mode = platform.isAndroid ? LaunchMode.inAppBrowserView : LaunchMode.externalApplication;
-      var ok = await launchUrl(url, mode: mode);
-      if (!ok && mode != LaunchMode.externalApplication) {
-        ok = await launchUrl(url, mode: LaunchMode.externalApplication);
-      }
-      if (!ok) throw StateError('No browser could open ${url.host}');
-    };
+  final mode = platform.isAndroid ? LaunchMode.inAppBrowserView : LaunchMode.externalApplication;
+  var ok = await launchUrl(url, mode: mode);
+  if (!ok && mode != LaunchMode.externalApplication) {
+    ok = await launchUrl(url, mode: LaunchMode.externalApplication);
+  }
+  if (!ok) throw StateError('No browser could open ${url.host}');
+};
 
 /// Incoming app links via `app_links` (registered by the Android manifest's
 /// `fermata://oauth` intent filter).

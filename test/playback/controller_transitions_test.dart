@@ -1,6 +1,5 @@
 import 'package:fermata/core/contracts/playback.dart';
 import 'package:fermata/core/models/playback.dart';
-import 'package:fermata/core/models/track.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'fakes/fakes.dart';

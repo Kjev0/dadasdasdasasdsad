@@ -183,9 +183,11 @@ class OAuthSession {
     await _loadToken();
     _evaluate();
     if (fetchAccountOnInit && _token != null && hasCredentials) {
-      unawaited(refreshAccount().catchError((Object e) {
-        _log.fine('Background account refresh for $sourceId failed: $e');
-      }));
+      unawaited(
+        refreshAccount().catchError((Object e) {
+          _log.fine('Background account refresh for $sourceId failed: $e');
+        }),
+      );
     }
   }
 
@@ -205,12 +207,12 @@ class OAuthSession {
   }
 
   SourceAuthState _connected({OAuthAccount? account, SourceAuthState? keepFrom}) => SourceAuthState(
-        status: SourceConnectionStatus.connected,
-        accountName: account?.name ?? keepFrom?.accountName,
-        accountAvatar: account?.avatar ?? keepFrom?.accountAvatar,
-        grantedScopes: _token?.scopes ?? const [],
-        expiresAt: _token?.expiresAt,
-      );
+    status: SourceConnectionStatus.connected,
+    accountName: account?.name ?? keepFrom?.accountName,
+    accountAvatar: account?.avatar ?? keepFrom?.accountAvatar,
+    grantedScopes: _token?.scopes ?? const [],
+    expiresAt: _token?.expiresAt,
+  );
 
   /// Recomputes the state from credentials + stored token.
   void _evaluate() {
@@ -251,14 +253,17 @@ class OAuthSession {
     try {
       token = await _client.authorize(config);
     } on OAuthFlowException catch (e) {
-      final soft = e.failure == OAuthFailure.cancelled ||
+      final soft =
+          e.failure == OAuthFailure.cancelled ||
           e.failure == OAuthFailure.timeout ||
           e.failure == OAuthFailure.accessDenied;
-      _emit(SourceAuthState(
-        status: soft ? _restingStatus(previous) : SourceConnectionStatus.error,
-        error: e.message,
-        accountName: soft ? previous.accountName : null,
-      ));
+      _emit(
+        SourceAuthState(
+          status: soft ? _restingStatus(previous) : SourceConnectionStatus.error,
+          error: e.message,
+          accountName: soft ? previous.accountName : null,
+        ),
+      );
       rethrow;
     } catch (e) {
       _emit(SourceAuthState(status: SourceConnectionStatus.error, error: e is FermataException ? e.message : '$e'));
@@ -266,7 +271,12 @@ class OAuthSession {
     }
     _token = token;
     _tokenLoaded = true;
-    await _tokens.write(sourceId, token);
+    try {
+      await _tokens.write(sourceId, token);
+    } catch (e) {
+      // Keep the session usable; it just will not survive a restart.
+      _log.warning('Could not persist the $sourceId token: ${e.runtimeType}');
+    }
     OAuthAccount? account;
     try {
       account = await _fetchAccount(this, null);
@@ -275,7 +285,12 @@ class OAuthSession {
         // e.g. Spotify dev-mode apps answer 403 for users not on the allow-list.
         await _tokens.delete(sourceId);
         _token = null;
-        _emit(SourceAuthState(status: SourceConnectionStatus.error, error: 'Account rejected by $displayName (HTTP ${e.statusCode}).'));
+        _emit(
+          SourceAuthState(
+            status: SourceConnectionStatus.error,
+            error: 'Account rejected by $displayName (HTTP ${e.statusCode}).',
+          ),
+        );
         rethrow;
       }
       _log.warning('Connected to $sourceId but fetching the account failed: ${e.message}');
@@ -290,10 +305,10 @@ class OAuthSession {
 
   SourceConnectionStatus _restingStatus(SourceAuthState previous) =>
       _token != null && previous.status != SourceConnectionStatus.expired
-          ? SourceConnectionStatus.connected
-          : (previous.status == SourceConnectionStatus.expired
-              ? SourceConnectionStatus.expired
-              : SourceConnectionStatus.notConnected);
+      ? SourceConnectionStatus.connected
+      : (previous.status == SourceConnectionStatus.expired
+            ? SourceConnectionStatus.expired
+            : SourceConnectionStatus.notConnected);
 
   /// Revokes remotely where supported (best effort) and deletes local tokens.
   Future<void> disconnect() async {
@@ -312,8 +327,11 @@ class OAuthSession {
     }
     _token = null;
     await _tokens.delete(sourceId);
-    _emit(SourceAuthState(
-        status: hasCredentials ? SourceConnectionStatus.notConnected : SourceConnectionStatus.credentialsMissing));
+    _emit(
+      SourceAuthState(
+        status: hasCredentials ? SourceConnectionStatus.notConnected : SourceConnectionStatus.credentialsMissing,
+      ),
+    );
     _log.info('Disconnected $sourceId');
   }
 
@@ -383,22 +401,24 @@ class OAuthSession {
 
   void _markExpired(String why) {
     _log.info('$sourceId session expired: $why');
-    _emit(SourceAuthState(
-      status: SourceConnectionStatus.expired,
-      accountName: _state.accountName,
-      accountAvatar: _state.accountAvatar,
-      error: why,
-    ));
+    _emit(
+      SourceAuthState(
+        status: SourceConnectionStatus.expired,
+        accountName: _state.accountName,
+        accountAvatar: _state.accountAvatar,
+        error: why,
+      ),
+    );
   }
 
   /// The `Authorization` header for [token] in the provider's format.
   Map<String, String> authHeaders(OAuthToken token) => {
-        'Authorization': switch (headerStyle) {
-          AuthHeaderStyle.bearer => 'Bearer ${token.accessToken}',
-          AuthHeaderStyle.oauth => 'OAuth ${token.accessToken}',
-          AuthHeaderStyle.tokenType => '${token.tokenType} ${token.accessToken}',
-        },
-      };
+    'Authorization': switch (headerStyle) {
+      AuthHeaderStyle.bearer => 'Bearer ${token.accessToken}',
+      AuthHeaderStyle.oauth => 'OAuth ${token.accessToken}',
+      AuthHeaderStyle.tokenType => '${token.tokenType} ${token.accessToken}',
+    },
+  };
 
   // ---- Authorized requests ------------------------------------------------
 
@@ -414,8 +434,14 @@ class OAuthSession {
     CancelToken? cancel,
   }) async {
     var token = await validToken(cancel: cancel);
-    var response = await _http.send(method, uri,
-        headers: {...?headers, ...authHeaders(token)}, body: body, retry: retry, cancel: cancel);
+    var response = await _http.send(
+      method,
+      uri,
+      headers: {...?headers, ...authHeaders(token)},
+      body: body,
+      retry: retry,
+      cancel: cancel,
+    );
     if (response.statusCode != 401) return response;
     _log.fine('$sourceId answered 401; refreshing token once');
     if (token.refreshToken == null) {
@@ -423,8 +449,14 @@ class OAuthSession {
       throw AuthRequiredException(sourceId, 'The $displayName session expired. Please reconnect.');
     }
     token = await forceRefresh(cancel: cancel);
-    response = await _http.send(method, uri,
-        headers: {...?headers, ...authHeaders(token)}, body: body, retry: retry, cancel: cancel);
+    response = await _http.send(
+      method,
+      uri,
+      headers: {...?headers, ...authHeaders(token)},
+      body: body,
+      retry: retry,
+      cancel: cancel,
+    );
     if (response.statusCode == 401) {
       _markExpired('Access token rejected (401) after refresh.');
       throw AuthRequiredException(sourceId, 'The $displayName session expired. Please reconnect.');
@@ -440,8 +472,13 @@ class OAuthSession {
     RetryPolicy retry = const RetryPolicy(),
     CancelToken? cancel,
   }) async {
-    final response = await authorizedSend('GET', uri,
-        headers: {'Accept': 'application/json', ...?headers}, retry: retry, cancel: cancel);
+    final response = await authorizedSend(
+      'GET',
+      uri,
+      headers: {'Accept': 'application/json', ...?headers},
+      retry: retry,
+      cancel: cancel,
+    );
     return FermataHttp.decodeJsonResponse(response);
   }
 
@@ -452,8 +489,14 @@ class OAuthSession {
     Map<String, String>? headers,
     CancelToken? cancel,
   }) async {
-    final response = await authorizedSend('POST', uri,
-        headers: {'Accept': 'application/json', ...?headers}, body: fields, retry: RetryPolicy.none, cancel: cancel);
+    final response = await authorizedSend(
+      'POST',
+      uri,
+      headers: {'Accept': 'application/json', ...?headers},
+      body: fields,
+      retry: RetryPolicy.none,
+      cancel: cancel,
+    );
     return FermataHttp.decodeJsonResponse(response);
   }
 

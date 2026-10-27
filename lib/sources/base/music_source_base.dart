@@ -28,7 +28,7 @@ import '../../core/util/cancel_token.dart';
 /// which replaces the auth-related members.
 abstract class MusicSourceBase extends MusicSource {
   MusicSourceBase({SourceAuthState initialAuthState = const SourceAuthState.notRequired()})
-      : _authState = initialAuthState;
+    : _authState = initialAuthState;
 
   final StreamController<SourceAuthState> _authController = StreamController<SourceAuthState>.broadcast();
   SourceAuthState _authState;
@@ -127,8 +127,12 @@ abstract class MusicSourceBase extends MusicSource {
   Future<Artist?> getArtist(String sourceArtistId, {CancelToken? cancel}) async => unsupported('getArtist');
 
   @override
-  Future<Page<Track>> artistTopTracks(String sourceArtistId, {String? cursor, int limit = 30, CancelToken? cancel}) async =>
-      unsupported('artistTopTracks');
+  Future<Page<Track>> artistTopTracks(
+    String sourceArtistId, {
+    String? cursor,
+    int limit = 30,
+    CancelToken? cancel,
+  }) async => unsupported('artistTopTracks');
 
   @override
   Future<List<Artist>> relatedArtists(String sourceArtistId, {int limit = 12, CancelToken? cancel}) async =>
@@ -169,8 +173,11 @@ abstract class MusicSourceBase extends MusicSource {
   // ---- Playback & downloads ---------------------------------------------
 
   @override
-  Future<PlayableSource> resolveStream(Track track, {AudioQuality quality = AudioQuality.high, CancelToken? cancel}) async =>
-      unsupported('resolveStream', '$displayName cannot stream audio inside Fermata.');
+  Future<PlayableSource> resolveStream(
+    Track track, {
+    AudioQuality quality = AudioQuality.high,
+    CancelToken? cancel,
+  }) async => unsupported('resolveStream', '$displayName cannot stream audio inside Fermata.');
 
   @override
   Uri? externalPlaybackUri(Track track) => track.sourceId == id ? track.permalink : null;

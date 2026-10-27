@@ -220,7 +220,8 @@ ThemeData buildFermataTheme({
     inputDecorationTheme: InputDecorationThemeData(
       filled: true,
       fillColor: c.surfaceHigh,
-      hintStyle: type.body.copyWith(color: c.textTertiary),
+      // Inputs sit on surfaceHigh, where tertiary text is too faint.
+      hintStyle: type.body.copyWith(color: c.textSecondary),
       labelStyle: type.body.copyWith(color: c.textSecondary),
       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       border: OutlineInputBorder(borderRadius: radii.smAll, borderSide: BorderSide.none),

@@ -76,7 +76,7 @@ class _TrackTileState extends ConsumerState<TrackTile> {
 
   void _openMenuFromButton() {
     final box = _moreKey.currentContext?.findRenderObject() as RenderBox?;
-    final pos = box == null ? null : box.localToGlobal(Offset(0, box.size.height));
+    final pos = box?.localToGlobal(Offset(0, box.size.height));
     _openMenu(position: pos ?? Offset.zero);
   }
 
@@ -165,7 +165,7 @@ class _TrackTileState extends ConsumerState<TrackTile> {
         if (track.explicit == true) ...[
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 4),
-            decoration: BoxDecoration(color: c.textTertiary, borderRadius: BorderRadius.circular(3)),
+            decoration: BoxDecoration(color: c.textSecondary, borderRadius: BorderRadius.circular(3)),
             child: Text('E', semanticsLabel: l10n.shellBadgeExplicit, style: type.caption.copyWith(color: c.bg, fontSize: 10, fontWeight: FontWeight.w700)),
           ),
           const SizedBox(width: 6),

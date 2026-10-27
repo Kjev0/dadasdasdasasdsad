@@ -23,7 +23,7 @@ class SqlHistoryRepository implements HistoryRepository {
   @override
   Future<void> recordPlay(PlayRecord record) async {
     await _db.db.transaction((txn) async {
-      await TrackStore.upsert(txn, [record.track]);
+      await TrackStore.upsert(txn, [record.track], preserveScanned: true);
       await txn.insert('play_history', {
         'track_id': record.track.id,
         'played_at': record.playedAt.millisecondsSinceEpoch,

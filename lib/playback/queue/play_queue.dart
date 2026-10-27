@@ -45,6 +45,7 @@ class PlayQueue {
   int _index = -1;
   bool _shuffle = false;
   String? _originLabel;
+  int _listsRevision = 0;
 
   /// Repeat mode used by [advance]/[peekNext]/[goPrevious].
   RepeatMode repeat = RepeatMode.off;
@@ -59,6 +60,10 @@ class PlayQueue {
   bool get isEmpty => _order.isEmpty;
   bool get shuffle => _shuffle;
   String? get originLabel => _originLabel;
+
+  /// Changes whenever the item lists (play order or original order) change;
+  /// lets persistence reuse the encoded lists when only the position moved.
+  int get listsRevision => _listsRevision;
 
   QueueItem? get current => _index >= 0 && _index < _order.length ? _order[_index] : null;
 
@@ -83,6 +88,7 @@ class PlayQueue {
     _originLabel = originLabel;
     _index = created.isEmpty ? -1 : startIndex.clamp(0, created.length - 1);
     _shuffle = false;
+    _listsRevision++;
     if (shuffle) setShuffle(true);
     return created;
   }
@@ -96,6 +102,7 @@ class PlayQueue {
     // to start playing.
     _order.addAll(created);
     _original.addAll(created);
+    _listsRevision++;
     return created;
   }
 
@@ -108,6 +115,7 @@ class PlayQueue {
     _order.insertAll(cur == null ? 0 : _index + 1, created);
     final originalPos = cur == null ? 0 : _original.indexOf(cur) + 1;
     _original.insertAll(originalPos, created);
+    _listsRevision++;
     return created;
   }
 
@@ -117,6 +125,7 @@ class PlayQueue {
     if (pos < 0) return null;
     final item = _order.removeAt(pos);
     _original.removeWhere((i) => i.uid == uid);
+    _listsRevision++;
     final wasCurrent = pos == _index;
     if (pos < _index) {
       _index--;
@@ -140,6 +149,7 @@ class PlayQueue {
     if (from == to) return true;
     final item = _order.removeAt(from);
     _order.insert(to, item);
+    _listsRevision++;
     if (_index == from) {
       _index = to;
     } else if (from < _index && to >= _index) {
@@ -161,6 +171,7 @@ class PlayQueue {
     final cur = current;
     _order.clear();
     _original.clear();
+    _listsRevision++;
     if (keepCurrent && cur != null) {
       _order.add(cur);
       _original.add(cur);
@@ -174,6 +185,7 @@ class PlayQueue {
   void setShuffle(bool enabled) {
     if (enabled == _shuffle) return;
     _shuffle = enabled;
+    _listsRevision++;
     final cur = current;
     if (enabled) {
       final manualUpcoming = <QueueItem>[
@@ -262,13 +274,18 @@ class PlayQueue {
 
   // ------------------------------------------------------------ persistence
 
-  Map<String, Object?> toJson() => {
-        'items': [for (final i in _order) i.toJson()],
-        'original': [for (final i in _original) i.uid],
+  Map<String, Object?> toJson({bool includeLists = true}) => {
+        if (includeLists) ...listsJson(),
         'index': _index,
         'shuffle': _shuffle,
         'repeat': repeat.name,
         if (_originLabel != null) 'originLabel': _originLabel,
+      };
+
+  /// The (potentially large) item lists of [toJson].
+  Map<String, Object?> listsJson() => {
+        'items': [for (final i in _order) i.toJson()],
+        'original': [for (final i in _original) i.uid],
       };
 
   /// Restores a queue written by [toJson]. Tolerates partial/corrupt data.
@@ -294,6 +311,7 @@ class PlayQueue {
       ..clear()
       ..addAll(consistent ? original : items);
     _shuffle = consistent && (json['shuffle'] as bool? ?? false);
+    _listsRevision++;
     repeat = RepeatMode.values.asNameMap()[json['repeat']] ?? RepeatMode.off;
     _originLabel = json['originLabel'] as String?;
     final idx = (json['index'] as num?)?.toInt() ?? -1;

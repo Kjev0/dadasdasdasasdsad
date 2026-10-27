@@ -227,6 +227,28 @@ void main() {
     });
   });
 
+  test('a seek is reported (and persisted) before a lagging deck catches up', () {
+    fake((async) {
+      final h = Harness(async, trackLength: const Duration(minutes: 5))..init();
+      h.playAll(h.tracks(1));
+      h.settle(h.controller.pause());
+      final deck = h.backend.decks.single..positionLag = const Duration(milliseconds: 300);
+      h.settle(h.controller.seek(s(42)));
+      expect(deck.position, Duration.zero, reason: 'deck has not caught up yet');
+      expect(h.snap.position, s(42));
+      h.settle(h.controller.saveState());
+      expect(h.memoryStore!.saved!.position, s(42));
+      h.elapse(const Duration(milliseconds: 400));
+      expect(h.snap.position, s(42));
+      // A deck that never reports the target falls back to its own value.
+      deck.positionLag = const Duration(hours: 1);
+      h.settle(h.controller.seek(s(100)));
+      deck.jumpTo(s(7));
+      h.elapse(s(4));
+      expect(h.snap.position, s(7));
+    });
+  });
+
   test('dispose stops, persists and releases the backend', () {
     fake((async) {
       final h = Harness(async, trackLength: const Duration(minutes: 5))..init();

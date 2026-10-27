@@ -493,5 +493,10 @@
   "shellGlassModeSolid": "Solid surfaces",
   "shellGlassModeTranslucent": "Translucent, no blur",
   "shellGlassModeBlurred": "Translucent with blur",
-  "shellFileYourFile": "Local file"
+  "shellFileYourFile": "Local file",
+  "shellCloseTitle": "Close Fermata?",
+  "shellCloseMessage": "Fermata can keep playing in the system tray, or quit completely.",
+  "shellCloseMinimize": "Keep playing in tray",
+  "shellCloseQuit": "Quit",
+  "shellCloseRemember": "Remember my choice"
 }

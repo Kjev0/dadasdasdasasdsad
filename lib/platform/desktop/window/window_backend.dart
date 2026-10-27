@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui' show Rect, Size;
 
+import 'package:flutter/services.dart' show MethodChannel;
 import 'package:logging/logging.dart';
 import 'package:screen_retriever/screen_retriever.dart';
 import 'package:window_manager/window_manager.dart';
@@ -48,6 +49,11 @@ class WindowManagerBackend with WindowListener implements WindowBackend {
 
   final WindowManager _wm;
   final ScreenRetriever _screens;
+
+  /// window_manager's own channel. 0.5.2's `focus()` invokes `isFocused` by
+  /// mistake, so the native `focus` (gtk_window_present /
+  /// SetForegroundWindow) is called directly.
+  static const _channel = MethodChannel('window_manager');
   final _events = StreamController<WindowEventKind>.broadcast();
   bool _listening = false;
 
@@ -106,7 +112,7 @@ class WindowManagerBackend with WindowListener implements WindowBackend {
   Future<void> hide() => _wm.hide();
 
   @override
-  Future<void> focus() => _wm.focus();
+  Future<void> focus() => _channel.invokeMethod<void>('focus');
 
   @override
   Future<void> destroy() => _wm.destroy();

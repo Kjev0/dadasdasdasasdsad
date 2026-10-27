@@ -22,7 +22,7 @@ import '../base/paging.dart';
 /// identified by name, albums by an opaque id encoding artist + title.
 class LocalSource extends MusicSourceBase {
   LocalSource({required this._tracks, Future<bool> Function(String path)? fileExists})
-      : _exists = fileExists ?? ((p) => File(p).exists());
+    : _exists = fileExists ?? ((p) => File(p).exists());
 
   final TrackRepository _tracks;
   final Future<bool> Function(String path) _exists;
@@ -35,14 +35,14 @@ class LocalSource extends MusicSourceBase {
 
   @override
   Set<SourceCapability> get capabilities => const {
-        SourceCapability.searchTracks,
-        SourceCapability.searchArtists,
-        SourceCapability.searchAlbums,
-        SourceCapability.stream,
-        SourceCapability.artistPages,
-        SourceCapability.albumPages,
-        SourceCapability.genres,
-      };
+    SourceCapability.searchTracks,
+    SourceCapability.searchArtists,
+    SourceCapability.searchAlbums,
+    SourceCapability.stream,
+    SourceCapability.artistPages,
+    SourceCapability.albumPages,
+    SourceCapability.genres,
+  };
 
   @override
   String get limitationsNote =>
@@ -68,8 +68,7 @@ class LocalSource extends MusicSourceBase {
     final items = await _tracks.query(_withPage(base, offset: offset, limit: limit + 1));
     cancel?.throwIfCanceled();
     final more = items.length > limit;
-    return PageCursor.offsetPage(more ? items.sublist(0, limit) : items,
-        offset: offset, limit: limit, hasMore: more);
+    return PageCursor.offsetPage(more ? items.sublist(0, limit) : items, offset: offset, limit: limit, hasMore: more);
   }
 
   @override
@@ -109,7 +108,12 @@ class LocalSource extends MusicSourceBase {
 
   /// The artist's tracks, most played first.
   @override
-  Future<Page<Track>> artistTopTracks(String sourceArtistId, {String? cursor, int limit = 30, CancelToken? cancel}) async {
+  Future<Page<Track>> artistTopTracks(
+    String sourceArtistId, {
+    String? cursor,
+    int limit = 30,
+    CancelToken? cancel,
+  }) async {
     final offset = PageCursor.decodeOffset(cursor);
     final base = TrackQuery(
       artist: sourceArtistId,
@@ -120,8 +124,7 @@ class LocalSource extends MusicSourceBase {
     );
     final items = await _tracks.query(_withPage(base, offset: offset, limit: limit + 1));
     final more = items.length > limit;
-    return PageCursor.offsetPage(more ? items.sublist(0, limit) : items,
-        offset: offset, limit: limit, hasMore: more);
+    return PageCursor.offsetPage(more ? items.sublist(0, limit) : items, offset: offset, limit: limit, hasMore: more);
   }
 
   /// All tracks of the album in disc/track order (albums are small, so a
@@ -129,21 +132,23 @@ class LocalSource extends MusicSourceBase {
   @override
   Future<Page<Track>> albumTracks(String sourceAlbumId, {String? cursor, CancelToken? cancel}) async {
     final key = decodeAlbumId(sourceAlbumId);
-    final items = await _tracks.query(TrackQuery(
-      album: key.title,
-      artist: key.artist.isEmpty ? null : key.artist,
-      sourceIds: _localOnly,
-      localFilesOnly: true,
-      sort: TrackSortField.title,
-      descending: false,
-    ));
+    final items = await _tracks.query(
+      TrackQuery(
+        album: key.title,
+        artist: key.artist.isEmpty ? null : key.artist,
+        sourceIds: _localOnly,
+        localFilesOnly: true,
+        sort: TrackSortField.title,
+        descending: false,
+      ),
+    );
     // Album artist may differ from the track artist (compilations): fall
     // back to album-only matching when the artist filter found nothing.
     final tracks = items.isNotEmpty || key.artist.isEmpty
         ? items
         : (await _tracks.query(TrackQuery(album: key.title, sourceIds: _localOnly, localFilesOnly: true)))
-            .where((t) => (t.albumArtist ?? t.primaryArtist).toLowerCase() == key.artist.toLowerCase())
-            .toList();
+              .where((t) => (t.albumArtist ?? t.primaryArtist).toLowerCase() == key.artist.toLowerCase())
+              .toList();
     final sorted = [...tracks]..sort(_albumOrder);
     return Page(sorted, total: sorted.length);
   }
@@ -162,15 +167,22 @@ class LocalSource extends MusicSourceBase {
   // ---- Playback ---------------------------------------------------------------
 
   @override
-  Future<PlayableSource> resolveStream(Track track, {AudioQuality quality = AudioQuality.high, CancelToken? cancel}) async {
+  Future<PlayableSource> resolveStream(
+    Track track, {
+    AudioQuality quality = AudioQuality.high,
+    CancelToken? cancel,
+  }) async {
     checkOwnTrack(track);
     var path = track.localPath;
     if (path == null || path.isEmpty) {
       path = (await _tracks.getTrack(track.id))?.localPath;
     }
     if (path == null || path.isEmpty || !await _exists(path)) {
-      throw UnplayableTrackException(track.id, AvailabilityReason.fileMissing,
-          message: 'The file for "${track.title}" was moved or deleted');
+      throw UnplayableTrackException(
+        track.id,
+        AvailabilityReason.fileMissing,
+        message: 'The file for "${track.title}" was moved or deleted',
+      );
     }
     return PlayableSource(uri: Uri.file(path), isLocalFile: true);
   }
@@ -188,14 +200,14 @@ class LocalSource extends MusicSourceBase {
       Artist(sourceId: id, sourceArtistId: a.name, name: a.name, avatarUrl: a.artworkUrl);
 
   Album _albumOf(AlbumSummary a) => Album(
-        sourceId: id,
-        sourceAlbumId: encodeAlbumId(a.artist, a.title),
-        title: a.title,
-        artists: a.artist.isEmpty ? const [] : [ArtistRef(a.artist, sourceArtistId: a.artist)],
-        artworkUrl: a.artworkUrl,
-        year: a.year,
-        trackCount: a.trackCount,
-      );
+    sourceId: id,
+    sourceAlbumId: encodeAlbumId(a.artist, a.title),
+    title: a.title,
+    artists: a.artist.isEmpty ? const [] : [ArtistRef(a.artist, sourceArtistId: a.artist)],
+    artworkUrl: a.artworkUrl,
+    year: a.year,
+    trackCount: a.trackCount,
+  );
 
   /// Opaque, URL-safe album id for (artist, title).
   static String encodeAlbumId(String artist, String title) =>
@@ -215,17 +227,17 @@ class LocalSource extends MusicSourceBase {
   }
 
   static TrackQuery _withPage(TrackQuery q, {required int offset, required int limit}) => TrackQuery(
-        text: q.text,
-        sourceIds: q.sourceIds,
-        artist: q.artist,
-        album: q.album,
-        genre: q.genre,
-        localFilesOnly: q.localFilesOnly,
-        sort: q.sort,
-        descending: q.descending,
-        limit: limit,
-        offset: offset,
-      );
+    text: q.text,
+    sourceIds: q.sourceIds,
+    artist: q.artist,
+    album: q.album,
+    genre: q.genre,
+    localFilesOnly: q.localFilesOnly,
+    sort: q.sort,
+    descending: q.descending,
+    limit: limit,
+    offset: offset,
+  );
 
   static Page<T> _slice<T>(List<T> all, String? cursor, int limit) {
     final offset = PageCursor.decodeOffset(cursor);

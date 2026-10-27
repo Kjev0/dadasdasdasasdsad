@@ -245,6 +245,28 @@ void main() {
     });
   });
 
+  test('listsRevision changes with the lists, not with the position', () {
+    final q = queueOf(5);
+    var rev = q.listsRevision;
+    void changed(void Function() f, bool expectChange) {
+      f();
+      expect(q.listsRevision != rev, expectChange);
+      rev = q.listsRevision;
+    }
+
+    changed(() => q.advance(), false);
+    changed(() => q.skipToIndex(3), false);
+    changed(() => q.goPrevious(), false);
+    changed(() => q.repeat = RepeatMode.all, false);
+    changed(() => q.enqueue([track('x')]), true);
+    changed(() => q.playNext([track('y')]), true);
+    changed(() => q.move(0, 2), true);
+    changed(() => q.remove(q.items.last.uid), true);
+    changed(() => q.setShuffle(true), true);
+    changed(() => q.clear(), true);
+    changed(() => q.replace([track('z')]), true);
+  });
+
   group('persistence', () {
     test('toJson/restoreJson round-trips order, original order and modes', () {
       final q = queueOf(8, start: 3, seed: 3)

@@ -177,7 +177,8 @@ class FermataColors extends ThemeExtension<FermataColors> {
   final Color textPrimary;
   final Color textSecondary;
 
-  /// Captions / disabled text only (≥ 3:1). Never for body copy.
+  /// Captions / disabled text only (≥ 3:1 on bg, surface and
+  /// surfaceRaised). Never for body copy, never on [surfaceHigh].
   final Color textTertiary;
 
   /// Accent fill colour (buttons, active indicators, slider tracks).

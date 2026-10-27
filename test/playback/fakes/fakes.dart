@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:fermata/core/contracts/playback.dart';
@@ -62,10 +63,15 @@ class MemoryQueueStateStore extends QueueStateStore {
   PersistedPlaybackState? saved;
   int writes = 0;
 
+  /// Raw documents as they would be written to disk.
+  final documents = <String>[];
+
   @override
   Future<void> write(PersistedPlaybackState state) async {
     writes++;
-    saved = state;
+    final doc = state.encode();
+    documents.add(doc);
+    saved = PersistedPlaybackState.fromJson(jsonDecode(doc));
   }
 
   @override

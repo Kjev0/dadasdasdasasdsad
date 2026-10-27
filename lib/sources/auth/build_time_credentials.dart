@@ -31,15 +31,15 @@ abstract final class BuildTimeCredentials {
   /// The compiled-in credentials per source (sources without any value are
   /// omitted).
   static Map<String, SourceCredentials> all() => fromValues(const {
-        'FERMATA_SOUNDCLOUD_CLIENT_ID': soundcloudClientId,
-        'FERMATA_SOUNDCLOUD_CLIENT_SECRET': soundcloudClientSecret,
-        'FERMATA_SPOTIFY_CLIENT_ID': spotifyClientId,
-        'FERMATA_YOUTUBE_CLIENT_ID': youtubeClientId,
-        'FERMATA_YOUTUBE_CLIENT_SECRET': youtubeClientSecret,
-        'FERMATA_YOUTUBE_API_KEY': youtubeApiKey,
-        'FERMATA_JAMENDO_CLIENT_ID': jamendoClientId,
-        'FERMATA_AUDIUS_API_KEY': audiusApiKey,
-      });
+    'FERMATA_SOUNDCLOUD_CLIENT_ID': soundcloudClientId,
+    'FERMATA_SOUNDCLOUD_CLIENT_SECRET': soundcloudClientSecret,
+    'FERMATA_SPOTIFY_CLIENT_ID': spotifyClientId,
+    'FERMATA_YOUTUBE_CLIENT_ID': youtubeClientId,
+    'FERMATA_YOUTUBE_CLIENT_SECRET': youtubeClientSecret,
+    'FERMATA_YOUTUBE_API_KEY': youtubeApiKey,
+    'FERMATA_JAMENDO_CLIENT_ID': jamendoClientId,
+    'FERMATA_AUDIUS_API_KEY': audiusApiKey,
+  });
 
   /// Maps define-style values to per-source credentials (testable without
   /// recompiling).
@@ -50,16 +50,22 @@ abstract final class BuildTimeCredentials {
       if (c.clientId != null || c.clientSecret != null || c.apiKey != null) result[id] = c;
     }
 
-    put(SourceIds.soundcloud, SourceCredentials(
-      clientId: val('FERMATA_SOUNDCLOUD_CLIENT_ID'),
-      clientSecret: val('FERMATA_SOUNDCLOUD_CLIENT_SECRET'),
-    ));
+    put(
+      SourceIds.soundcloud,
+      SourceCredentials(
+        clientId: val('FERMATA_SOUNDCLOUD_CLIENT_ID'),
+        clientSecret: val('FERMATA_SOUNDCLOUD_CLIENT_SECRET'),
+      ),
+    );
     put(SourceIds.spotify, SourceCredentials(clientId: val('FERMATA_SPOTIFY_CLIENT_ID')));
-    put(SourceIds.youtube, SourceCredentials(
-      clientId: val('FERMATA_YOUTUBE_CLIENT_ID'),
-      clientSecret: val('FERMATA_YOUTUBE_CLIENT_SECRET'),
-      apiKey: val('FERMATA_YOUTUBE_API_KEY'),
-    ));
+    put(
+      SourceIds.youtube,
+      SourceCredentials(
+        clientId: val('FERMATA_YOUTUBE_CLIENT_ID'),
+        clientSecret: val('FERMATA_YOUTUBE_CLIENT_SECRET'),
+        apiKey: val('FERMATA_YOUTUBE_API_KEY'),
+      ),
+    );
     put(SourceIds.jamendo, SourceCredentials(clientId: val('FERMATA_JAMENDO_CLIENT_ID')));
     put(SourceIds.audius, SourceCredentials(apiKey: val('FERMATA_AUDIUS_API_KEY')));
     return result;

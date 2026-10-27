@@ -930,4 +930,20 @@ class AppLocalizationsDa extends AppLocalizations {
 
   @override
   String get shellFileYourFile => 'Lokal fil';
+
+  @override
+  String get shellCloseTitle => 'Vil du lukke Fermata?';
+
+  @override
+  String get shellCloseMessage =>
+      'Fermata kan spille videre i systembakken eller lukke helt ned.';
+
+  @override
+  String get shellCloseMinimize => 'Spil videre i systembakken';
+
+  @override
+  String get shellCloseQuit => 'Afslut';
+
+  @override
+  String get shellCloseRemember => 'Husk mit valg';
 }
