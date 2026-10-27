@@ -167,12 +167,13 @@ void main() {
   test('timeouts isolate slow sources', () async {
     final slow = _SlowSource(SourceIds.jamendo);
     w.registry.register(slow);
-    final svc = w.service(persist: false);
+    final svc = w.service(persist: false, sourceTimeout: const Duration(milliseconds: 300));
     final started = DateTime.now();
     final similar = await svc.similarArtists('Alpha');
-    expect(similar, isNotEmpty);
-    expect(DateTime.now().difference(started), lessThan(const Duration(seconds: 20)));
-  }, timeout: const Timeout(Duration(seconds: 40)));
+    expect(similar, isNotEmpty, reason: 'the other sources still answer');
+    expect(DateTime.now().difference(started), lessThan(const Duration(seconds: 5)));
+    expect(slow.calls, isEmpty, reason: 'the hanging call is not counted as a result');
+  });
 }
 
 /// A source whose artist search never answers (until the per-call timeout).

@@ -112,7 +112,7 @@ void main() {
       await pumpInApp(tester, _Host(onSeek: seeks.add));
       final node = tester.getSemantics(find.bySemanticsLabel('Playback position'));
       expect(node.value, '1:00');
-      tester.semantics.increase(find.bySemanticsLabel('Playback position'));
+      tester.semantics.increase(find.semantics.byLabel('Playback position'));
       await tester.pump();
       expect(seeks.last, const Duration(minutes: 1, seconds: 5));
       handle.dispose();

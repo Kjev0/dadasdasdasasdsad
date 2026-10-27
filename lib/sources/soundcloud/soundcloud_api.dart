@@ -59,16 +59,13 @@ class SoundCloudSignedStream {
 ///   `*.soundcloud.com`.
 class SoundCloudApi {
   SoundCloudApi({
-    required FermataHttp http,
-    required OAuthSession session,
+    required this._http,
+    required this._session,
     required SoundCloudAppTokens appTokens,
-    required SoundCloudRateGate gate,
+    required this._gate,
     Uri? baseUri,
     DateTime Function()? clock,
-  }) : _http = http,
-       _session = session,
-       _app = appTokens,
-       _gate = gate,
+  }) : _app = appTokens,
        baseUri = baseUri ?? defaultBaseUri,
        _clock = clock ?? DateTime.now;
 
@@ -274,7 +271,8 @@ class SoundCloudApi {
   /// returned with the `Authorization` header the player must send.
   Future<SoundCloudSignedStream> signStream(Uri streamUrl, {CancelToken? cancel}) async {
     _session.requireCredentials();
-    _gate.check(SoundCloudRateGroup.streams);
+    // Only the `/streams` call counts against the play budget.
+    _gate.check(SoundCloudRateGroup.streams, budget: false);
     if (!isSoundCloudHost(streamUrl) || !streamUrl.isScheme('https')) {
       throw ApiException(502, 'Unexpected SoundCloud stream host ${streamUrl.host}');
     }

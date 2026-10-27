@@ -144,10 +144,15 @@ class World {
     favorites.items.addAll(known['Alpha']!.take(3));
   }
 
-  RecommendationServiceImpl service({DateTime? at, bool persist = true, DiscoveryTuning tuning = const DiscoveryTuning()}) {
+  RecommendationServiceImpl service({
+    DateTime? at,
+    bool persist = true,
+    DiscoveryTuning tuning = const DiscoveryTuning(),
+    Duration sourceTimeout = const Duration(seconds: 15),
+  }) {
     final clock = at ?? now;
     return RecommendationServiceImpl(registry, history, tracks, favorites, settings, paths,
-        clock: () => clock, persistCache: persist, tuning: tuning);
+        clock: () => clock, persistCache: persist, tuning: tuning, sourceTimeout: sourceTimeout);
   }
 
   /// Service with a mutable clock.

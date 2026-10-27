@@ -19,21 +19,21 @@ import '../player/mini_mode.dart';
 import '../widgets/controls/search_field.dart';
 import '../widgets/playlists/playlist_providers.dart';
 
-bool _paletteOpen = false;
+DialogRoute<void>? _paletteRoute;
 
 /// Opens the command palette (Ctrl+K). No-op when it is already open.
 Future<void> showCommandPalette(BuildContext context) async {
-  if (_paletteOpen) return;
-  _paletteOpen = true;
-  try {
-    await showDialog<void>(
-      context: context,
-      barrierColor: context.colors.scrim,
-      builder: (_) => const CommandPalette(),
-    );
-  } finally {
-    _paletteOpen = false;
-  }
+  if (_paletteRoute?.isActive ?? false) return;
+  final navigator = Navigator.of(context, rootNavigator: true);
+  final route = DialogRoute<void>(
+    context: context,
+    barrierColor: context.colors.scrim,
+    barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+    themes: InheritedTheme.capture(from: context, to: navigator.context),
+    builder: (_) => const CommandPalette(),
+  );
+  _paletteRoute = route;
+  await navigator.push(route);
 }
 
 /// One palette row.
@@ -276,6 +276,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
                         itemExtent: _rowHeight,
                         itemCount: entries.length,
                         itemBuilder: (context, i) => _PaletteRow(
+                          key: ValueKey('palette-${entries[i].id}'),
                           entry: entries[i],
                           selected: i == _selected,
                           onTap: () => _run(entries[i]),
@@ -297,7 +298,7 @@ class _CommandPaletteState extends ConsumerState<CommandPalette> {
 }
 
 class _PaletteRow extends StatelessWidget {
-  const _PaletteRow({required this.entry, required this.selected, required this.onTap, required this.onHover});
+  const _PaletteRow({super.key, required this.entry, required this.selected, required this.onTap, required this.onHover});
 
   final PaletteEntry entry;
   final bool selected;

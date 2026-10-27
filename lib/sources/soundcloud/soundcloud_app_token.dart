@@ -24,15 +24,12 @@ final _log = Logger('sources.soundcloud.app_token');
 class SoundCloudAppTokens {
   SoundCloudAppTokens({
     required TokenEndpointClient tokenEndpoint,
-    required TokenStore store,
-    required OAuthConfig Function() grantConfig,
-    required OAuthConfig Function() refreshConfig,
+    required this._store,
+    required this._grantConfig,
+    required this._refreshConfig,
     DateTime Function()? clock,
     this.leeway = const Duration(minutes: 2),
   }) : _endpoint = tokenEndpoint,
-       _store = store,
-       _grantConfig = grantConfig,
-       _refreshConfig = refreshConfig,
        _clock = clock ?? DateTime.now;
 
   /// Key in the [TokenStore] (not a source id; ignored by sources).

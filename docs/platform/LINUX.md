@@ -15,7 +15,7 @@ environment) is described in `docs/platform/DESKTOP.md`.
 | Wayland `app_id` / `_GTK_APPLICATION_ID` | `app.fermata.player` |
 | Desktop entry | `packaging/linux/app.fermata.player.desktop` |
 | AppStream metadata | `packaging/linux/app.fermata.player.metainfo.xml` |
-| Icon name | `app.fermata.player` (hicolor theme, `packaging/linux/icons/`) |
+| Icon name | `app.fermata.player` (hicolor theme; files in `packaging/linux/icons/`, owned by branding) |
 | MPRIS bus name | `org.mpris.MediaPlayer2.fermata` (`DesktopEntry` = `app.fermata.player`) |
 
 ## Building
@@ -173,7 +173,7 @@ echo "Fermata: runtime dependencies OK"
 |---|---|
 | `packaging/linux/app.fermata.player.desktop` | `/usr/share/applications/` (or `~/.local/share/applications/`) |
 | `packaging/linux/app.fermata.player.metainfo.xml` | `/usr/share/metainfo/` |
-| `packaging/linux/icons/hicolor/<size>/apps/app.fermata.player.png` / `scalable/apps/app.fermata.player.svg` (branding) | `/usr/share/icons/hicolor/...` (or `~/.local/share/icons/hicolor/...`) |
+| icons from `packaging/linux/icons/` (branding), named `app.fermata.player.png` / `.svg` | `/usr/share/icons/hicolor/<size>/apps/` (or `~/.local/share/icons/hicolor/<size>/apps/`) |
 
 After installing, refresh the caches:
 
@@ -221,8 +221,12 @@ xdg-open 'fermata://oauth/test'
 `linux/runner/my_application.cc` uses
 `G_APPLICATION_HANDLES_COMMAND_LINE | G_APPLICATION_HANDLES_OPEN` instead of
 `G_APPLICATION_NON_UNIQUE` (see the app_links Linux setup). That change is not
-applied: the runner keeps Flutter's default, and Fermata's Dart
-single-instance mechanism forwards arguments to the running instance instead.
+applied (the runner keeps Flutter's default), so a link or file opened while
+Fermata runs starts a second process that hands over to the first through
+Fermata's Dart single-instance mechanism. As specified, that mechanism
+forwards `show` and the `--play-pause` / `--next` / `--previous` flags;
+forwarding file paths and `fermata://` URIs has to be added there if those
+should reach the running instance.
 
 ## Known limitations
 

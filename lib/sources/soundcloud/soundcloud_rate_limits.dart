@@ -6,9 +6,9 @@ final _log = Logger('sources.soundcloud.limits');
 
 /// SoundCloud rate-limit groups (developers.soundcloud.com/docs/api/rate-limits,
 /// verified 2026-10-27): ~100 requests/min overall, play requests
-/// (`/tracks/:id/streams`) 1,500 per 24 h, search 3,000 per hour — all per
-/// `client_id`.
-enum SoundCloudRateGroup { general, search, streams }
+/// (`/tracks/:id/streams`) 1,500 per 24 h, search 3,000 per hour, likes
+/// (including listing them) 500 per 24 h — all per `client_id`.
+enum SoundCloudRateGroup { general, search, streams, likes }
 
 /// Honours SoundCloud 429s and documented play limits without hammering the
 /// API:
@@ -37,6 +37,7 @@ class SoundCloudRateGate {
     SoundCloudRateGroup.general: Duration(minutes: 1),
     SoundCloudRateGroup.search: Duration(minutes: 5),
     SoundCloudRateGroup.streams: Duration(minutes: 15),
+    SoundCloudRateGroup.likes: Duration(minutes: 15),
   };
 
   /// Stream resolutions made in the last 24 hours.
@@ -50,9 +51,10 @@ class SoundCloudRateGate {
     _streamCalls.removeWhere((t) => t.isBefore(cutoff));
   }
 
-  /// Throws [RateLimitedException] when [group] is currently blocked (or the
-  /// daily stream budget is used up).
-  void check(SoundCloudRateGroup group) {
+  /// Throws [RateLimitedException] when [group] is currently blocked or —
+  /// for [SoundCloudRateGroup.streams] with [budget] — the daily stream
+  /// budget is used up.
+  void check(SoundCloudRateGroup group, {bool budget = true}) {
     final now = _clock();
     for (final g in {group, SoundCloudRateGroup.general}) {
       final until = _blockedUntil[g];
@@ -60,7 +62,7 @@ class SoundCloudRateGate {
         throw RateLimitedException('SoundCloud rate limit reached; try again later.', retryAfter: until.difference(now));
       }
     }
-    if (group == SoundCloudRateGroup.streams) {
+    if (group == SoundCloudRateGroup.streams && budget) {
       _prune();
       if (_streamCalls.length >= dailyStreamLimit) {
         final retry = _streamCalls.first.add(_window).difference(now);

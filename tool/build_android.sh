@@ -159,9 +159,10 @@ verify_apk() {
   info "$apk (${size})"
   if [[ -n "$AAPT2" ]]; then
     badging="$("$AAPT2" dump badging "$apk" 2>/dev/null | head -n1 || true)"
-    pkg="$(sed -n -E "s/.*name='([^']*)'.*/\1/p" <<<"$badging")"
-    vcode="$(sed -n -E "s/.*versionCode='([^']*)'.*/\1/p" <<<"$badging")"
-    vname="$(sed -n -E "s/.*versionName='([^']*)'.*/\1/p" <<<"$badging")"
+    # package: name='app.fermata.player' versionCode='1' versionName='1.0.0' platformBuild...
+    pkg="$(sed -n -E "s/^package: name='([^']*)'.*/\1/p" <<<"$badging")"
+    vcode="$(sed -n -E "s/^package: .* versionCode='([^']*)'.*/\1/p" <<<"$badging")"
+    vname="$(sed -n -E "s/^package: .* versionName='([^']*)'.*/\1/p" <<<"$badging")"
     printf '     package %s, versionName %s, versionCode %s\n' "${pkg:-?}" "${vname:-?}" "${vcode:-?}"
     [[ -z "$pkg" || "$pkg" == "$APP_ID" ]] || die "unexpected applicationId '$pkg' in $apk (expected $APP_ID)"
   fi
