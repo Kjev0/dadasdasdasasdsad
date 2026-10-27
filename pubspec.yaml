@@ -1,7 +1,7 @@
 name: fermata
 description: "Fermata — a premium cross-platform music player"
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.1+2
 
 environment:
   sdk: ^3.13.7
@@ -97,3 +97,8 @@ flutter:
           weight: 700
         - asset: assets/fonts/Manrope-800.ttf
           weight: 800
+
+dependency_overrides:
+  # smtc_windows ships flutter_rust_bridge 2.11.1 generated code, and FRB
+  # requires the runtime to match exactly (2.13 makes SMTC fail at startup).
+  flutter_rust_bridge: 2.11.1
