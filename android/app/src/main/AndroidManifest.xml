@@ -57,15 +57,15 @@
         The only cleartext traffic allowed is to 127.0.0.1 / localhost, which
         just_audio's local proxy needs (request headers, caching, stream sources).
 
-        roundIcon: TEMPORARY @mipmap/ic_launcher until the branding work adds
-        @mipmap/ic_launcher_round; switch it then (the build fails if it points
-        at a resource that does not exist).
+        launchMode singleTask: the OAuth redirect (fermata://oauth/...) returns
+        to the existing activity instead of stacking a second one on top of
+        the Custom Tab.
     -->
     <application
         android:name="${applicationName}"
         android:label="Fermata"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:usesCleartextTraffic="false"
@@ -77,7 +77,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:taskAffinity=""
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
