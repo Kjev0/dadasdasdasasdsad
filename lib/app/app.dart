@@ -78,6 +78,7 @@ class AppFrame extends ConsumerStatefulWidget {
 
 class _AppFrameState extends ConsumerState<AppFrame> {
   AppLifecycleController? _lifecycle;
+  final _miniNavigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
@@ -110,25 +111,18 @@ class _AppFrameState extends ConsumerState<AppFrame> {
   }
 
   Future<(CloseChoice, bool)> _askClose() async {
-    final ctx = widget.router.routerDelegate.navigatorKey.currentContext;
+    // In mini mode the router's navigator is offstage: ask in the mini
+    // host's own navigator with a compact dialog that fits the tiny window.
+    final mini = ref.read(miniModeProvider).active;
+    final ctx = mini
+        ? _miniNavigatorKey.currentContext
+        : widget.router.routerDelegate.navigatorKey.currentContext;
     if (ctx == null || !ctx.mounted) return (CloseChoice.minimizeToTray, false);
-    // In mini mode the router's navigator is offstage (and the window is too
-    // small for a dialog): leave mini mode first, restore it on cancel.
-    final mini = ref.read(miniModeProvider.notifier);
-    final wasMini = ref.read(miniModeProvider).active;
-    if (wasMini) {
-      await mini.exit();
-      await WidgetsBinding.instance.endOfFrame;
-    }
-    final dialogCtx = widget.router.routerDelegate.navigatorKey.currentContext;
-    if (dialogCtx == null || !dialogCtx.mounted) return (CloseChoice.minimizeToTray, false);
     final result = await showDialog<(CloseChoice, bool)>(
-      context: dialogCtx,
-      builder: (_) => const CloseDialog(),
+      context: ctx,
+      builder: (_) => CloseDialog(compact: mini),
     );
-    final choice = result ?? (CloseChoice.cancel, false);
-    if (wasMini && choice.$1 == CloseChoice.cancel) await mini.enter();
-    return choice;
+    return result ?? (CloseChoice.cancel, false);
   }
 
   @override
@@ -163,7 +157,7 @@ class _AppFrameState extends ConsumerState<AppFrame> {
                 );
               },
             ),
-            if (mini) const _MiniModeHost(),
+            if (mini) _MiniModeHost(navigatorKey: _miniNavigatorKey),
           ],
         ),
       ),
@@ -171,34 +165,31 @@ class _AppFrameState extends ConsumerState<AppFrame> {
   }
 }
 
-/// Hosts [MiniModeView] in its own [Overlay] (it sits above the router's
-/// navigator, so tooltips and menus need an overlay of their own).
-class _MiniModeHost extends StatefulWidget {
-  const _MiniModeHost();
+/// Hosts [MiniModeView] in its own [Navigator] (it sits above the router's
+/// navigator, so tooltips, menus and dialogs need an overlay of their own).
+class _MiniModeHost extends StatelessWidget {
+  const _MiniModeHost({required this.navigatorKey});
+
+  final GlobalKey<NavigatorState> navigatorKey;
 
   @override
-  State<_MiniModeHost> createState() => _MiniModeHostState();
-}
-
-class _MiniModeHostState extends State<_MiniModeHost> {
-  late final OverlayEntry _entry = OverlayEntry(builder: (_) => const MiniModeView());
-
-  @override
-  void dispose() {
-    _entry
-      ..remove()
-      ..dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => Overlay(initialEntries: [_entry]);
+  Widget build(BuildContext context) => Navigator(
+        key: navigatorKey,
+        onGenerateRoute: (_) => PageRouteBuilder<void>(
+          pageBuilder: (_, _, _) => const MiniModeView(),
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+        ),
+      );
 }
 
 /// "Close Fermata?" — keep playing in the tray, quit, or cancel; with
 /// "Remember my choice".
 class CloseDialog extends StatefulWidget {
-  const CloseDialog({super.key});
+  const CloseDialog({super.key, this.compact = false});
+
+  /// Dense layout for the mini player's tiny window.
+  final bool compact;
 
   @override
   State<CloseDialog> createState() => _CloseDialogState();
@@ -210,6 +201,7 @@ class _CloseDialogState extends State<CloseDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    if (widget.compact) return _buildCompact(context);
     return AlertDialog(
       title: Text(l10n.shellCloseTitle),
       content: Column(
@@ -219,6 +211,9 @@ class _CloseDialogState extends State<CloseDialog> {
           Text(l10n.shellCloseMessage),
           const SizedBox(height: 12),
           CheckboxListTile(
+            // Focus a control so Space / Enter act on the dialog, never on
+            // the app-wide playback shortcuts behind it.
+            autofocus: true,
             contentPadding: EdgeInsets.zero,
             controlAffinity: ListTileControlAffinity.leading,
             value: _remember,
@@ -235,6 +230,52 @@ class _CloseDialogState extends State<CloseDialog> {
           child: Text(l10n.shellCloseMinimize),
         ),
       ],
+    );
+  }
+
+  Widget _buildCompact(BuildContext context) {
+    final l10n = context.l10n;
+    final text = Theme.of(context).textTheme;
+    void pop(CloseChoice c, bool remember) => Navigator.of(context).pop((c, remember));
+    return Dialog(
+      insetPadding: const EdgeInsets.all(4),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l10n.shellCloseTitle, style: text.titleSmall),
+            Text(l10n.shellCloseMessage, style: text.bodySmall, maxLines: 2, overflow: TextOverflow.ellipsis),
+            InkWell(
+              onTap: () => setState(() => _remember = !_remember),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 28,
+                    height: 28,
+                    child: Checkbox(
+                      value: _remember,
+                      autofocus: true,
+                      visualDensity: VisualDensity.compact,
+                      onChanged: (v) => setState(() => _remember = v ?? false),
+                    ),
+                  ),
+                  Expanded(child: Text(l10n.shellCloseRemember, style: text.bodySmall, overflow: TextOverflow.ellipsis)),
+                ],
+              ),
+            ),
+            Wrap(
+              alignment: WrapAlignment.end,
+              children: [
+                TextButton(onPressed: () => pop(CloseChoice.cancel, false), child: Text(l10n.actionCancel)),
+                TextButton(onPressed: () => pop(CloseChoice.quit, _remember), child: Text(l10n.shellCloseQuit)),
+                TextButton(onPressed: () => pop(CloseChoice.minimizeToTray, _remember), child: Text(l10n.shellCloseMinimize)),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
