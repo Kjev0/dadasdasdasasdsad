@@ -31,6 +31,10 @@ set(CMAKE_CXX_FLAGS_PROFILE "${CMAKE_CXX_FLAGS_RELEASE}")
 
 # Use Unicode for all projects.
 add_definitions(-DUNICODE -D_UNICODE)
+# permission_handler_windows still includes <experimental/coroutine>, which
+# MSVC 14.5x (Visual Studio 18) rejects as error STL1011 unless silenced.
+# Fermata does not use that plugin on Windows; it is only compiled in.
+add_compile_definitions(_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS)
 
 # Compilation settings that should be applied to most targets.
 #
