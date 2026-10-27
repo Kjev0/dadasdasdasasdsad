@@ -143,6 +143,7 @@ class WeightedTrackScorer implements TrackScorer {
       final weakIdentity = reading.title < config.capMinTitle || (primary != null && primary < config.capMinArtist);
       if (farDuration || weakIdentity) confidence = confidence.cappedAt(MatchConfidence.low);
       if (primary == null) confidence = confidence.cappedAt(MatchConfidence.medium);
+      if (reading.title < config.minTitle) confidence = MatchConfidence.none;
       // Keep score and confidence consistent: a capped candidate must not
       // outrank (or display a higher percentage than) a better band.
       score = score.clamp(0.0, _ceiling(confidence));

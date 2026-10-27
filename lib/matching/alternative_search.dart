@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:collection/collection.dart';
 import 'package:logging/logging.dart';
 
@@ -11,6 +13,7 @@ import 'match_policy.dart';
 import 'normalizer.dart';
 import 'query_builder.dart';
 import 'scorer.dart';
+import 'source_rules.dart';
 import 'util/async_utils.dart';
 
 /// Manual "find another version" search for one original track: runs a
@@ -22,14 +25,18 @@ class AlternativeSearch {
     this.normalizer = const TrackNormalizer(),
     this.rateLimit = const RateLimitPolicy(),
     this.limit = 20,
+    this.maxPageSize = MatchingSourceRules.maxSearchPageSize,
   });
 
   final TrackScorer _scorer;
   final TrackNormalizer normalizer;
   final RateLimitPolicy rateLimit;
 
-  /// Results requested per source.
+  /// Results requested per source (capped by [maxPageSize]).
   final int limit;
+
+  /// Per-source cap on the search page size.
+  final Map<String, int> maxPageSize;
 
   static final _log = Logger('matching.alternatives');
 
@@ -58,7 +65,7 @@ class AlternativeSearch {
           : SearchQueryBuilder.sanitize(query);
       try {
         final page = await withRateLimitRetry(
-          () => source.searchTracks(text, limit: limit, cancel: cancel),
+          () => source.searchTracks(text, limit: math.min(limit, maxPageSize[source.id] ?? limit), cancel: cancel),
           policy: rateLimit,
           cancel: cancel,
           log: _log,

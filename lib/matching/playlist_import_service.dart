@@ -22,6 +22,7 @@ import 'import_session.dart';
 import 'match_policy.dart';
 import 'normalizer.dart';
 import 'scoring_config.dart';
+import 'source_rules.dart';
 import 'util/async_utils.dart';
 
 /// Tunables of [PlaylistImportServiceImpl].
@@ -35,6 +36,8 @@ class ImportSettings {
     this.rateLimit = const RateLimitPolicy(maxRetries: 3),
     this.alternativesLimit = 20,
     this.writeChunkSize = 500,
+    this.explicitOnlySources = MatchingSourceRules.explicitOnlySources,
+    this.maxSearchPageSize = MatchingSourceRules.maxSearchPageSize,
   });
 
   /// Tracks matched in parallel.
@@ -58,6 +61,14 @@ class ImportSettings {
 
   /// Tracks per repository write.
   final int writeChunkSize;
+
+  /// Sources searched for alternatives only when the user picks them (by
+  /// `sourceId` or in the session's target sources); YouTube's search quota
+  /// is tiny.
+  final Set<String> explicitOnlySources;
+
+  /// Per-source cap on the search page size.
+  final Map<String, int> maxSearchPageSize;
 }
 
 /// Imports a playlist from one source and matches every track on the
@@ -89,6 +100,7 @@ class PlaylistImportServiceImpl implements PlaylistImportService {
           normalizer: normalizer,
           rateLimit: settings.rateLimit,
           limit: settings.alternativesLimit,
+          maxPageSize: settings.maxSearchPageSize,
         ),
         _saver = ImportSaver(
           tracks: trackRepository,
@@ -353,7 +365,8 @@ class PlaylistImportServiceImpl implements PlaylistImportService {
   }
 
   /// Searches one source ([sourceId]) or all of the session's target
-  /// sources. An empty [query] searches "artist + title" of the original.
+  /// sources (all ready sources except explicit-only ones when the session
+  /// has none). An empty [query] searches "artist + title" of the original.
   @override
   Future<List<MatchCandidate>> searchAlternatives(
     String sessionId,
@@ -375,7 +388,10 @@ class PlaylistImportServiceImpl implements PlaylistImportService {
     } else {
       final ids = s.options.targetSources.isNotEmpty
           ? s.options.targetSources
-          : [for (final src in _registry.ordered) src.id];
+          : [
+              for (final src in _registry.ordered)
+                if (!settings.explicitOnlySources.contains(src.id)) src.id,
+            ];
       sources = [
         for (final id in ids.toSet())
           if (id != s.source) ?_registry.byId(id),

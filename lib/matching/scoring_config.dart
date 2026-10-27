@@ -24,6 +24,10 @@ abstract final class MatchThresholds {
   static const double highMinTitle = 0.85;
   static const double highMinArtist = 0.80;
 
+  /// Below this title similarity the candidate is a different song:
+  /// confidence is [MatchConfidence.none] whatever else agrees.
+  static const double minTitle = 0.45;
+
   /// Below these the candidate is capped at [MatchConfidence.low].
   static const double capMinTitle = 0.60;
   static const double capMinArtist = 0.50;
@@ -118,6 +122,7 @@ class ScoringConfig {
     this.isrcFloor = MatchThresholds.isrcFloor,
     this.highMinTitle = MatchThresholds.highMinTitle,
     this.highMinArtist = MatchThresholds.highMinArtist,
+    this.minTitle = MatchThresholds.minTitle,
     this.capMinTitle = MatchThresholds.capMinTitle,
     this.capMinArtist = MatchThresholds.capMinArtist,
     this.significantVersionPenalty = MatchThresholds.significantVersionPenalty,
@@ -132,6 +137,7 @@ class ScoringConfig {
   final double isrcFloor;
   final double highMinTitle;
   final double highMinArtist;
+  final double minTitle;
   final double capMinTitle;
   final double capMinArtist;
   final double significantVersionPenalty;

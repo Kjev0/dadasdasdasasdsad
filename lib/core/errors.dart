@@ -46,8 +46,10 @@ class AuthRequiredException extends FermataException {
 
 /// Developer credentials (client id/secret, API key) are not configured.
 class MissingCredentialsException extends FermataException {
-  const MissingCredentialsException(this.sourceId, this.missing)
-      : super('credentials_missing', 'Missing developer credentials for $sourceId: $missing');
+  // Not const: the message interpolates a List, which const constructors
+  // cannot do.
+  MissingCredentialsException(this.sourceId, this.missing)
+      : super('credentials_missing', 'Missing developer credentials for $sourceId: ${missing.join(', ')}');
 
   final String sourceId;
   final List<String> missing;

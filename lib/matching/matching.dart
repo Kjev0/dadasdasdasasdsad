@@ -24,5 +24,6 @@ export 'query_builder.dart';
 export 'scorer.dart';
 export 'scoring_config.dart';
 export 'similarity.dart';
+export 'source_rules.dart';
 export 'util/async_utils.dart' show RateLimitPolicy;
 export 'version_detector.dart';
